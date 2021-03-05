@@ -34,6 +34,8 @@ Challenges:
 - Using user history to prioritize recipes
 - Creating user-friendly (non tedious) interface
 
+**HTA Approval (crusch):** Approved, but it's going to be really important that your algorithm has some level of complexity and that this isn't a CRUD app!
+
 ### Idea 2
 Spotify Snippets:
 - Website requires login
@@ -49,6 +51,8 @@ Challenges:
 - Login + tracking users
 - Using user history to identify genre preferences
 - Using genre prefences to select song snippets
+
+**HTA Approval (crusch):** Rejected — this will either be too straightforward or too complex.
 
 ### Idea 3
 Critical Review 2.0:
@@ -68,6 +72,8 @@ Challenges:
 - Creating class recommendations 
 - Storing class data in a way that is efficiently accessible (tree with classes as nodes?)
 - Limits to extensibility because certain classes have certain prereqs that have to be inputted manually
+
+**HTA Approval (crusch):** Rejected — it sounds useful, but it seems like it'll end up being a CRUD app that lacks algorithmic complexity.
 
 
 **Mentor TA:** _Put your mentor TA's name and email here once you're assigned one!_
