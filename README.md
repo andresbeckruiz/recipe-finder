@@ -89,3 +89,8 @@ _On your first meeting with your mentor TA, you should plan dates for at least t
 
 ## How to Build and Run
 _A necessary part of any README!_
+
+
+User auth tutorial: https://www.youtube.com/watch?v=PKwu15ldZ7k&t=43s
+
+
