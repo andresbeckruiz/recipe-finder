@@ -13,8 +13,18 @@ export function AuthProvider({children}){
     //by default we are loading
     const [loading, setLoading] = useState(true)
 
+    //if don't want to use firebase, we can just edit these signup and login functions
     function signup(email, password) {
-        return auth.createUserWithEmailAndPassword(email,password)
+        //return these functions because method returns a promise
+        return auth.createUserWithEmailAndPassword(email, password)
+    }
+
+    function login(email, password) {
+        return auth.signInWithEmailAndPassword(email, password)
+    }
+
+    function logout() {
+        return auth.signOut()
     }
 
     //only want to call once so we use useEffect here
@@ -30,7 +40,9 @@ export function AuthProvider({children}){
 
     const value = {
         currentUser,
-        signup
+        login,
+        signup,
+        logout
     }
 
     return(
