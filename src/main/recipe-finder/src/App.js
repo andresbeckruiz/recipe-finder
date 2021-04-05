@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="App">
       {/*add components here for login landing page*/}
-      {/*<Fridge/>*/}
+      <Fridge/>
     </div>
   );
 }
