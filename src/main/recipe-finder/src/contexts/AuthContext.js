@@ -31,6 +31,14 @@ export function AuthProvider({children}){
         return auth.sendPasswordResetEmail(email)
     }
 
+    function updateEmail(email) {
+        return currentUser.updateEmail(email)
+    }
+
+    function updatePassword(password) {
+        return currentUser.updatePassword(password)
+    }
+
     //only want to call once so we use useEffect here
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
@@ -47,7 +55,9 @@ export function AuthProvider({children}){
         login,
         signup,
         logout,
-        resetPassword
+        resetPassword,
+        updateEmail,
+        updatePassword
     }
 
     return(
