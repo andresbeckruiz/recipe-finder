@@ -53,15 +53,17 @@ function Fridge() {
             {/*two panes for lists and input*/}
             <List x={200} width={250} label={"Current Ingredients"} ingredients={ingredients} setter={setIngredients}/>
             <div>
-            <List x={600} width={800} label={"Add an Ingredient"} ingredients={[]}/>
-            {/*textbox for input*/}
-            <div style={{position: "absolute", top: 400, right: 375}}>
-                <TextBox input={setInput} change={onChange} label={"Name of Ingredient"}/>
+            <List x={600} width={800} label={"Add an Ingredient"} ingredients={[]}>
+                <div style={{position: "absolute", top: 225, left: 0, right:0}}>
+                    <TextBox input={setInput} change={onChange} label={"Name of Ingredient"}/>
                     <div style={{position: "relative", top: 50}}>
                         {/*submission button*/}
                         <SubmitButton label={"Submit"} onClick={onSubmit}/>
                     </div>
                 </div>
+            </List>
+            {/*textbox for input*/}
+
             </div>
         </div>
     );

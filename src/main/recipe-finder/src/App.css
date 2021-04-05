@@ -39,6 +39,15 @@ h5 {
   outline: none;
 }
 
+.List {
+  /* We first create a flex layout context */
+  display: flex;
+
+  /* Then we define how is distributed the remaining space */
+  justify-content: center;
+
+}
+
 .flex-container {
   /* We first create a flex layout context */
   display: flex;

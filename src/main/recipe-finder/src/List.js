@@ -49,6 +49,7 @@ function List(props) {
                     }>{r}</p>
                 )}
             </div>
+            {props.children}
         </div>
     );
 }
