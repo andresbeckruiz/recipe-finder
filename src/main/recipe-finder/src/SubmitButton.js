@@ -1,7 +1,7 @@
 import { AwesomeButton } from "react-awesome-button";
 import "react-awesome-button/dist/styles.css";
 
-function Button(props) {
+function SubmitButton(props) {
 
     return <AwesomeButton type="primary" onPress= {
         // click
@@ -10,4 +10,4 @@ function Button(props) {
     }>{props.label}!</AwesomeButton>;
 }
 
-export default Button;
+export default SubmitButton;

@@ -1,7 +1,8 @@
 import List from "./List";
 import React, {useState, useEffect, useRef} from 'react';
 import TextBox from "./TextBox";
-import Button from "./Button";
+import SubmitButton from "./SubmitButton";
+import Button from 'react-bootstrap/Button';
 
 let list = [];
 
@@ -45,7 +46,10 @@ function Fridge() {
     return (
         <div style={rootStyle} className="Fridge">
             {/*dynamic header*/}
-            <h1>{name}'s Fridge</h1>
+            <h1 style={{top: 25}}>{name}'s Fridge</h1>
+            {/*two buttons on side of page*/}
+            <Button variant="success" size= "lg" style={{position: "absolute", left: 50, top: 25}}>Search for Recipes</Button>
+            <Button variant="danger" size= "lg" style={{position: "absolute", right: 50, top: 25}}>Logout</Button>
             {/*two panes for lists and input*/}
             <List x={200} width={250} label={"Current Ingredients"} ingredients={ingredients} setter={setIngredients}/>
             <div>
@@ -55,7 +59,7 @@ function Fridge() {
                 <TextBox input={setInput} change={onChange} label={"Name of Ingredient"}/>
                     <div style={{position: "relative", top: 50}}>
                         {/*submission button*/}
-                        <Button label={"Submit"} onClick={onSubmit}/>
+                        <SubmitButton label={"Submit"} onClick={onSubmit}/>
                     </div>
                 </div>
             </div>

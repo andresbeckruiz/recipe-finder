@@ -26,14 +26,12 @@ function List(props) {
 
     // useEffect hook for ingredient list updates
     useEffect(() => {
-        console.log("triggerd");
-        console.log(props.ingredients);
         setList(props.ingredients);
     }, [props.ingredients, flag])
 
     return (
         <div style={style} className="List">
-            <h2 style={{position: "relative", top: -60, left: 0, right: 0}}>{props.label}</h2>
+            <h4 style={{position: "relative", top: -40, left: 0, right: 0}}>{props.label}</h4>
             <div style={innerStyle} className="List">
                 <br/>
                 {list.map((r) =>

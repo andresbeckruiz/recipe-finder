@@ -1,5 +1,6 @@
 import './App.css';
 import Fridge from "./Fridge";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
