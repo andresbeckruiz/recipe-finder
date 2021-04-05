@@ -23,6 +23,12 @@ h4 {
   color: #888888;
 }
 
+h5 {
+  font-family: Avenir;
+  font-size: 24px;
+  color: #000000;
+}
+
 .inputBox {
   background-color: #2776ED;
   border-radius: 10px;
@@ -31,6 +37,37 @@ h4 {
   width: 400px;
   height: 25px;
   outline: none;
+}
+
+.flex-container {
+  /* We first create a flex layout context */
+  display: flex;
+
+  /* Then we define the flow direction
+     and if we allow the items to wrap
+   * Remember this is the same as:
+   * flex-direction: row;
+   * flex-wrap: wrap;
+   */
+  flex-flow: row wrap;
+
+  /* Then we define how is distributed the remaining space */
+  justify-content: space-evenly;
+
+  padding: 0;
+  list-style: none;
+  margin-top: 10%;
+}
+
+.flex-item {
+  padding: 5px;
+  width: 200px;
+  height: 150px;
+  margin-top: 10px;
+  line-height: 150px;
+  font-weight: bold;
+  font-size: 3em;
+  text-align: center;
 }
 
 @media (prefers-reduced-motion: no-preference) {
