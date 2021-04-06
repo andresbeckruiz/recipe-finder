@@ -31,11 +31,11 @@ function List(props) {
 
     return (
         <div style={style} className="List">
-            <h4 style={{position: "relative", top: -40, left: 0, right: 0}}>{props.label}</h4>
+            <h4 style={{position: "absolute", top: -40}}>{props.label}</h4>
             <div style={innerStyle} className="List">
-                <br/>
+                <div style={{marginTop: 25}}>
                 {list.map((r) =>
-                    <p onClick={() =>{
+                    <p style={{textAlign: "center"}} onClick={() =>{
                         let list = props.ingredients;
                         for(let i = 0; i < list.length; i++){
 
@@ -48,6 +48,7 @@ function List(props) {
                     }
                     }>{r}</p>
                 )}
+                </div>
             </div>
             {props.children}
         </div>

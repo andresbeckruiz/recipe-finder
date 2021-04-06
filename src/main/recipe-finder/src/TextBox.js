@@ -12,8 +12,8 @@ function TextBox(props) {
         fontFamily: "Avenir",
         textAlign: "left",
         position: "relative",
-        left: -125,
-        bottom:1
+        left: 0,
+        bottom:0
     }
 
     return (

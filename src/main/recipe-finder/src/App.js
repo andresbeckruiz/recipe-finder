@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       {/*add components here for login landing page*/}
       {/*<Fridge/>*/}
-      <Recipe/>
+      {/*<Recipe/>*/}
     </div>
   );
 }

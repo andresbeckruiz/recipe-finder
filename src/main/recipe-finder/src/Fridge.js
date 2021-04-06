@@ -3,9 +3,17 @@ import React, {useState, useEffect, useRef} from 'react';
 import TextBox from "./TextBox";
 import SubmitButton from "./SubmitButton";
 import Button from 'react-bootstrap/Button';
-import { Link } from 'react-router';
+import {Link} from 'react-router-dom'
 
 let list = [];
+
+// event listener for enter key
+let submit;
+document.addEventListener('keydown',function(e){
+    if (e.key === "Enter") {
+        submit();
+    }
+});
 
 function Fridge() {
 
@@ -26,9 +34,10 @@ function Fridge() {
 
     // function for submit button
     const onSubmit = () => {
-        if(!list.includes(input)) {
+        let text = input.trim();
+        if(!list.includes(text)) {
             //put current input into list
-            list.unshift(input);
+            list.unshift(text);
 
             //update ingredients
             setIngredients(list);
@@ -39,32 +48,37 @@ function Fridge() {
         }
     }
 
+    //set global for listener
+    submit = onSubmit;
+
     const onChange = () => {
 
     }
 
-
     return (
         <div style={rootStyle} className="Fridge">
             {/*dynamic header*/}
-            <h1>{name}'s Fridge</h1>
+            <h1 style={{marginTop: 25}}>{name}'s Fridge</h1>
             {/*two buttons on side of page*/}
+            {/*<Route exact path="/" component={Page1} />*/}
+            {/*<Link to="/Recipe"><button>coom</button></Link>*/}
+            <Link to={"/Recipe"}>
             <Button variant="success" size= "lg" style={{position: "absolute", left: 50, top: 25}}>Search for Recipes</Button>
+            </Link>
             <Button variant="danger" size= "lg" style={{position: "absolute", right: 50, top: 25}}>Logout</Button>
             {/*two panes for lists and input*/}
             <List x={200} width={250} label={"Current Ingredients"} ingredients={ingredients} setter={setIngredients}/>
             <div>
             <List x={600} width={800} label={"Add an Ingredient"} ingredients={[]}>
-                <div style={{position: "absolute", top: 225, left: 0, right:0}}>
+                <div style={{position: "relative", top: 225, left: 0, right:0}}>
                     <TextBox input={setInput} change={onChange} label={"Name of Ingredient"}/>
-                    <div style={{position: "relative", top: 50}}>
+                    <div id={"submit"} style={{position: "relative", top: 50, left: 150}}>
                         {/*submission button*/}
                         <SubmitButton label={"Submit"} onClick={onSubmit}/>
                     </div>
                 </div>
             </List>
             {/*textbox for input*/}
-
             </div>
         </div>
     );

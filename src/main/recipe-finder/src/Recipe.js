@@ -2,6 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import Button from 'react-bootstrap/Button';
 import SimilarRecipe from "./SimilarRecipe";
 import Rating from '@material-ui/lab/Rating';
+import {Link} from "react-router-dom";
 
 function Recipe() {
 
@@ -21,16 +22,18 @@ function Recipe() {
     return (
         <div style={rootStyle} className="Recipe">
             {/*dynamic header*/}
-            <h1 style={{top: 25, color: "#000"}}>{name}</h1>
+            <h1 style={{top: 25, color: "#000"}}><b>{name}</b></h1>
             {/*two buttons on side of page*/}
+            <Link to={"/"}>
             <Button variant="success" size= "lg" style={{position: "absolute", left: 50, top: 25}}>Back to Fridge</Button>
+            </Link>
             <Button variant="primary" size= "lg" style={{position: "absolute", right: 50, top: 25}}>Cook!</Button>
 
             <div style={{position: "relative", marginTop: 150, marginLeft: 100}}>
 
                 {/*ratings in header*/}
                 <Rating
-                    style={{position: "relative", top: 40, left: 500}}
+                    style={{position: "relative", top: 40, left: 1250}}
                     name="simple-controlled"
                     value={value}
                     size={"large"}
