@@ -39,6 +39,21 @@ h5 {
   outline: none;
 }
 
+.recipe {
+  /* We first create a flex layout context */
+  display: flex;
+
+  /* Then we define how is distributed the remaining space */
+  justify-content: left;
+}
+
+.inside-paragraph {
+  font-family: Avenir;
+  font-size: 24px;
+  color: #000000;
+  text-align: left;
+}
+
 .List {
   /* We first create a flex layout context */
   display: flex;

@@ -3,6 +3,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import TextBox from "./TextBox";
 import SubmitButton from "./SubmitButton";
 import Button from 'react-bootstrap/Button';
+import { Link } from 'react-router';
 
 let list = [];
 
@@ -46,7 +47,7 @@ function Fridge() {
     return (
         <div style={rootStyle} className="Fridge">
             {/*dynamic header*/}
-            <h1 style={{top: 25}}>{name}'s Fridge</h1>
+            <h1>{name}'s Fridge</h1>
             {/*two buttons on side of page*/}
             <Button variant="success" size= "lg" style={{position: "absolute", left: 50, top: 25}}>Search for Recipes</Button>
             <Button variant="danger" size= "lg" style={{position: "absolute", right: 50, top: 25}}>Logout</Button>
