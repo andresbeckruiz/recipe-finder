@@ -17,10 +17,10 @@ function List(props) {
     }
 
     let innerStyle = {
-        height: 600,
+        height: 590,
         width: props.width,
         position: "absolute",
-        bottom: 0,
+        bottom: 10,
         overflow: "auto"
     }
 
@@ -35,7 +35,7 @@ function List(props) {
             <div style={innerStyle} className="List">
                 <div style={{marginTop: 25}}>
                 {list.map((r) =>
-                    <p style={{textAlign: "center"}} onClick={() =>{
+                    <p style={{textAlign: "center", cursor: "pointer"}} onClick={() =>{
                         let list = props.ingredients;
                         for(let i = 0; i < list.length; i++){
 

@@ -9,7 +9,11 @@ function Recipe() {
     // useState variable for name
     const [name, setName] = useState("Recipe Name");
 
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = React.useState(2.5);
+
+    const [ingredients, setIngredients] = useState("ingredients");
+
+    const [preparation, setPreparation] = useState("preparation");
 
 
     // style details for root page
@@ -36,6 +40,7 @@ function Recipe() {
                     style={{position: "relative", top: 40, left: 1250}}
                     name="simple-controlled"
                     value={value}
+                    precision={0.5}
                     size={"large"}
                     onChange={(event, newValue) => {
                         setValue(newValue);
@@ -47,13 +52,13 @@ function Recipe() {
 
 
                 {/*paragraph for ingredients*/}
-                <p className={"inside-paragraph"}>ingredients</p>
+                <p className={"inside-paragraph"}>{ingredients}</p>
 
                 {/*instructions header*/}
                 <h2 className={"recipe"}><u>Preparation</u></h2>
 
                 {/*paragraph for instruction*/}
-                <p className={"inside-paragraph"}>preparation</p>
+                <p className={"inside-paragraph"}>{preparation}</p>
 
                 {/*similar recipes header*/}
                 <h2 className={"recipe"} style={{position: "relative", bottom: -100}}><u>Similar Recipes</u></h2>

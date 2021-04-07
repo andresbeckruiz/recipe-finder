@@ -21,7 +21,6 @@ h4 {
   font-family: Avenir;
   font-size: 20px;
   color: #888888;
-  position: ;
 }
 
 h5 {
@@ -93,6 +92,10 @@ h5 {
   font-weight: bold;
   font-size: 3em;
   text-align: center;
+}
+
+.MuiRating-label {
+  top:3px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
