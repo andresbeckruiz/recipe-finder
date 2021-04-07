@@ -1,7 +1,9 @@
 package edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe;
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.User;
+
 import java.util.HashMap;
 import java.util.ArrayList;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320.Database.*;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.Database.*;
 
 public final class RecipeGraph {
 
@@ -13,14 +15,15 @@ public final class RecipeGraph {
 
   public ArrayList<GraphVertex> getGraphVertices() { return graphVertices; }
   public HashMap<String, Ingredient> getIngredientObjects() { return ingredientObjects; }
+  public HashMap<String, Recipe> getRecipeObjects() { return recipeObjects; }
 
-  public void initializeGraph() {
+  public void initializeGraph(User user) {
     graphVertices = new ArrayList<>();
     ingredientObjects = new HashMap<>();
     recipeObjects = new HashMap<>();
 
     //For every ingredient in database, create ingredient object
-    ArrayList<String> ingredients = getIngredientNames();
+    ArrayList<String> ingredients = user.getIngredients();
 
     for (String ing : ingredients) {
       Ingredient newIngredient = new Ingredient(ing);
@@ -35,7 +38,7 @@ public final class RecipeGraph {
         if (!(recipeObjects.containsKey(recipes[i]))) {
           Recipe newRecipe = getRecipe(recipes[i]);
           newRecipe.addIngredient(newIngredient);
-          recipeObjects.put(newRecipe.getName(), newRecipe);
+          recipeObjects.put(newRecipe.getTitle(), newRecipe);
         } else {
           recipeObjects.get(recipes[i]).addIngredient(newIngredient);
         }

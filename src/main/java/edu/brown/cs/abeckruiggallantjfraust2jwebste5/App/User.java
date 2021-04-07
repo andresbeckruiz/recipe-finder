@@ -11,17 +11,22 @@ public class User {
     private ArrayList<String> ingredients;
     private ArrayList<GraphVertex> localVertices;
     private String name;
+    private RecipeGraph recipeGraph;
 
     public User(String username) {
       this.name = username;
+      this.recipeGraph = new RecipeGraph();
+      this.loadUserGraph(recipeGraph);
     }
 
     public void loadUserGraph(RecipeGraph graph) {
-      for (String ing: ingredients) {
-        Ingredient ingr = graph.getIngredientObjects().get(ing);
-
-
-      }
+      graph.initializeGraph(this);
+//      for (String ing: ingredients) {
+//        Ingredient ingredient = graph.getIngredientObjects().get(ing);
+//        ingredients.add(ingredient);
+//      }
     }
+
+    public ArrayList<String> getIngredients() {return ingredients;}
 }
 

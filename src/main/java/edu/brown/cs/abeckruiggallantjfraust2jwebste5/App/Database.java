@@ -1,4 +1,4 @@
-package edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320;
+package edu.brown.cs.abeckruiggallantjfraust2jwebste5.App;
 
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
 import org.checkerframework.checker.units.qual.A;
@@ -20,7 +20,7 @@ public final class Database {
    * @throws ClassNotFoundException thrown if org.sqlite.JDBC is not found
    * @throws SQLException when querying and encounters an unexptected error
    */
-  public static void initializeDatabase(String filename) throws ClassNotFoundException, SQLException {
+  public static void initialize(String filename) throws ClassNotFoundException, SQLException {
     Class.forName("org.sqlite.JDBC");
     String urlToDB = "jdbc:sqlite:" + filename;
     conn = DriverManager.getConnection(urlToDB);
@@ -29,6 +29,7 @@ public final class Database {
     Statement stat = conn.createStatement();
     stat.executeUpdate("PRAGMA foreign_keys=ON;");
   }
+
 
   public static void createIngredientDatabase() throws SQLException {
     try {
@@ -116,7 +117,6 @@ public final class Database {
       return null;
     }
   }
-
   public static void addToRecipeDatabase(ArrayList<String> params)
           throws SQLException {
     try {
@@ -134,24 +134,4 @@ public final class Database {
       System.out.println(e.getMessage());
     }
   }
-
-  public static ArrayList<String> getIngredientNames() {
-      try {
-        PreparedStatement prep = conn.prepareStatement("SELECT * FROM ingredientMap");
-        ResultSet rs = prep.executeQuery();
-        ArrayList<String> sb = new ArrayList<>();
-        while (rs.next()) {
-          String toAdd = rs.getString(1);
-          sb.add(toAdd);
-        }
-        rs.close();
-        prep.close();
-        return sb;
-      } catch (Exception e) {
-        System.out.println(e.getMessage());
-        return null;
-      }
-    }
 }
-
-

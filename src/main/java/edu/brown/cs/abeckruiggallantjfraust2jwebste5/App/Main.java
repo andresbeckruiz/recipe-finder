@@ -4,25 +4,21 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.List;
-import java.util.Map;
 import java.util.ArrayList;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import spark.ExceptionHandler;
-import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
-import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
-import spark.Route;
-import org.json.JSONObject;
 import com.google.gson.Gson;
-
-import com.google.common.collect.ImmutableMap;
 import freemarker.template.Configuration;
+
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.JsonToSql.parseJson;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.RecipeFinder.findRecipeWithIngredients;
+
 /**
  * The Main class of our project. This is where execution begins.
  */
@@ -62,6 +58,21 @@ public final class Main {
       runSparkServer((int) options.valueOf("port"));
     }
     System.out.println("Running");
+    //I ADDED EVERYTHING HERE
+    try {
+      //parseJson();
+      ArrayList<String> ingredients = new ArrayList<>() {
+        {
+          add("tomato");
+          add("olive oil");
+          add("basil");
+        }
+      };
+
+      findRecipeWithIngredients(ingredients);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   private static FreeMarkerEngine createEngine() {
