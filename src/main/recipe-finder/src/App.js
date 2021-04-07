@@ -8,7 +8,7 @@ import Dashboard from "./Dashboard"
 import Login from "./Login"
 import PrivateRoute from "./PrivateRoute"
 import UpdatePassword from "./UpdatePassword";
-
+import Recipe from "./Recipe";
 import ForgotPassword from "./ForgotPassword"
 
 function App() {
@@ -23,6 +23,8 @@ function App() {
                           <Route path={"/signup"} component={Signup}/>
                           <Route path={"/login"} component={Login}/>
                           <Route path={"/forgot-password"} component={ForgotPassword}/>
+                          <Route path="/Fridge" component={Fridge} />
+                          <Route path="/Recipe" component={Recipe} />
                       </Switch>
                   </AuthProvider>
               </Router>
