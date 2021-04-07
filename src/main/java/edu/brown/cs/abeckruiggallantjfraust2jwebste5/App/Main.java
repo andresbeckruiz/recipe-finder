@@ -1,4 +1,4 @@
-package edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320;
+package edu.brown.cs.abeckruiggallantjfraust2jwebste5.App;
 
 import java.io.File;
 import java.io.IOException;
