@@ -3,9 +3,9 @@ import {Form, Button, Card, Alert} from 'react-bootstrap'
 import {useAuth} from "./contexts/AuthContext";
 import {Link, useHistory} from "react-router-dom";
 
-export default function UpdateProfile() {
+export default function UpdatePassword() {
     //const nameRef = useRef()
-    const emailRef = useRef()
+    //const emailRef = useRef()
     const passwordRef = useRef()
     const passwordConfirmRef = useRef()
     const {currentUser, updatePassword, updateEmail} = useAuth()
@@ -23,9 +23,9 @@ export default function UpdateProfile() {
         setLoading(true)
         setError("")
 
-        if (emailRef.current.value !== currentUser.email) {
-            promises.push(updateEmail(emailRef.current.value))
-        }
+        // if (emailRef.current.value !== currentUser.email) {
+        //     promises.push(updateEmail(emailRef.current.value))
+        // }
         if (passwordRef.current.value) {
             promises.push(updatePassword(passwordRef.current.value))
         }
@@ -54,20 +54,18 @@ export default function UpdateProfile() {
                         {/*    <Form.Label>Name</Form.Label>*/}
                         {/*    <Form.Control type={"name"} ref={{nameRef}} required/>*/}
                         {/*</Form.Group>*/}
-                        <Form.Group id="email">
-                            <Form.Label>Email</Form.Label>
-                            <Form.Control type={"email"} ref={emailRef} required
-                                          defaultValue={currentUser.email}/>
-                        </Form.Group>
+                        {/*<Form.Group id="email">*/}
+                        {/*    <Form.Label>Email</Form.Label>*/}
+                        {/*    <Form.Control type={"email"} ref={emailRef} required*/}
+                        {/*                  defaultValue={currentUser.email}/>*/}
+                        {/*</Form.Group>*/}
                         <Form.Group id="password">
                             <Form.Label>Password</Form.Label>
-                            <Form.Control type={"password"} ref={passwordRef}
-                            placeholder={"Leave blank to keep same password"}/>
+                            <Form.Control type={"password"} ref={passwordRef} required/>
                         </Form.Group>
                         <Form.Group id="password-confirm">
                             <Form.Label>Password Confirmation</Form.Label>
-                            <Form.Control type={"password"} ref={passwordConfirmRef}
-                                          placeholder={"Leave blank to keep same password"}/>
+                            <Form.Control type={"password"} ref={passwordConfirmRef} required/>
                         </Form.Group>
                         <Button disabled={loading} className={"w-100"} type={"submit"}>
                             Update
