@@ -1,5 +1,6 @@
-package edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320;
+package edu.brown.cs.abeckruiggallantjfraust2jwebste5.App;
 
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
 import org.checkerframework.checker.units.qual.A;
 
 import java.sql.Connection;

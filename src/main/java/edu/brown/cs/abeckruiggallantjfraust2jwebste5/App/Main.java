@@ -17,8 +17,8 @@ import spark.template.freemarker.FreeMarkerEngine;
 import com.google.gson.Gson;
 import freemarker.template.Configuration;
 
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320.JsonToSql.parseJson;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320.RecipeFinder.findRecipesWithIngredients;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.JsonToSql.parseJson;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.RecipeFinder.findRecipeWithIngredients;
 
 /**
  * The Main class of our project. This is where execution begins.

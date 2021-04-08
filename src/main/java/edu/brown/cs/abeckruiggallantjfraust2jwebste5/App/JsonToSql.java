@@ -1,4 +1,4 @@
-package edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320;
+package edu.brown.cs.abeckruiggallantjfraust2jwebste5.App;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import org.json.JSONException;
@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320.Database.createRecipeDatabase;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320.Database.initialize;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320.Database.createIngredientDatabase;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320.Database.addToRecipeDatabase;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320.Database.addIngredient;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.Database.createRecipeDatabase;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.Database.initialize;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.Database.createIngredientDatabase;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.Database.addToRecipeDatabase;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.Database.addIngredient;
 
 public final class JsonToSql {
 

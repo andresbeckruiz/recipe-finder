@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 public class Recipe {
+
+  private GraphVertex vertex;
   private String title;
   private String description;
   private HashSet<String> ingredients;
@@ -16,6 +18,7 @@ public class Recipe {
   private String photourl;
   private String serves;
   private String url;
+
 
   public Recipe(ArrayList<String> params) {
     this.title = params.get(0);
@@ -30,14 +33,15 @@ public class Recipe {
     this.photourl = params.get(8);
     this.serves = params.get(9);
     this.url = params.get(10);
+    this.vertex = new GraphVertex();
   }
 
   public String getIngredientsDetailed() {
     return ingredientsDetailed;
   }
 
-  public void setIngredientsDetailed(String ingredientsDetailed) {
-    this.ingredientsDetailed = ingredientsDetailed;
+  public GraphVertex getVertex() {
+    return vertex;
   }
 
   public String getTitle() {
@@ -123,5 +127,9 @@ public class Recipe {
   @Override
   public String toString() {
     return "  -" + title + " : " + url;
+  }
+
+  public void addIngredient(Ingredient ingredient) {
+    vertex.getEdges().add(new GraphEdge(ingredient, this.vertex));
   }
 }

@@ -1,9 +1,9 @@
-package edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320;
+package edu.brown.cs.abeckruiggallantjfraust2jwebste5.App;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
 
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320.Database.*;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.Database.*;
 
 public final class RecipeFinder {
 
