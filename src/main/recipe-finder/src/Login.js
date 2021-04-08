@@ -21,7 +21,7 @@ export default function Login() {
             //don't want user to click login button multiple times
             setLoading(true)
             await login(emailRef.current.value, passwordRef.current.value)
-            history.push("/")
+            history.push("/fridge")
         } catch (error) {
             setError("Failed to log in")
             console.log(error)

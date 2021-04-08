@@ -33,7 +33,7 @@ export default function UpdatePassword() {
 
         Promise.all(promises)
             .then(() => {
-                history.push("/")
+                history.push("/fridge")
             })
             .catch(() => {
                 setError("Failed to update account")
@@ -74,7 +74,7 @@ export default function UpdatePassword() {
                 </Card.Body>
             </Card>
             <div className={"w-100 text-center mt-2"}>
-                <Link to={"/"}>Cancel</Link>
+                <Link to={"/fridge"}>Cancel</Link>
             </div>
         </>
     )

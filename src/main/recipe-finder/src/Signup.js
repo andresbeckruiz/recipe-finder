@@ -26,7 +26,7 @@ export default function Signup() {
             //don't want user to click sign up button multiple times
             setLoading(true)
             await signup(emailRef.current.value, passwordRef.current.value)
-            history.push("/")
+            history.push("/fridge")
         } catch (error) {
             setError("Failed to create an account")
             console.log(error)

@@ -21,12 +21,14 @@ function App() {
                       <Switch>
                           <PrivateRoute exact path={"/"} component={Dashboard}/>
                           <PrivateRoute path={"/update-password"} component={UpdatePassword}/>
+                          <PrivateRoute path={"/fridge"} component={Fridge}/>
+                          <PrivateRoute path={"/recipe"} component={Recipe}/>
+                          <PrivateRoute path={"/RecipeSelection"} component={RecipeSelection}/>
+                          {/*is there a way to prevent a user typing in these routes once
+                          logged in? or does this really matter*/}
                           <Route path={"/signup"} component={Signup}/>
                           <Route path={"/login"} component={Login}/>
                           <Route path={"/forgot-password"} component={ForgotPassword}/>
-                          <Route path={"/Fridge"} component={Fridge}/>
-                          <Route path={"/Recipe"} component={Recipe}/>
-                          <Route path={"/RecipeSelection"} component={RecipeSelection}/>
                       </Switch>
                   </AuthProvider>
               </Router>

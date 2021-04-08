@@ -4,7 +4,9 @@ import TextBox from "./TextBox";
 import SubmitButton from "./SubmitButton";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import {Link} from 'react-router-dom'
+import {Link, useHistory} from 'react-router-dom'
+import {Alert} from 'react-bootstrap'
+import {useAuth} from "./contexts/AuthContext"
 
 let list = [];
 
@@ -20,6 +22,11 @@ function Fridge() {
 
     // useState variable for name
     const [name, setName] = useState("User");
+
+    //variables for user auth and logout
+    const [error, setError] = useState("")
+    const {currentUser, logout} = useAuth()
+    const history = useHistory()
 
     // useState variable for text box input
     const [input, setInput] = useState("");
@@ -67,17 +74,32 @@ function Fridge() {
 
     }
 
+    async function handleLogout() {
+        setError("")
+
+        try {
+            await logout()
+            history.push("/login")
+        } catch {
+            setError("Failed to log out")
+        }
+    }
+
     return (
         <div style={rootStyle} className="Fridge">
             {/*dynamic header*/}
-            <h1 style={{marginTop: 25}}>{name}'s Fridge</h1>
+            <h1 style={{marginTop: 25}}>{currentUser.email}'s Fridge</h1>
+            {error && <Alert variant={"danger"}> {error} </Alert>}
             {/*two buttons on side of page*/}
             {/*<Route exact path="/" component={Page1} />*/}
             {/*<Link to="/Recipe"><button>coom</button></Link>*/}
-            <Link to={"/Recipe"}>
+            <Link to={"/recipe"}>
             <Button variant="success" size= "lg" style={{position: "absolute", left: 50, top: 25}}>Search for Recipes</Button>
             </Link>
-            <Button variant="danger" size= "lg" style={{position: "absolute", right: 50, top: 25}}>Logout</Button>
+            <Button onClick={handleLogout} variant="danger" size= "lg" style={{position: "absolute", right: 50, top: 25}}>Logout</Button>
+            <Link to={"/update-password"}>
+            <Button variant="primary" size= "sm" style={{position: "absolute", right: 50, top: 80}}>Update Password</Button>
+            </Link>
             {/*two panes for lists and input*/}
             <List x={200} width={250} label={"Current Ingredients"} ingredients={ingredients} setter={setIngredients}
              setModalIsOpen={setModalIsOpen} deleteCurr={deleteIngredient} setDeleteCurr={setDeleteIngredient}/>
