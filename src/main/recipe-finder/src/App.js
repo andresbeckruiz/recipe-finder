@@ -10,6 +10,7 @@ import PrivateRoute from "./PrivateRoute"
 import UpdatePassword from "./UpdatePassword";
 import Recipe from "./Recipe";
 import ForgotPassword from "./ForgotPassword"
+import RecipeSelection from "./RecipeSelection";
 
 function App() {
   return (
@@ -23,8 +24,9 @@ function App() {
                           <Route path={"/signup"} component={Signup}/>
                           <Route path={"/login"} component={Login}/>
                           <Route path={"/forgot-password"} component={ForgotPassword}/>
-                          <Route path="/Fridge" component={Fridge} />
-                          <Route path="/Recipe" component={Recipe} />
+                          <Route path={"/Fridge"} component={Fridge}/>
+                          <Route path={"/Recipe"} component={Recipe}/>
+                          <Route path={"/RecipeSelection"} component={RecipeSelection}/>
                       </Switch>
                   </AuthProvider>
               </Router>
