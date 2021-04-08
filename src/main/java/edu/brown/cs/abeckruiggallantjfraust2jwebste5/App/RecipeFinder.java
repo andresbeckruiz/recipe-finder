@@ -1,12 +1,9 @@
 package edu.brown.cs.abeckruiggallantjfraust2jwebste5.App;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.ArrayList;
+import java.util.*;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getRecipesWithIngredient;
+import static java.lang.Math.min;
 
 
 public final class RecipeFinder {
@@ -14,13 +11,12 @@ public final class RecipeFinder {
   private RecipeFinder() {
   }
 
-  public static Map<Integer, ArrayList<String>> findRecipesWithIngredients(
-          HashSet<String> ingredientList) {
-    HashMap<String, Integer> recipeMap = new HashMap<>();
+  public static ArrayList<String> findRecipesWithIngredients(
+          HashSet<String> ingredientList, int numRecipesToReturn) {
+    LinkedHashMap<String, Integer> recipeMap = new LinkedHashMap<>();
     // for every ingredient find recipes that correspond to that ingredient
     // count how many ingredients in ingredientList overlap with recipe ingredients
     for (String ingredient : ingredientList) {
-      System.out.println(ingredient);
       String recipesString = getRecipesWithIngredient(ingredient);
       String[] rec = recipesString.trim().split("\\s*,\\s*");
       for (String recipe : rec) {
@@ -35,11 +31,10 @@ public final class RecipeFinder {
         }
       }
     }
-    TreeMap<String, Integer> sortedMap = new TreeMap<>(recipeMap);
 
     //create hashmap where keys are count and value is arraylist of recipes
     Map<Integer, ArrayList<String>> invertedHashMap = new HashMap<>();
-    for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
+    for (Map.Entry<String, Integer> entry : recipeMap.entrySet()) {
       ArrayList<String> recipe = invertedHashMap.get(entry.getValue());
       if (recipe == null) {
         ArrayList<String> recipeList = new ArrayList<>();
@@ -50,6 +45,17 @@ public final class RecipeFinder {
         invertedHashMap.put(entry.getValue(), recipe);
       }
     }
-    return invertedHashMap;
+
+    ArrayList<String> topSortedRecipes = new ArrayList<>();
+    int numToAdd = numRecipesToReturn;
+    for (int count = invertedHashMap.keySet().size(); count > 0; count--) {
+      ArrayList<String> rep = invertedHashMap.get(count);
+      topSortedRecipes.addAll(rep.subList(0, min(numToAdd, rep.size())));
+      numToAdd = numToAdd - rep.size();
+      if (numToAdd < 0) {
+        return topSortedRecipes;
+      }
+    }
+    return topSortedRecipes;
   }
 }

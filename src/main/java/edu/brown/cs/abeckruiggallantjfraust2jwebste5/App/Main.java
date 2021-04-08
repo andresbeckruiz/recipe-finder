@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.TreeMap;
 
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import spark.ExceptionHandler;
@@ -15,6 +18,8 @@ import spark.Spark;
 import spark.template.freemarker.FreeMarkerEngine;
 import com.google.gson.Gson;
 import freemarker.template.Configuration;
+
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.JsonToSql.parseJson;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -55,6 +60,7 @@ public final class Main {
       runSparkServer((int) options.valueOf("port"));
     }
     System.out.println("Running");
+    // used to rewrite sql database
 //    try {
 //      parseJson();
 //    } catch (Exception e) {
@@ -64,13 +70,19 @@ public final class Main {
     //this should eventually be user ingredients
     HashSet<String> ingredients = new HashSet<>() {
       {
-        add("tomato");
-        add("thyme");
-        add("mustard");
+        add("double cream");
+        add("lemon curd");
+        add("lemon");
       }
     };
+
     User user = new User("me", ingredients);
-    user.cook();
+    ArrayList<String> possibleRecipes = user.cook();
+    String recipeSelected = possibleRecipes.get(0);
+    System.out.println("RECIPES SIMILAR TO " + recipeSelected + " : ");
+    TreeMap<Recipe, Double> map = user.findSimilarRecipes(recipeSelected);
+    System.out.println(map);
+    System.out.println(map.firstEntry());
   }
 
   private static FreeMarkerEngine createEngine() {

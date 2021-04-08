@@ -2,19 +2,20 @@ package edu.brown.cs.abeckruiggallantjfraust2jwebste5.App;
 
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Graph.Graph;
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Ingredient;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
+
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.TreeMap;
 
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.CreateUserMap.createRecipeMap;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.RecipeFinder.findRecipesWithIngredients;
 
 public class User {
   private HashSet<String> ingredients;
   private String name;
-  private Graph recipeGraph;
+  private Graph<Recipe, Ingredient> recipeGraph;
 
   public User(String username, HashSet<String> ingredients) {
     this.name = username;
@@ -34,26 +35,17 @@ public class User {
     this.ingredients = ingredients;
   }
 
-  public void cook() {
-    try {
-      // TODO: change for different number of top recipes
-      final int topXRecipes = 10;
-      Map<Integer, ArrayList<String>> map = findRecipesWithIngredients(ingredients);
-      int numRecipesQueried = 0;
-      for (Integer count: map.keySet()) {
-        for (int i = 0; i < map.get(count).size(); i++) {
-          Recipe startSearch = Database.getRecipeObject(map.get(count).get(i));
-          System.out.println(recipeGraph.search(startSearch));
-          numRecipesQueried++;
-          if (numRecipesQueried == topXRecipes) {
-            return; //TODO: maybe don't return?
-          }
-        }
-
-      }
-    } catch (Exception e) { //TODO: something here!
-      System.out.println(e.getMessage());
+  public ArrayList<String> cook() {
+    // TODO: change for different number of top recipes
+    //map from number overlapping ingredients to recipe list
+    final int numRecipesToReturn = 10;
+    return findRecipesWithIngredients(ingredients, numRecipesToReturn);
+  }
+  public TreeMap<Recipe, Double> findSimilarRecipes(String recipe) {
+    if (recipeGraph.getCentralNodeMap().containsKey(recipe)) {
+      return recipeGraph.search(recipeGraph.getCentralNodeMap().get(recipe));
     }
+    return recipeGraph.search(Database.getRecipeObject(recipe));
   }
 
 }

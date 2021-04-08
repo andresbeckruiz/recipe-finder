@@ -2,54 +2,54 @@ package edu.brown.cs.abeckruiggallantjfraust2jwebste5.Graph;
 
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.VertexComparator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
-public class Graph {
+public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex> {
 
-  private HashMap<String, Vertex> nonCentralNodeMap = new HashMap<>();
-  private HashMap<String, Vertex> centralNodeMap = new HashMap<>();
+  private HashMap<String, nonCentralVertex> nonCentralNodeMap = new HashMap<>();
+  private HashMap<String, centralVertex> centralNodeMap = new HashMap<>();
 
   public Graph() {
   }
 
-  public HashMap<String, Vertex> getNonCentralNodes() {
+  public HashMap<String, nonCentralVertex> getNonCentralNodes() {
     return nonCentralNodeMap;
   }
-  public HashMap<String, Vertex> getCentralNodeMap() {
+  public HashMap<String, centralVertex> getCentralNodeMap() {
     return centralNodeMap;
   }
 
-  private void addHashSetToHashMap(HashSet<Vertex> set, boolean central) {
-    HashMap<String, Vertex> map = nonCentralNodeMap;
-    if (central) {
-      map = centralNodeMap;
+  private void addNonCentralHashSetToHashMap(HashSet<nonCentralVertex> set) {
+    HashMap<String, nonCentralVertex> map = nonCentralNodeMap;
+    for (nonCentralVertex vertex : set) {
+      map.put(vertex.getName(), vertex);
     }
-    for (Vertex v : set) {
-      map.put(v.getName(), v);
+  }
+
+  private void addCentralHashSetToHashMap(HashSet<centralVertex> set) {
+    HashMap<String, centralVertex> map = centralNodeMap;
+    for (centralVertex vertex : set) {
+      map.put(vertex.getName(), vertex);
     }
   }
   //central = recipe non-central = ingredient
-  public List<Vertex> search(Vertex searchStart) {
+  public TreeMap<centralVertex, Double> search(centralVertex searchStart) {
     centralNodeMap.put(searchStart.getName(), searchStart);
-    HashSet<Vertex> mostSimilarContenders = new HashSet<>();
-    HashSet<Vertex> adjacentVertices = searchStart.getAdjacentVertices(nonCentralNodeMap);
-    addHashSetToHashMap(adjacentVertices, false);
 
-    System.out.println(adjacentVertices.size());
+    TreeMap<centralVertex, Double> mostSimilarContenders = new TreeMap<>(new VertexComparator());
+    HashSet<nonCentralVertex> adjacentVertices = searchStart.getAdjacentVertices(nonCentralNodeMap);
+    addNonCentralHashSetToHashMap(adjacentVertices);
+
     // get adjacent to adjacent vertices, and for each one compute similarity
-    for (Vertex adj : adjacentVertices) {
-      System.out.println("name: " + adj.getName());
-      if (adj == null || adj.getName().equals("null")) {
+    for (nonCentralVertex nonCentralAdj : adjacentVertices) {
+      System.out.println("name: " + nonCentralAdj.getName());
+      if (nonCentralAdj == null || nonCentralAdj.getName().equals("null")) {
         System.out.println("exiting");
         continue;
       }
-      HashSet<Vertex> adjToAdjVertices = adj.getAdjacentVertices(centralNodeMap);
-      addHashSetToHashMap(adjToAdjVertices, true);
-      for (Vertex doubleAdj : adjToAdjVertices) {
-
+      HashSet<centralVertex> adjToAdjVertices = nonCentralAdj.getAdjacentVertices(centralNodeMap);
+      addCentralHashSetToHashMap(adjToAdjVertices);
+      for (centralVertex doubleAdj : adjToAdjVertices) {
         if (doubleAdj == null || doubleAdj.equals("null")
                 || searchStart.getName().contains(doubleAdj.getName())) {
           continue;
@@ -57,22 +57,20 @@ public class Graph {
         double similarity = computeSimilarity(doubleAdj, searchStart);
         if (doubleAdj.getSimilarityScore() < similarity) {
           doubleAdj.setSimilarityScore(similarity);
-          mostSimilarContenders.add(doubleAdj);
+          mostSimilarContenders.put(doubleAdj, similarity);
         }
       }
     }
 
-    List<Vertex> sortedContenders = new ArrayList<Vertex>(mostSimilarContenders);
-    sortedContenders.sort(new VertexComparator());
-    return sortedContenders;
+    return mostSimilarContenders;
   }
 
-  public double computeSimilarity(Vertex adjToAdj, Vertex searchStart) {
-    HashSet<Vertex> setOne = adjToAdj.getAdjacentVertices(nonCentralNodeMap);
-    addHashSetToHashMap(setOne, false);
+  public double computeSimilarity(centralVertex adjToAdj, centralVertex searchStart) {
+    HashSet<nonCentralVertex> setOne = adjToAdj.getAdjacentVertices(nonCentralNodeMap);
+    addNonCentralHashSetToHashMap(setOne);
     int initialSetOneSize = setOne.size();
-    HashSet<Vertex> setTwo = searchStart.getAdjacentVertices(nonCentralNodeMap);
-    addHashSetToHashMap(setTwo, false);
+    HashSet<nonCentralVertex> setTwo = searchStart.getAdjacentVertices(nonCentralNodeMap);
+    addNonCentralHashSetToHashMap(setTwo);
     setOne.retainAll(setTwo);
     int intersectionSize = setOne.size();
     int totalNumSharedAdjNodes = initialSetOneSize + setTwo.size();

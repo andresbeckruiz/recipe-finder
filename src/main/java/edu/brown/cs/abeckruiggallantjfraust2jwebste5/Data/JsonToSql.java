@@ -1,6 +1,7 @@
 package edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.NumIngredientsComparator;
 import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
@@ -9,10 +10,13 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
 
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.createIngredientDatabase;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.createRecipeDatabase;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.initialize;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.createIngredientDatabase;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.addToRecipeDatabase;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.addIngredient;
 
@@ -20,6 +24,7 @@ public final class JsonToSql {
 
   private JsonToSql() { }
   public static void parseJson() throws FileNotFoundException, JSONException {
+    HashMap<String, Integer> numIngredientsMap = new HashMap<>();
     ListMultimap<String, Object> ingredientSet = ArrayListMultimap.create();
     try {
       initialize("data/newdb.sqlite3");
@@ -67,13 +72,21 @@ public final class JsonToSql {
         parameters.add(2, ingredients);
         //add to recipe database
         addToRecipeDatabase(parameters);
+        numIngredientsMap.put(title, ingredientList.size());
       }
       //add to ingredient database
+      Comparator<String> newComp = new NumIngredientsComparator(numIngredientsMap);
       for (String ingredient: ingredientSet.keySet()) {
-        String value = ingredientSet.get(ingredient).toString();
-        value = value.strip();
-        value = value.substring(1, value.length() - 1);
-        addIngredient(ingredient, value);
+        String recipeList = ingredientSet.get(ingredient).toString();
+        recipeList = recipeList.strip();
+        recipeList = recipeList.substring(1, recipeList.length() - 1);
+        // sort recipe list by number of ingredients (lowest number of ingredients first)
+        String[] recArr = recipeList.trim().split("\\s*,\\s*");
+        ArrayList<String> recArrList = new ArrayList<>(Arrays.asList(recArr));
+        recArrList.sort(newComp);
+        recipeList = recArrList.toString().replace("[", "")
+                .replace("]", "");
+        addIngredient(ingredient, recipeList);
       }
     } catch (Exception e) {
       e.printStackTrace();
