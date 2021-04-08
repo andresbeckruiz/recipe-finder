@@ -9,6 +9,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320.Database.createRecipeDatabase;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320.Database.initialize;
@@ -31,7 +33,10 @@ public final class JsonToSql {
       while ((line = bufferedReader.readLine()) != null) {
         JSONObject jsonObject = (JSONObject) parser.parse(line);
         ArrayList<String> parameters = new ArrayList<>();
+
+        //parsing json fields to send to sql database
         String title = jsonObject.get("title").toString().trim().replace(",", "");
+        title = title.toLowerCase();
         parameters.add(title);
         parameters.add(jsonObject.get("description").toString());
         parameters.add(jsonObject.get("ingredients").toString());
@@ -43,15 +48,29 @@ public final class JsonToSql {
                 : jsonObject.get("photo_url").toString());
         parameters.add(jsonObject.get("serves").toString());
         parameters.add(jsonObject.get("url").toString());
-        addToRecipeDatabase(parameters);
         JSONArray ingredientList = (JSONArray) jsonObject.get("instructions_detailed");
+
+        String ingredients = "";
+        //cycle through ingredient list
         for (int i = 0; i < ingredientList.size(); i++) {
           JSONObject ingredientObj = (JSONObject) ingredientList.get(i);
           String ingredient = ingredientObj.get("ingredient") == null ? null
                   : ingredientObj.get("ingredient").toString().toLowerCase();
-          ingredientSet.put(ingredient, title);
+          if (!ingredientSet.containsEntry(ingredient, title)) {
+            ingredientSet.put(ingredient, title);
+            ingredients += ingredient + ",";
+          }
         }
+        if (ingredients.length() > 0) {
+          ingredients = ingredients.substring(0, ingredients.length()-1);
+        } else {
+          ingredients = "";
+        }
+        parameters.add(2, ingredients);
+        //add to recipe database
+        addToRecipeDatabase(parameters);
       }
+      //add to ingredient database
       for (String ingredient: ingredientSet.keySet()) {
         String value = ingredientSet.get(ingredient).toString();
         value = value.strip();

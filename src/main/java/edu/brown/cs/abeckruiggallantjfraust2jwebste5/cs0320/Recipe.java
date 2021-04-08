@@ -1,11 +1,14 @@
 package edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 
 public class Recipe {
   private String title;
   private String description;
-  private String ingredients;
+  private HashSet<String> ingredients;
+  private String ingredientsDetailed;
   private String chef;
   private String instructions;
   private String cookingTime;
@@ -17,15 +20,26 @@ public class Recipe {
   public Recipe(ArrayList<String> params) {
     this.title = params.get(0);
     this.description = params.get(1);
-    this.ingredients = params.get(2);
-    this.chef = params.get(3);
-    this.instructions = params.get(4);
-    this.cookingTime = params.get(5);
-    this.prepTime = params.get(6);
-    this.photourl = params.get(7);
-    this.serves = params.get(8);
-    this.url = params.get(9);
+    String ingredients[] = params.get(2).trim().split("\\s*,\\s*");
+    this.ingredients =  new HashSet(Arrays.asList(ingredients));
+    this.ingredientsDetailed = params.get(3);
+    this.chef = params.get(4);
+    this.instructions = params.get(5);
+    this.cookingTime = params.get(6);
+    this.prepTime = params.get(7);
+    this.photourl = params.get(8);
+    this.serves = params.get(9);
+    this.url = params.get(10);
   }
+
+  public String getIngredientsDetailed() {
+    return ingredientsDetailed;
+  }
+
+  public void setIngredientsDetailed(String ingredientsDetailed) {
+    this.ingredientsDetailed = ingredientsDetailed;
+  }
+
   public String getTitle() {
     return title;
   }
@@ -42,11 +56,11 @@ public class Recipe {
     this.description = description;
   }
 
-  public String getIngredients() {
+  public HashSet<String> getIngredients() {
     return ingredients;
   }
 
-  public void setIngredients(String ingredients) {
+  public void setIngredients(HashSet<String> ingredients) {
     this.ingredients = ingredients;
   }
 

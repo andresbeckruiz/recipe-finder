@@ -1,32 +1,51 @@
 package edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320.Database.*;
 
 public final class RecipeFinder {
 
-  public static void findRecipeWithIngredients(ArrayList<String> ingredientList) throws SQLException, ClassNotFoundException {
+  public static void findRecipesWithIngredients(HashSet<String> ingredientList) throws SQLException, ClassNotFoundException {
     initialize("data/newdb.sqlite3");
-    HashSet<String> recipeList = new HashSet();
+    Map<Double, Recipe> rankedSimilarRecipes = new HashMap<Double, Recipe>();
+    HashMap<String, Integer> recipeMap = new HashMap<>();
+    // for every ingredient find recipes that correspond to that ingredient
+    // count how many ingredients in ingredientList overlap with recipe ingredients
     for(String ingredient : ingredientList) {
-      String recipes = getRecipesWithIngredient(ingredient);
-      String rec[] = recipes.trim().split("\\s*,\\s*");
-      HashSet<String> newRecipes = new HashSet(Arrays.asList(rec));
-      if (!recipeList.isEmpty()) {
-        recipeList.retainAll(newRecipes);
-      } else {
-        recipeList = newRecipes;
+      System.out.println(ingredient);
+      String recipesString = getRecipesWithIngredient(ingredient);
+      String rec[] = recipesString.trim().split("\\s*,\\s*");
+      for (String recipe : rec) {
+        // get the value of the specified key
+        Integer count = recipeMap.get(recipe);
+        // if the map contains no mapping for the key,
+        // map the key with a value of 1
+        if (count == null) {
+          recipeMap.put(recipe, 1);
+        }
+        // else increment the found value by 1
+        else {
+          recipeMap.put(recipe, count + 1);
+        }
       }
     }
-    System.out.println("recipes with: " + ingredientList.toString());
-    for (String s : recipeList) {
-      System.out.println(getRecipe(s));
-      //System.out.println(s);
+    TreeMap<String, Integer> sortedMap = new TreeMap<>(recipeMap);
+
+    //create hashmap where keys are count and value is arraylist of recipes
+    Map<Integer, ArrayList<String>> myNewHashMap = new HashMap<>();
+    for(Map.Entry<String, Integer> entry : sortedMap.entrySet()){
+      ArrayList<String> recipe = myNewHashMap.get(entry.getValue());
+      if (recipe == null) {
+        ArrayList<String> recipeList = new ArrayList<>();
+        recipeList.add(entry.getKey());
+        myNewHashMap.put(entry.getValue(), recipeList);
+      } else {
+        recipe.add(entry.getKey());
+        myNewHashMap.put(entry.getValue(), recipe);
+      }
     }
   }
+
 }

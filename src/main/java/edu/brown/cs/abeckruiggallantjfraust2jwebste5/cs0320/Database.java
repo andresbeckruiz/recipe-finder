@@ -65,6 +65,7 @@ public final class Database {
                       + "title TEXT, "
                       + "description TEXT, "
                       + "ingredients TEXT, "
+                      + "ingredients_detailed TEXT, "
                       + "chef TEXT, "
                       + "instructions TEXT, "
                       + "cooktime TEXT, "
@@ -103,7 +104,7 @@ public final class Database {
       ResultSet rs = prep.executeQuery();
       ArrayList<String> params = new ArrayList<>() {
         {
-          for(int i = 1; i < 11; i++) {
+          for(int i = 1; i < 12; i++) {
             add(rs.getString(i));
           }
         }
@@ -122,7 +123,7 @@ public final class Database {
       if (conn != null) {
         PreparedStatement prep = conn.prepareStatement(
                 "INSERT INTO recipes "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         for (int i = 0; i < params.size(); i++) {
           prep.setString(i + 1, params.get(i));
         }

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -17,7 +18,7 @@ import com.google.gson.Gson;
 import freemarker.template.Configuration;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320.JsonToSql.parseJson;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320.RecipeFinder.findRecipeWithIngredients;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320.RecipeFinder.findRecipesWithIngredients;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -61,7 +62,7 @@ public final class Main {
     //I ADDED EVERYTHING HERE
     try {
       //parseJson();
-      ArrayList<String> ingredients = new ArrayList<>() {
+      HashSet<String> ingredients = new HashSet<>() {
         {
           add("tomato");
           add("olive oil");
@@ -69,7 +70,7 @@ public final class Main {
         }
       };
 
-      findRecipeWithIngredients(ingredients);
+      findRecipesWithIngredients(ingredients);
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
