@@ -1,5 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 
+let current;
+
 function List(props) {
 
     // useState hooks for list and flag
@@ -24,10 +26,30 @@ function List(props) {
         overflow: "auto"
     }
 
+    function deleteCurrent() {
+        let list = props.ingredients;
+        for(let i = 0; i < list.length; i++){
+
+            if (list[i] === current) {
+                list.splice(i, 1);
+            }
+        }
+        props.setter(list);
+        setFlag(flag+1);
+        props.setDeleteCurr(false);
+    }
+
     // useEffect hook for ingredient list updates
     useEffect(() => {
         setList(props.ingredients);
     }, [props.ingredients, flag])
+
+    useEffect(() => {
+        console.log("caught");
+        if(props.deleteCurr) {
+            deleteCurrent();
+        }
+    }, [props.deleteCurr])
 
     return (
         <div style={style} className="List">
@@ -36,15 +58,8 @@ function List(props) {
                 <div style={{marginTop: 25}}>
                 {list.map((r) =>
                     <p style={{textAlign: "center", cursor: "pointer"}} onClick={() =>{
-                        let list = props.ingredients;
-                        for(let i = 0; i < list.length; i++){
-
-                            if (list[i] === r) {
-                                list.splice(i, 1);
-                            }
-                        }
-                        props.setter(list);
-                        setFlag(flag+1);
+                        props.setModalIsOpen(true);
+                        current = r;
                     }
                     }>{r}</p>
                 )}

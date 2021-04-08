@@ -3,6 +3,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import TextBox from "./TextBox";
 import SubmitButton from "./SubmitButton";
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import {Link} from 'react-router-dom'
 
 let list = [];
@@ -23,7 +24,12 @@ function Fridge() {
     // useState variable for text box input
     const [input, setInput] = useState("");
 
+    // useState variable for ingredients list
     const [ingredients, setIngredients] = useState([""]);
+
+    // useState variables for deletion modal
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [deleteIngredient, setDeleteIngredient] = useState(false);
 
 
     // style details for root page
@@ -31,6 +37,12 @@ function Fridge() {
         backgroundColor: "white",
         height: '100vh'
     }
+
+    const handleClose = () => setModalIsOpen(false);
+    const handleCloseDelete = () => {
+        setDeleteIngredient(true);
+        setModalIsOpen(false);
+    };
 
     // function for submit button
     const onSubmit = () => {
@@ -67,7 +79,25 @@ function Fridge() {
             </Link>
             <Button variant="danger" size= "lg" style={{position: "absolute", right: 50, top: 25}}>Logout</Button>
             {/*two panes for lists and input*/}
-            <List x={200} width={250} label={"Current Ingredients"} ingredients={ingredients} setter={setIngredients}/>
+            <List x={200} width={250} label={"Current Ingredients"} ingredients={ingredients} setter={setIngredients}
+             setModalIsOpen={setModalIsOpen} deleteCurr={deleteIngredient} setDeleteCurr={setDeleteIngredient}/>
+
+            {/*Modal for deletion*/}
+            <Modal show={modalIsOpen} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Delete ingredient?</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>This ingredient will deleted permanently from your Fridge.</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="light" onClick={handleClose}>
+                        Cancel
+                    </Button>
+                    <Button variant="danger" onClick={handleCloseDelete}>
+                        Delete
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
             <div>
             <List x={600} width={800} label={"Add an Ingredient"} ingredients={[]}>
                 <div style={{position: "relative", top: 225, left: 0, right:0}}>

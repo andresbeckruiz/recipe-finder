@@ -30,11 +30,6 @@ function App() {
               </Router>
           </div>
       </Container>
-    // <div className="App">
-    //   {/*add components here for login landing page*/}
-    //   {/*<Fridge/>*/}
-    //   <h1>Hello world</h1>
-    // </div>
   );
 }
 
