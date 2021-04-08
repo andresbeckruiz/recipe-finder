@@ -1,12 +1,16 @@
-package edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320;
+package edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe;
+
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database;
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Graph.Vertex;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 
-public class Recipe {
+public class Recipe implements Vertex<Ingredient> {
 
-  private GraphVertex vertex;
+  private HashSet<Ingredient> adjIngredients = new HashSet<>();
   private String title;
   private String description;
   private HashSet<String> ingredients;
@@ -18,34 +22,61 @@ public class Recipe {
   private String photourl;
   private String serves;
   private String url;
-
+  private Double rating;
+  private double similarityScore = 0;
 
   public Recipe(ArrayList<String> params) {
+    final int magicNum7 = 7;
+    final int magicNum8 = 8;
+    final int magicNum9 = 9;
+    final int magicNum10 = 10;
     this.title = params.get(0);
     this.description = params.get(1);
-    String ingredients[] = params.get(2).trim().split("\\s*,\\s*");
-    this.ingredients =  new HashSet(Arrays.asList(ingredients));
+    String[] ingredientArr = params.get(2).trim().split("\\s*,\\s*");
+    this.ingredients =  new HashSet(Arrays.asList(ingredientArr));
     this.ingredientsDetailed = params.get(3);
     this.chef = params.get(4);
     this.instructions = params.get(5);
     this.cookingTime = params.get(6);
-    this.prepTime = params.get(7);
-    this.photourl = params.get(8);
-    this.serves = params.get(9);
-    this.url = params.get(10);
-    this.vertex = new GraphVertex();
+    this.prepTime = params.get(magicNum7);
+    this.photourl = params.get(magicNum8);
+    this.serves = params.get(magicNum9);
+    this.url = params.get(magicNum10);
   }
 
   public String getIngredientsDetailed() {
     return ingredientsDetailed;
   }
 
-  public GraphVertex getVertex() {
-    return vertex;
+  public String getName() {
+    return title;
   }
 
-  public String getTitle() {
-    return title;
+  @Override
+  public HashSet<Ingredient> getAdjacentVertices(HashMap<String, Ingredient> ingredientsAlreadyAdded) {
+    if (adjIngredients.size() == 0) {
+      String ingredientString = Database.getIngredientForRecipe(title);
+      String[] ingredientArray = ingredientString.trim().split("\\s*,\\s*");
+      for (String ingredientName : ingredientArray) {
+        if (ingredientsAlreadyAdded.containsKey(ingredientName)) {
+          adjIngredients.add(ingredientsAlreadyAdded.get(ingredientName));
+        } else {
+          adjIngredients.add(new Ingredient(ingredientName));
+        }
+      }
+    }
+
+    return adjIngredients;
+  }
+
+  @Override
+  public void setSimilarityScore(double score) {
+    similarityScore = score;
+  }
+
+  @Override
+  public double getSimilarityScore() {
+    return similarityScore;
   }
 
   public void setTitle(String title) {
@@ -129,7 +160,13 @@ public class Recipe {
     return "  -" + title + " : " + url;
   }
 
-  public void addIngredient(Ingredient ingredient) {
-    vertex.getEdges().add(new GraphEdge(ingredient, this.vertex));
+  public Double getScore() {
+    return rating;
   }
+
+  public void setRating(double newRating) {
+    this.rating = newRating;
+  }
+
+
 }

@@ -1,10 +1,9 @@
-package edu.brown.cs.abeckruiggallantjfraust2jwebste5.cs0320;
+package edu.brown.cs.abeckruiggallantjfraust2jwebste5.App;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import joptsimple.OptionParser;
@@ -16,9 +15,6 @@ import spark.Spark;
 import spark.template.freemarker.FreeMarkerEngine;
 import com.google.gson.Gson;
 import freemarker.template.Configuration;
-
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.JsonToSql.parseJson;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.RecipeFinder.findRecipeWithIngredients;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -59,21 +55,22 @@ public final class Main {
       runSparkServer((int) options.valueOf("port"));
     }
     System.out.println("Running");
-    //I ADDED EVERYTHING HERE
-    try {
-      //parseJson();
-      HashSet<String> ingredients = new HashSet<>() {
-        {
-          add("tomato");
-          add("olive oil");
-          add("basil");
-        }
-      };
-
-      findRecipesWithIngredients(ingredients);
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-    }
+//    try {
+//      parseJson();
+//    } catch (Exception e) {
+//      System.out.println("ERROR");
+//    }
+    RecipeApp app = new RecipeApp();
+    //this should eventually be user ingredients
+    HashSet<String> ingredients = new HashSet<>() {
+      {
+        add("tomato");
+        add("thyme");
+        add("mustard");
+      }
+    };
+    User user = new User("me", ingredients);
+    user.cook();
   }
 
   private static FreeMarkerEngine createEngine() {
