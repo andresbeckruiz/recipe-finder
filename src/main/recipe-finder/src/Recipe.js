@@ -28,8 +28,11 @@ function Recipe() {
             {/*dynamic header*/}
             <h1 style={{top: 25, color: "#000"}}><b>{name}</b></h1>
             {/*two buttons on side of page*/}
+            <Link to={"/RecipeSelection"}>
+            <Button variant="success" size= "lg" style={{position: "absolute", left: 50, top: 25, width: 175}}>Back to Search </Button>
+            </Link>
             <Link to={"/fridge"}>
-            <Button variant="success" size= "lg" style={{position: "absolute", left: 50, top: 25}}>Back to Fridge</Button>
+                <Button variant="success" size= "lg" style={{position: "absolute", left: 50, top: 85, width: 175}}>Back to Fridge</Button>
             </Link>
             <Button variant="primary" size= "lg" style={{position: "absolute", right: 50, top: 25}}>Cook!</Button>
 

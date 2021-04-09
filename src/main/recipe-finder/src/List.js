@@ -9,7 +9,7 @@ function List(props) {
     const [flag, setFlag] = useState(0);
 
 
-    let style = {
+    const style = {
         backgroundColor: "#2776ED",
         height: 600,
         width: props.width,
@@ -18,7 +18,7 @@ function List(props) {
         left: props.x
     }
 
-    let innerStyle = {
+    const innerStyle = {
         height: 590,
         width: props.width,
         position: "absolute",
@@ -45,7 +45,6 @@ function List(props) {
     }, [props.ingredients, flag])
 
     useEffect(() => {
-        console.log("caught");
         if(props.deleteCurr) {
             deleteCurrent();
         }

@@ -45,6 +45,7 @@ function Fridge() {
         height: '100vh'
     }
 
+    // handlers for modal
     const handleClose = () => setModalIsOpen(false);
     const handleCloseDelete = () => {
         setDeleteIngredient(true);
@@ -91,9 +92,7 @@ function Fridge() {
             <h1 style={{marginTop: 25}}>{currentUser.email}'s Fridge</h1>
             {error && <Alert variant={"danger"}> {error} </Alert>}
             {/*two buttons on side of page*/}
-            {/*<Route exact path="/" component={Page1} />*/}
-            {/*<Link to="/Recipe"><button>coom</button></Link>*/}
-            <Link to={"/recipe"}>
+            <Link to={"/RecipeSelection"}>
             <Button variant="success" size= "lg" style={{position: "absolute", left: 50, top: 25}}>Search for Recipes</Button>
             </Link>
             <Button onClick={handleLogout} variant="danger" size= "lg" style={{position: "absolute", right: 50, top: 25}}>Logout</Button>
