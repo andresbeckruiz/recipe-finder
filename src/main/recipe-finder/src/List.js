@@ -58,6 +58,7 @@ function List(props) {
                 {list.map((r) =>
                     <p style={{textAlign: "center", cursor: "pointer"}} onClick={() =>{
                         props.setModalIsOpen(true);
+                        props.setCurrent(r);
                         current = r;
                     }
                     }>{r}</p>

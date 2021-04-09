@@ -38,6 +38,9 @@ function Fridge() {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [deleteIngredient, setDeleteIngredient] = useState(false);
 
+    // useState hook for current ingredient to delete
+    const [current, setCurrent] = useState("");
+
 
     // style details for root page
     const rootStyle = {
@@ -101,14 +104,15 @@ function Fridge() {
             </Link>
             {/*two panes for lists and input*/}
             <List x={200} width={250} label={"Current Ingredients"} ingredients={ingredients} setter={setIngredients}
-             setModalIsOpen={setModalIsOpen} deleteCurr={deleteIngredient} setDeleteCurr={setDeleteIngredient}/>
+             setModalIsOpen={setModalIsOpen} deleteCurr={deleteIngredient} setDeleteCurr={setDeleteIngredient}
+            setCurrent={setCurrent}/>
 
             {/*Modal for deletion*/}
             <Modal show={modalIsOpen} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Delete ingredient?</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>This ingredient will be deleted permanently from your Fridge.</Modal.Body>
+                <Modal.Body>"{current}" will be deleted permanently from your Fridge.</Modal.Body>
                 <Modal.Footer>
                     <Button variant="light" onClick={handleClose}>
                         Cancel
