@@ -27,6 +27,7 @@ public class Recipe implements Vertex<Ingredient> {
   private String serves;
   private String url;
   private Double rating;
+  private boolean ratingSet = false;
   private double similarityScore = 0;
   private User owner;
 
@@ -49,6 +50,7 @@ public class Recipe implements Vertex<Ingredient> {
     this.url = params.get(magicNum10);
     this.owner = user;
     if (user.getRecipeRatings().keySet().contains(title)) {
+      ratingSet = true;
       this.rating = user.getRecipeRatings().get(title) / TOTAL_RATING;
     } else {
       this.rating = DEFAULT_RATING;
@@ -83,7 +85,7 @@ public class Recipe implements Vertex<Ingredient> {
         adjIngredients.add(ing);
       }
     }
-    if (this.rating == DEFAULT_RATING) {
+    if (!ratingSet) {
       this.rating = newSim / (TOTAL_RATING * numIngredients);
     }
     return adjIngredients;
