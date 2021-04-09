@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.TreeMap;
 
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
@@ -75,14 +76,14 @@ public final class Main {
         add("lemon");
       }
     };
-
-    User user = new User("me", ingredients);
+    User user = new User("georgia", ingredients);
     ArrayList<String> possibleRecipes = user.cook();
     String recipeSelected = possibleRecipes.get(0);
     System.out.println("RECIPES SIMILAR TO " + recipeSelected + " : ");
     TreeMap<Recipe, Double> map = user.findSimilarRecipes(recipeSelected);
-    System.out.println(map);
-    System.out.println(map.firstEntry());
+    for (Map.Entry<Recipe, Double> entry : map.entrySet()) {
+      System.out.println("Key: " + entry.getKey() + ". Value: " + entry.getValue());
+    }
   }
 
   private static FreeMarkerEngine createEngine() {

@@ -1,5 +1,6 @@
 package edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe;
 
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.User;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Graph.Vertex;
 
@@ -7,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.DEFAULT_RATING;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.TOTAL_RATING;
 
 public class Recipe implements Vertex<Ingredient> {
 
@@ -24,8 +28,9 @@ public class Recipe implements Vertex<Ingredient> {
   private String url;
   private Double rating;
   private double similarityScore = 0;
+  private User owner;
 
-  public Recipe(ArrayList<String> params) {
+  public Recipe(ArrayList<String> params, User user) {
     final int magicNum7 = 7;
     final int magicNum8 = 8;
     final int magicNum9 = 9;
@@ -42,6 +47,12 @@ public class Recipe implements Vertex<Ingredient> {
     this.photourl = params.get(magicNum8);
     this.serves = params.get(magicNum9);
     this.url = params.get(magicNum10);
+    this.owner = user;
+    if (user.getRecipeRatings().keySet().contains(title)) {
+      this.rating = user.getRecipeRatings().get(title) / TOTAL_RATING;
+    } else {
+      this.rating = DEFAULT_RATING;
+    }
   }
 
   public String getIngredientsDetailed() {
@@ -53,19 +64,28 @@ public class Recipe implements Vertex<Ingredient> {
   }
 
   @Override
-  public HashSet<Ingredient> getAdjacentVertices(HashMap<String, Ingredient> ingredientsAlreadyAdded) {
+  public HashSet<Ingredient> getAdjacentVertices(
+          HashMap<String, Ingredient> ingredientsAlreadyAdded) {
+    double newSim = 0;
+    int numIngredients = 0;
     if (adjIngredients.size() == 0) {
       String ingredientString = Database.getIngredientForRecipe(title);
       String[] ingredientArray = ingredientString.trim().split("\\s*,\\s*");
+      numIngredients = ingredientArray.length;
       for (String ingredientName : ingredientArray) {
+        Ingredient ing;
         if (ingredientsAlreadyAdded.containsKey(ingredientName)) {
-          adjIngredients.add(ingredientsAlreadyAdded.get(ingredientName));
+          ing = ingredientsAlreadyAdded.get(ingredientName);
         } else {
-          adjIngredients.add(new Ingredient(ingredientName));
+          ing = new Ingredient(ingredientName, this.owner);
         }
+        newSim += ing.getValue() * TOTAL_RATING;
+        adjIngredients.add(ing);
       }
     }
-
+    if (this.rating == DEFAULT_RATING) {
+      this.rating = newSim / (TOTAL_RATING * numIngredients);
+    }
     return adjIngredients;
   }
 
@@ -160,13 +180,13 @@ public class Recipe implements Vertex<Ingredient> {
     return "  -" + title + " : " + url;
   }
 
-  public Double getScore() {
-    return rating;
+  @Override
+  public Double getValue() {
+    return this.rating;
   }
 
-  public void setRating(double newRating) {
-    this.rating = newRating;
+  @Override
+  public void setValue(double value) {
+    this.rating = value;
   }
-
-
 }

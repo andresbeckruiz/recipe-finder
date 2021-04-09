@@ -1,19 +1,30 @@
 package edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe;
 
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.User;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Graph.Vertex;
 
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class Ingredient implements Vertex<Recipe> {
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.DEFAULT_RATING;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.TOTAL_RATING;
 
+public class Ingredient implements Vertex<Recipe> {
   private String name;
+  private User owner;
+  private Double rating;
   private double similarityScore = 0;
   private HashSet<Recipe> adjRecipes = new HashSet<>();
 
-  public Ingredient(String name) {
+  public Ingredient(String name, User user) {
     this.name = name;
+    this.owner = user;
+    if (user.getIngredientRatings().keySet().contains(name)) {
+      this.rating = user.getIngredientRatings().get(name) / TOTAL_RATING;
+    } else {
+      this.rating = DEFAULT_RATING;
+    }
   }
 
   @Override
@@ -25,7 +36,7 @@ public class Ingredient implements Vertex<Recipe> {
         if (recipesAlreadyAdded.containsKey(recipeName)) {
           adjRecipes.add(recipesAlreadyAdded.get(recipeName));
         } else {
-          adjRecipes.add(Database.getRecipeObject(recipeName));
+          adjRecipes.add(Database.getRecipeObject(recipeName, this.owner));
         }
       }
     }
@@ -36,6 +47,15 @@ public class Ingredient implements Vertex<Recipe> {
     return name;
   }
 
+  @Override
+  public Double getValue() {
+    return rating;
+  }
+
+  @Override
+  public void setValue(double value) {
+    this.rating = value;
+  }
 
   @Override
   public void setSimilarityScore(double score) {

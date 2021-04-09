@@ -1,8 +1,9 @@
 package edu.brown.cs.abeckruiggallantjfraust2jwebste5.Graph;
-
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.VertexComparator;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.TreeMap;
 
 public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex> {
 
@@ -35,7 +36,6 @@ public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex
   //central = recipe non-central = ingredient
   public TreeMap<centralVertex, Double> search(centralVertex searchStart) {
     centralNodeMap.put(searchStart.getName(), searchStart);
-
     TreeMap<centralVertex, Double> mostSimilarContenders = new TreeMap<>(new VertexComparator());
     HashSet<nonCentralVertex> adjacentVertices = searchStart.getAdjacentVertices(nonCentralNodeMap);
     addNonCentralHashSetToHashMap(adjacentVertices);
@@ -48,7 +48,6 @@ public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex
         continue;
       }
       HashSet<centralVertex> adjToAdjVertices = nonCentralAdj.getAdjacentVertices(centralNodeMap);
-      addCentralHashSetToHashMap(adjToAdjVertices);
       for (centralVertex doubleAdj : adjToAdjVertices) {
         if (doubleAdj == null || doubleAdj.equals("null")
                 || searchStart.getName().contains(doubleAdj.getName())) {
@@ -60,12 +59,14 @@ public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex
           mostSimilarContenders.put(doubleAdj, similarity);
         }
       }
+      addCentralHashSetToHashMap(adjToAdjVertices);
     }
 
     return mostSimilarContenders;
   }
 
-  public double computeSimilarity(centralVertex adjToAdj, centralVertex searchStart) {
+  public double computeSimilarity(centralVertex adjToAdj,
+                                  centralVertex searchStart) {
     HashSet<nonCentralVertex> setOne = adjToAdj.getAdjacentVertices(nonCentralNodeMap);
     addNonCentralHashSetToHashMap(setOne);
     int initialSetOneSize = setOne.size();
@@ -74,6 +75,7 @@ public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex
     setOne.retainAll(setTwo);
     int intersectionSize = setOne.size();
     int totalNumSharedAdjNodes = initialSetOneSize + setTwo.size();
-    return (double) intersectionSize / (double) totalNumSharedAdjNodes;
+    return adjToAdj.getValue() * (double) intersectionSize
+            / (double) totalNumSharedAdjNodes;
   }
 }

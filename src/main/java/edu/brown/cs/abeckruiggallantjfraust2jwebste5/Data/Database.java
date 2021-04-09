@@ -1,5 +1,6 @@
 package edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data;
 
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.User;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
 
 import java.sql.Connection;
@@ -9,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public final class Database {
   private Database() { }
@@ -113,7 +115,54 @@ public final class Database {
     }
   }
 
-  public static Recipe getRecipeObject(String recipeName) {
+  public static HashMap<String, Double> userRecipeRatings(String username) {
+    try {
+      PreparedStatement prep = conn.prepareStatement("SELECT ratedRecipes FROM users "
+              + "WHERE name IS ?");
+      prep.setString(1, username);
+      ResultSet rs = prep.executeQuery();
+      if (!rs.isBeforeFirst()) {
+        return null;
+      }
+      HashMap<String, Double> ratingMap = new HashMap<>();
+      String[] recipes = rs.getString(1).trim().split("\\s*,\\s*");
+      for (String rec : recipes) {
+        String[] tuple = rec.split(":");
+        ratingMap.put(tuple[0], Double.parseDouble(tuple[1]));
+      }
+      rs.close();
+      prep.close();
+      return ratingMap;
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      return null;
+    }
+  }
+
+  public static HashMap<String, Double> userIngredientRatings(String username) {
+    try {
+      PreparedStatement prep = conn.prepareStatement("SELECT ratedIngredients FROM users "
+              + "WHERE name IS ?");
+      prep.setString(1, username);
+      ResultSet rs = prep.executeQuery();
+      if (!rs.isBeforeFirst()) {
+        return null;
+      }
+      HashMap<String, Double> ratingMap = new HashMap<>();
+      String[] ingredients = rs.getString(1).trim().split("\\s*,\\s*");
+      for (String ing : ingredients) {
+        String[] tuple = ing.split(":");
+        ratingMap.put(tuple[0], Double.parseDouble(tuple[1]));
+      }
+      rs.close();
+      prep.close();
+      return ratingMap;
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      return null;
+    }
+  }
+  public static Recipe getRecipeObject(String recipeName, User user) {
     try {
       PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipes "
               + "WHERE title IS ?");
@@ -132,7 +181,7 @@ public final class Database {
       };
       rs.close();
       prep.close();
-      return new Recipe(params);
+      return new Recipe(params, user);
     } catch (Exception e) {
       System.out.println(e.getMessage());
       return null;
