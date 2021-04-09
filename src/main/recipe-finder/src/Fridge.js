@@ -1,5 +1,5 @@
 import List from "./List";
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState} from 'react';
 import TextBox from "./TextBox";
 import SubmitButton from "./SubmitButton";
 import Button from 'react-bootstrap/Button';
@@ -7,8 +7,10 @@ import Modal from 'react-bootstrap/Modal';
 import {Link, useHistory} from 'react-router-dom'
 import {Alert} from 'react-bootstrap'
 import {useAuth} from "./contexts/AuthContext"
+import Rating from "@material-ui/lab/Rating";
 
 let list = [];
+let ingredientRatings = {};
 
 // event listener for enter key
 function submit() {}
@@ -38,6 +40,10 @@ function Fridge() {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [deleteIngredient, setDeleteIngredient] = useState(false);
 
+    // useState variables for ingredient ratings modal
+    const [ratingIsOpen, setRatingIsOpen] = useState(false);
+    const [currentToRate, setCurrentToRate] = useState("");
+
     // useState hook for current ingredient to delete
     const [current, setCurrent] = useState("");
 
@@ -48,8 +54,9 @@ function Fridge() {
         height: '100vh'
     }
 
-    // handlers for modal
+    // handlers for modals
     const handleClose = () => setModalIsOpen(false);
+    const handleRatingClose = () => setRatingIsOpen(false);
     const handleCloseDelete = () => {
         setDeleteIngredient(true);
         setModalIsOpen(false);
@@ -68,6 +75,11 @@ function Fridge() {
             //clear from this scope and from input box
             document.getElementById("inputBox").value = "";
             setInput("");
+        }
+
+        //open modal if need be
+        if (!ingredientRatings.hasOwnProperty(currentToRate)) {
+            setRatingIsOpen(true);
         }
     }
 
@@ -123,10 +135,38 @@ function Fridge() {
                 </Modal.Footer>
             </Modal>
 
+            {/*Modal for ingredient ratings*/}
+            <Modal show={ratingIsOpen} onHide={handleRatingClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{currentToRate}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p style={{textAlign: "center"}}>How would you rate this ingredient?</p>
+                    <div>
+                    <Rating
+                        style={{position: "relative", left: 150}}
+                        name="simple-controlled"
+                        value={2.5}
+                        precision={0.5}
+                        size={"large"}
+                        onChange={(event, newValue) => {
+                            ingredientRatings[currentToRate] = newValue;
+                            handleRatingClose();
+                        }}
+                    />
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="light" onClick={handleRatingClose}>
+                        Skip
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
             <div>
             <List x={600} width={800} label={"Add an Ingredient"} ingredients={[]}>
                 <div style={{position: "relative", top: 225, left: 0, right:0}}>
-                    <TextBox input={setInput} change={onChange} label={"Name of Ingredient"}/>
+                    <TextBox input={setInput} change={onChange} label={"Name of Ingredient"} setCurr={setCurrentToRate}/>
                     <div id={"submit"} style={{position: "relative", top: 50, left: 150}}>
                         {/*submission button*/}
                         <SubmitButton label={"Submit"} onClick={onSubmit}/>

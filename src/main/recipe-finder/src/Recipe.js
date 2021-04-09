@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState} from 'react';
 import Button from 'react-bootstrap/Button';
 import SimilarRecipe from "./SimilarRecipe";
 import Rating from '@material-ui/lab/Rating';

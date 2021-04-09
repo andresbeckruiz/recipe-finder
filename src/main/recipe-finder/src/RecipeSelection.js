@@ -1,6 +1,5 @@
 import {Link} from "react-router-dom";
 import Button from "react-bootstrap/Button";
-import React, {useState} from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import {Card, CardActions, CardMedia, CardContent, Typography} from '@material-ui/core';
 
@@ -30,11 +29,6 @@ const useStyles = makeStyles({
 });
 
 function RecipeSelection() {
-
-    // useState hooks for cards
-    const [image, setImage] = useState('https://assets.bonappetit.com/photos/5a8749c98e5ab504d767b208/16:9/w_2048,c_limit/no-fail-roast-chicken-with-lemon-and-garlic.jpg');
-    const [recipeName, setRecipeName] = useState('Roast Chicken with Lemon and Garlic');
-    const [chefName, setChefName] = useState("Claire Saffitz");
 
     // style details for root page
     const rootStyle = {
@@ -104,7 +98,7 @@ function RecipeSelection() {
                                     <CardMedia
                                         className={classes.media}
                                         image={r.src}
-                                        title={recipeName}
+                                        title={r.recipeName}
                                     />
                                 </div>
                             </Card>
@@ -133,7 +127,7 @@ function RecipeSelection() {
                                     <CardMedia
                                         className={classes.media}
                                         image={r.src}
-                                        title={recipeName}
+                                        title={r.recipeName}
                                     />
                                 </div>
                             </Card>

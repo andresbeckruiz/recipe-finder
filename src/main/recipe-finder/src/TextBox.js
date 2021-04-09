@@ -3,7 +3,9 @@ function TextBox(props) {
 
     // Changes value of text box
     const value = (event) => {
-        props.input(event.target.value);
+        let val = event.target.value;
+        props.input(val);
+        props.setCurr(val);
     }
 
     // Style of label
