@@ -32,7 +32,7 @@ function Fridge() {
     const [input, setInput] = useState("");
 
     // useState variable for ingredients list
-    const [ingredients, setIngredients] = useState([""]);
+    const [ingredients, setIngredients] = useState(list);
 
     // useState variables for deletion modal
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -108,7 +108,7 @@ function Fridge() {
                 <Modal.Header closeButton>
                     <Modal.Title>Delete ingredient?</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>This ingredient will deleted permanently from your Fridge.</Modal.Body>
+                <Modal.Body>This ingredient will be deleted permanently from your Fridge.</Modal.Body>
                 <Modal.Footer>
                     <Button variant="light" onClick={handleClose}>
                         Cancel
