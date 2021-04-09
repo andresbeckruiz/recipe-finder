@@ -40,7 +40,9 @@ public class Ingredient implements Vertex<Recipe> {
         }
       }
     }
-    return adjRecipes;
+    HashSet<Recipe> adjRecipesToReturn = new HashSet<>();
+    adjRecipesToReturn.addAll(adjRecipes);
+    return adjRecipesToReturn;
   }
 
   public String getName() {

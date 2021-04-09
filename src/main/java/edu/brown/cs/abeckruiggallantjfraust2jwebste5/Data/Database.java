@@ -38,7 +38,7 @@ public final class Database {
       prep.execute();
       prep = conn.prepareStatement(
               "CREATE TABLE IF NOT EXISTS ingredientMap("
-                      + "ingredient TEXT, "
+                      + "ingredient TEXT PRIMARY KEY, "
                       + "recipes TEXT);");
       prep.execute();
       prep.close();
@@ -47,16 +47,25 @@ public final class Database {
     }
   }
 
-  public static void addIngredient(String ingredient, String recipes) throws SQLException {
-    if (conn != null) {
-      PreparedStatement prep = conn.prepareStatement(
-              "INSERT INTO ingredientMap "
-                      + "VALUES (?, ?)");
-      prep.setString(1, ingredient);
-      prep.setString(2, recipes);
-      prep.execute();
-      prep.close();
+  public static void addIngredient(String ingredient, String recipes) {
+    try {
+      if (conn != null) {
+        PreparedStatement prep = conn.prepareStatement(
+                "INSERT INTO ingredientMap "
+                        + "VALUES (?, ?)");
+        prep.setString(1, ingredient);
+        prep.setString(2, recipes);
+        prep.execute();
+        prep.close();
+      }
+    } catch (Exception e) {
+      if (e.getMessage().contains("constraint violation")) {
+        return;
+      } else {
+        System.out.println(e.getMessage());
+      }
     }
+
   }
   public static void createRecipeDatabase() throws SQLException {
     try {
@@ -64,7 +73,7 @@ public final class Database {
       prep.execute();
       prep = conn.prepareStatement(
               "CREATE TABLE IF NOT EXISTS recipes("
-                      + "title TEXT, "
+                      + "title TEXT PRIMARY KEY, "
                       + "description TEXT, "
                       + "ingredients TEXT, "
                       + "ingredients_detailed TEXT, "
@@ -195,13 +204,18 @@ public final class Database {
                 "INSERT INTO recipes "
                         + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         for (int i = 0; i < params.size(); i++) {
+
           prep.setString(i + 1, params.get(i));
         }
         prep.executeUpdate();
         prep.close();
       }
     } catch (Exception e) {
-      System.out.println(e.getMessage());
+      if (e.getMessage().contains("constraint violation")) {
+        return;
+      } else {
+        System.out.println(e.getMessage());
+      }
     }
   }
 }

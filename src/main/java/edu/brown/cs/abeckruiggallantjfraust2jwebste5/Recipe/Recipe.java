@@ -68,6 +68,9 @@ public class Recipe implements Vertex<Ingredient> {
   @Override
   public HashSet<Ingredient> getAdjacentVertices(
           HashMap<String, Ingredient> ingredientsAlreadyAdded) {
+    if (this.getName().equals("gin and lime truffles")) {
+      System.out.println("here");
+    }
     double newSim = 0;
     int numIngredients = 0;
     if (adjIngredients.size() == 0) {
@@ -84,11 +87,14 @@ public class Recipe implements Vertex<Ingredient> {
         newSim += ing.getValue() * TOTAL_RATING;
         adjIngredients.add(ing);
       }
+      if (!ratingSet) {
+        this.rating = newSim / (double) (TOTAL_RATING * numIngredients);
+      }
     }
-    if (!ratingSet) {
-      this.rating = newSim / (TOTAL_RATING * numIngredients);
-    }
-    return adjIngredients;
+
+    HashSet<Ingredient> adjIngredientsToReturn = new HashSet<>();
+    adjIngredientsToReturn.addAll(adjIngredients);
+    return adjIngredientsToReturn;
   }
 
   @Override

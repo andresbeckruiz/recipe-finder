@@ -20,7 +20,7 @@ import spark.template.freemarker.FreeMarkerEngine;
 import com.google.gson.Gson;
 import freemarker.template.Configuration;
 
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.JsonToSql.parseJson;
+//import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.JsonToSql.parseJson;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -81,6 +81,10 @@ public final class Main {
     String recipeSelected = possibleRecipes.get(0);
     System.out.println("RECIPES SIMILAR TO " + recipeSelected + " : ");
     TreeMap<Recipe, Double> map = user.findSimilarRecipes(recipeSelected);
+    for (Map.Entry<Recipe, Double> entry : map.entrySet()) {
+      System.out.println("Key: " + entry.getKey() + ". Value: " + entry.getValue());
+    }
+    map = user.findSimilarRecipes(recipeSelected);
     for (Map.Entry<Recipe, Double> entry : map.entrySet()) {
       System.out.println("Key: " + entry.getKey() + ". Value: " + entry.getValue());
     }

@@ -53,8 +53,8 @@ public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex
                 || searchStart.getName().contains(doubleAdj.getName())) {
           continue;
         }
-        double similarity = computeSimilarity(doubleAdj, searchStart);
-        if (doubleAdj.getSimilarityScore() < similarity) {
+        double similarity = computeSimilarity(doubleAdj, adjacentVertices);
+        if (doubleAdj.getSimilarityScore() <= similarity) {
           doubleAdj.setSimilarityScore(similarity);
           mostSimilarContenders.put(doubleAdj, similarity);
         }
@@ -66,11 +66,10 @@ public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex
   }
 
   public double computeSimilarity(centralVertex adjToAdj,
-                                  centralVertex searchStart) {
+                                  HashSet<nonCentralVertex> setTwo) {
     HashSet<nonCentralVertex> setOne = adjToAdj.getAdjacentVertices(nonCentralNodeMap);
     addNonCentralHashSetToHashMap(setOne);
     int initialSetOneSize = setOne.size();
-    HashSet<nonCentralVertex> setTwo = searchStart.getAdjacentVertices(nonCentralNodeMap);
     addNonCentralHashSetToHashMap(setTwo);
     setOne.retainAll(setTwo);
     int intersectionSize = setOne.size();
