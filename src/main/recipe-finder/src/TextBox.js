@@ -3,7 +3,7 @@ function TextBox(props) {
 
     // Changes value of text box
     const value = (event) => {
-        props.change(event.target.value);
+        props.input(event.target.value);
     }
 
     // Style of label
@@ -12,15 +12,15 @@ function TextBox(props) {
         fontFamily: "Avenir",
         textAlign: "left",
         position: "relative",
-        left: -125,
-        bottom:1
+        left: 0,
+        bottom:0
     }
 
     return (
         <div>
             <label style={labelStyle}>{props.label}</label>
             <br/>
-            <input style={{fontSize:24}} className="inputBox" type={"text"} onChange={value}></input>
+            <input style={{fontSize:24}} className="inputBox" type={"text"} onChange={value} id={"inputBox"}></input>
         </div>
     );
 }

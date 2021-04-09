@@ -37,6 +37,7 @@ public class User {
   public HashMap<String, Double> getRecipeRatings() {
     return recipeRatings;
   }
+
   public Graph getUserGraph() {
     return recipeGraph;
   }
@@ -49,7 +50,9 @@ public class User {
     this.ingredients = ingredients;
   }
 
-
+  public void addIngredient(String newIngredient) {
+    this.ingredients.add(newIngredient);
+  }
 
   public ArrayList<String> cook() {
     // TODO: change for different number of top recipes

@@ -33,6 +33,7 @@ public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex
       map.put(vertex.getName(), vertex);
     }
   }
+
   //central = recipe non-central = ingredient
   public TreeMap<centralVertex, Double> search(centralVertex searchStart) {
     centralNodeMap.put(searchStart.getName(), searchStart);

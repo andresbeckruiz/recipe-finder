@@ -4,18 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
+import com.google.common.collect.ImmutableMap;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
-import spark.ExceptionHandler;
-import spark.Request;
-import spark.Response;
-import spark.Spark;
+import org.json.JSONObject;
+import spark.*;
 import spark.template.freemarker.FreeMarkerEngine;
 import com.google.gson.Gson;
 import freemarker.template.Configuration;
@@ -40,9 +36,12 @@ public final class Main {
   }
 
   private final String[] args;
+  private User currentUser;
+  private boolean userSet;
 
   private Main(String[] args) {
     this.args = args;
+    this.userSet = false;
   }
 
   /**
@@ -122,6 +121,11 @@ public final class Main {
     });
     Spark.before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
     Spark.exception(Exception.class, new ExceptionPrinter());
+
+    Spark.post("/findSimilar", new FindSimilarRecipesHandler());
+    Spark.post("/findSuggestions", new FindRecipeSuggestionsHandler());
+    Spark.post("/enterIngredient", new EnterNewIngredientHandler());
+    Spark.post("/newUser", new CreateNewUserHandler());
   }
 
   /**
@@ -138,6 +142,62 @@ public final class Main {
         pw.println("</pre>");
       }
       res.body(stacktrace.toString());
+    }
+  }
+
+  /**
+   * Handles finding similar recipes when prompted in front end
+   */
+  private class FindSimilarRecipesHandler implements Route {
+    @Override
+    public Object handle(Request request, Response response) throws Exception {
+      JSONObject data = new JSONObject(request.body());
+      String currentRecipeName = data.getString("currentRecipe");
+
+      TreeMap<Recipe, Double> map = currentUser.findSimilarRecipes(currentRecipeName);
+
+      Map<String, Object> variables = ImmutableMap.of("firstSimilar", map.firstKey().toString());
+      return GSON.toJson(variables);
+    }
+  }
+
+  /**
+   * Handles finding initial recipe suggestions
+   */
+  private class FindRecipeSuggestionsHandler implements Route {
+    @Override
+    public Object handle(Request request, Response response) throws Exception {
+      ArrayList<String> recipeSuggestions = currentUser.cook();
+      Map<String, Object> variables = ImmutableMap.of("firstSuggestion", recipeSuggestions.get(0));
+      return GSON.toJson(variables);
+    }
+  }
+
+  /**
+   * Handles entering in a new ingredient to the current users fridge
+   */
+  private class EnterNewIngredientHandler implements Route {
+    @Override
+    public Object handle(Request request, Response response) throws Exception {
+      JSONObject data = new JSONObject(request.body());
+      String ingredientName = data.getString("ingredientName");
+      currentUser.addIngredient(ingredientName);
+      return null;
+    }
+  }
+
+  /**
+   * Handles creating a new user object and updating the currentUser object
+   */
+  private class CreateNewUserHandler implements Route {
+    @Override
+    public Object handle(Request request, Response response) throws Exception {
+      JSONObject data = new JSONObject(request.body());
+      String username = data.getString("name");
+      HashSet<String> ingredients = new HashSet<>();
+      User newUser = new User(username, ingredients);
+      currentUser = newUser;
+      return null;
     }
   }
 }
