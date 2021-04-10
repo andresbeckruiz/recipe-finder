@@ -4,14 +4,22 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.*;
-
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.TreeMap;
 import com.google.common.collect.ImmutableMap;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import org.json.JSONObject;
-import spark.*;
+import spark.ExceptionHandler;
+import spark.Request;
+import spark.Response;
+import spark.Route;
+import spark.Spark;
 import spark.template.freemarker.FreeMarkerEngine;
 import com.google.gson.Gson;
 import freemarker.template.Configuration;
@@ -126,6 +134,7 @@ public final class Main {
     Spark.post("/findSuggestions", new FindRecipeSuggestionsHandler());
     Spark.post("/enterIngredient", new EnterNewIngredientHandler());
     Spark.post("/newUser", new CreateNewUserHandler());
+    Spark.post("/newUserSignup", new CreateNewUserHandlerSignup());
   }
 
   /**
@@ -196,23 +205,78 @@ public final class Main {
       String username = data.getString("name");
       System.out.println("Username" + username);
       //check if user exists. If not, create new row in table
-//      try {
-//        Class.forName("org.sqlite.JDBC");
-//        String urlToDB = "jdbc:sqlite:" + filename;
-//        Connection conn = DriverManager.getConnection(urlToDB);
-//      }
-//      catch (SQLException e) {
-//        System.err.println("ERROR: Error connecting to database");
-//        return "error";
-//      } catch (ClassNotFoundException e) {
-//        System.err.println("ERROR: Invalid database class");
-//        return "error";
+      try {
+        Class.forName("org.sqlite.JDBC");
+        String urlToDB = "jdbc:sqlite:data/newdb.sqlite3";
+        Connection conn = DriverManager.getConnection(urlToDB);
+        PreparedStatement prep;
+        prep = conn.prepareStatement(
+                  "SELECT name FROM 'users' WHERE name = ?;");
+        prep.setString(1, username);
+        ResultSet rs = prep.executeQuery();
+        while (rs.next()) {
+          //create a Node object for each entry in table
+          String id = rs.getString(1);
+              //we want to make sure this is valid and that the table is well formatted. If
+              //it isn't we throw an error.
+        }
+        rs.close();
+        conn.close();
+        return "";
+      } catch (SQLException e) {
+        System.err.println("ERROR: Error connecting to database");
+        return "error";
+      } catch (ClassNotFoundException e) {
+        System.err.println("ERROR: Invalid database class");
+        return "error";
+      }
 
+//        HashSet<String> ingredients = new HashSet<>();
+//        User newUser = new User(username, ingredients);
+//        currentUser = newUser;
+//        return "";
+    }
+  }
 
-      HashSet<String> ingredients = new HashSet<>();
-      User newUser = new User(username, ingredients);
-      currentUser = newUser;
-      return "";
+  /**
+   * Front end handler for creating new user off of signuo
+   */
+  private class CreateNewUserHandlerSignup implements Route {
+    @Override
+    public Object handle(Request request, Response response) throws Exception {
+      JSONObject data = new JSONObject(request.body());
+      String username = data.getString("name");
+      System.out.println("Username" + username);
+      //check if user exists. If not, create new row in table
+      try {
+        Class.forName("org.sqlite.JDBC");
+        String urlToDB = "jdbc:sqlite:data/newdb.sqlite3";
+        Connection conn = DriverManager.getConnection(urlToDB);
+        PreparedStatement prep;
+        prep = conn.prepareStatement(
+                "INSERT INTO users VALUES (?,?,?,?);");
+        prep.setString(1, username);
+        prep.setString(2, "test");
+        prep.setString(3, "test");
+        prep.setString(4, "test");
+        prep.addBatch();
+        //prep.setString(1, username);
+        System.out.println("Connected?");
+        prep.executeQuery();
+        System.out.println("Not connected?");
+        HashSet<String> ingredients = new HashSet<>();
+        User newUser = new User(username, ingredients);
+        currentUser = newUser;
+        conn.close();
+        return "";
+      } catch (SQLException e) {
+        System.err.println("ERROR: Error connecting to database");
+        return "error";
+      } catch (ClassNotFoundException e) {
+        System.err.println("ERROR: Invalid database class");
+        return "error";
+      }
     }
   }
 }
+

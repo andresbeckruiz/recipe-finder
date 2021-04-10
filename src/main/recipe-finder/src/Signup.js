@@ -27,7 +27,7 @@ export default function Signup() {
         }
         // sending this information to backend
         axios.post(
-            "http://localhost:4567/newUser",
+            "http://localhost:4567/newUserSignup",
             toSend,
             config
         )
