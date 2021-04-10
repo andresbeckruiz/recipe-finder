@@ -9,13 +9,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.*;
+
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.addUserToDatabase;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserInventory;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.TreeMap;
+
 import com.google.common.collect.ImmutableMap;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
 import joptsimple.OptionParser;
@@ -210,24 +208,23 @@ public final class Main {
       JSONObject data = new JSONObject(request.body());
       String username = data.getString("name");
       System.out.println("Username" + username);
-      //check if user exists. If not, create new row in table
       try {
         String string = getUserInventory(username);
-        System.out.println();
+        //splitting to create hashset for user ingredients
+        String[] values = string.split(",");
+        HashSet<String> ingredients = new HashSet<>(Arrays.asList(values));
+        User newUser = new User(username, ingredients);
+        currentUser = newUser;
       } catch (SQLException e) {
         System.err.println("ERROR: Error connecting to database");
         return "error";
       }
-
-//        HashSet<String> ingredients = new HashSet<>();
-//        User newUser = new User(username, ingredients);
-//        currentUser = newUser;
-//        return "";
+      return "";
     }
   }
 
   /**
-   * Front end handler for creating new user off of signuo
+   * Front end handler for creating new user off of signup
    */
   private class CreateNewUserHandlerSignup implements Route {
     @Override
@@ -235,7 +232,6 @@ public final class Main {
       JSONObject data = new JSONObject(request.body());
       String username = data.getString("name");
       System.out.println("Username" + username);
-      //check if user exists. If not, create new row in table
       try {
         addUserToDatabase(username);
         HashSet<String> ingredients = new HashSet<>();

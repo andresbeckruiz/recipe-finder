@@ -231,9 +231,9 @@ public final class Database {
       prep = conn.prepareStatement(
               "INSERT INTO users VALUES (?,?,?,?);");
       prep.setString(1, user);
-      prep.setString(2, "test");
-      prep.setString(3, "test");
-      prep.setString(4, "test");
+      prep.setString(2, "");
+      prep.setString(3, "");
+      prep.setString(4, "");
       prep.execute();
       System.out.println("Connected?");
     }
