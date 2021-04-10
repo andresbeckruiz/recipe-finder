@@ -137,6 +137,9 @@ public final class Database {
       String[] recipes = rs.getString(1).trim().split("\\s*,\\s*");
       for (String rec : recipes) {
         String[] tuple = rec.split(":");
+        if (tuple.length != 2) {
+          continue;
+        }
         ratingMap.put(tuple[0], Double.parseDouble(tuple[1]));
       }
       rs.close();
@@ -161,6 +164,9 @@ public final class Database {
       String[] ingredients = rs.getString(1).trim().split("\\s*,\\s*");
       for (String ing : ingredients) {
         String[] tuple = ing.split(":");
+        if (tuple.length != 2) {
+          continue;
+        }
         ratingMap.put(tuple[0], Double.parseDouble(tuple[1]));
       }
       rs.close();
