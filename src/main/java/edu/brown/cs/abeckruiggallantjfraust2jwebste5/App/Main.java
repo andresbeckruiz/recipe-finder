@@ -194,6 +194,7 @@ public final class Main {
     public Object handle(Request request, Response response) throws Exception {
       JSONObject data = new JSONObject(request.body());
       String username = data.getString("name");
+
       HashSet<String> ingredients = new HashSet<>();
       User newUser = new User(username, ingredients);
       currentUser = newUser;
