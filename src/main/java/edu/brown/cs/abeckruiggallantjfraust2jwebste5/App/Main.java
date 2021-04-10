@@ -4,8 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.addUserToDatabase;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -249,31 +254,13 @@ public final class Main {
       System.out.println("Username" + username);
       //check if user exists. If not, create new row in table
       try {
-        Class.forName("org.sqlite.JDBC");
-        String urlToDB = "jdbc:sqlite:data/newdb.sqlite3";
-        Connection conn = DriverManager.getConnection(urlToDB);
-        PreparedStatement prep;
-        prep = conn.prepareStatement(
-                "INSERT INTO users VALUES (?,?,?,?);");
-        prep.setString(1, username);
-        prep.setString(2, "test");
-        prep.setString(3, "test");
-        prep.setString(4, "test");
-        prep.addBatch();
-        //prep.setString(1, username);
-        System.out.println("Connected?");
-        prep.executeQuery();
-        System.out.println("Not connected?");
+        addUserToDatabase(username);
         HashSet<String> ingredients = new HashSet<>();
         User newUser = new User(username, ingredients);
         currentUser = newUser;
-        conn.close();
         return "";
       } catch (SQLException e) {
         System.err.println("ERROR: Error connecting to database");
-        return "error";
-      } catch (ClassNotFoundException e) {
-        System.err.println("ERROR: Invalid database class");
         return "error";
       }
     }

@@ -218,4 +218,18 @@ public final class Database {
       }
     }
   }
+
+  public static void addUserToDatabase(String user) throws SQLException {
+    if (conn != null) {
+      PreparedStatement prep;
+      prep = conn.prepareStatement(
+              "INSERT INTO users VALUES (?,?,?,?);");
+      prep.setString(1, user);
+      prep.setString(2, "test");
+      prep.setString(3, "test");
+      prep.setString(4, "test");
+      prep.execute();
+      System.out.println("Connected?");
+    }
+  }
 }
