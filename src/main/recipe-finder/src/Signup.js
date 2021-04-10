@@ -1,7 +1,8 @@
 import React, {useRef, useState} from 'react'
 import {Form, Button, Card, Alert} from 'react-bootstrap'
-import {useAuth} from "./contexts/AuthContext";
-import {Link, useHistory} from "react-router-dom";
+import {useAuth} from "./contexts/AuthContext"
+import {Link, useHistory} from "react-router-dom"
+import axios from "axios"
 
 export default function Signup() {
     //const nameRef = useRef()
@@ -12,6 +13,28 @@ export default function Signup() {
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const history = useHistory()
+
+    const createUser = (email) => {
+        console.log(emailRef.current.value)
+        const toSend = {
+            name: email
+        };
+        let config = {
+            headers: {
+                "Content-Type": "application/json",
+                'Access-Control-Allow-Origin': '*',
+            }
+        }
+        // sending this information to backend
+        axios.post(
+            "http://localhost:4567/newUser",
+            toSend,
+            config
+        )
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
 
     //here is where we can check that fields are in the right format that we want
     async function handleSubmit(e) {
@@ -26,13 +49,16 @@ export default function Signup() {
             //don't want user to click sign up button multiple times
             setLoading(true)
             await signup(emailRef.current.value, passwordRef.current.value)
+            await createUser(emailRef.current.value)
             history.push("/fridge")
         } catch (error) {
             setError("Failed to create an account")
             console.log(error)
+            setLoading(false)
         }
-        setLoading(false)
     }
+
+
 
     return(
         <>

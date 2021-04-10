@@ -194,10 +194,25 @@ public final class Main {
     public Object handle(Request request, Response response) throws Exception {
       JSONObject data = new JSONObject(request.body());
       String username = data.getString("name");
+      System.out.println("Username" + username);
+      //check if user exists. If not, create new row in table
+//      try {
+//        Class.forName("org.sqlite.JDBC");
+//        String urlToDB = "jdbc:sqlite:" + filename;
+//        Connection conn = DriverManager.getConnection(urlToDB);
+//      }
+//      catch (SQLException e) {
+//        System.err.println("ERROR: Error connecting to database");
+//        return "error";
+//      } catch (ClassNotFoundException e) {
+//        System.err.println("ERROR: Invalid database class");
+//        return "error";
+
+
       HashSet<String> ingredients = new HashSet<>();
       User newUser = new User(username, ingredients);
       currentUser = newUser;
-      return null;
+      return "";
     }
   }
 }
