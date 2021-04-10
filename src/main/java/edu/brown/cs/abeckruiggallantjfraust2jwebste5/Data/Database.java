@@ -232,4 +232,20 @@ public final class Database {
       System.out.println("Connected?");
     }
   }
+
+  public static String getUserInventory(String user) throws SQLException {
+    if (conn != null) {
+      PreparedStatement prep;
+      prep = conn.prepareStatement(
+              "SELECT inventory FROM users WHERE name = ?;");
+      prep.setString(1, user);
+      ResultSet rs = prep.executeQuery();
+      while (rs.next()) {
+        String inventory = rs.getString(1);
+        return inventory;
+      }
+      return "";
+    }
+    return "";
+  }
 }

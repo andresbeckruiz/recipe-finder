@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.addUserToDatabase;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserInventory;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -211,28 +212,10 @@ public final class Main {
       System.out.println("Username" + username);
       //check if user exists. If not, create new row in table
       try {
-        Class.forName("org.sqlite.JDBC");
-        String urlToDB = "jdbc:sqlite:data/newdb.sqlite3";
-        Connection conn = DriverManager.getConnection(urlToDB);
-        PreparedStatement prep;
-        prep = conn.prepareStatement(
-                  "SELECT name FROM 'users' WHERE name = ?;");
-        prep.setString(1, username);
-        ResultSet rs = prep.executeQuery();
-        while (rs.next()) {
-          //create a Node object for each entry in table
-          String id = rs.getString(1);
-              //we want to make sure this is valid and that the table is well formatted. If
-              //it isn't we throw an error.
-        }
-        rs.close();
-        conn.close();
-        return "";
+        String string = getUserInventory(username);
+        System.out.println();
       } catch (SQLException e) {
         System.err.println("ERROR: Error connecting to database");
-        return "error";
-      } catch (ClassNotFoundException e) {
-        System.err.println("ERROR: Invalid database class");
         return "error";
       }
 
