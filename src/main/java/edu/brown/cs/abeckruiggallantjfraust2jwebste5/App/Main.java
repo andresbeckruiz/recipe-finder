@@ -4,12 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.Arrays;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.addUserToDatabase;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserInventory;
@@ -48,12 +48,10 @@ public final class Main {
   }
 
   private final String[] args;
-  private User currentUser;
-  private boolean userSet;
+  private RecipeApp app;
 
   private Main(String[] args) {
     this.args = args;
-    this.userSet = false;
   }
 
   /**
@@ -72,33 +70,7 @@ public final class Main {
       runSparkServer((int) options.valueOf("port"));
     }
     System.out.println("Running");
-    // used to rewrite sql database
-//    try {
-//      parseJson();
-//    } catch (Exception e) {
-//      System.out.println("ERROR");
-//    }
-    RecipeApp app = new RecipeApp();
-    //this should eventually be user ingredients
-    HashSet<String> ingredients = new HashSet<>() {
-      {
-        add("double cream");
-        add("lemon curd");
-        add("lemon");
-      }
-    };
-    User user = new User("georgia", ingredients);
-    ArrayList<String> possibleRecipes = user.cook();
-    String recipeSelected = possibleRecipes.get(0);
-    System.out.println("RECIPES SIMILAR TO " + recipeSelected + " : ");
-    TreeMap<Recipe, Double> map = user.findSimilarRecipes(recipeSelected);
-    for (Map.Entry<Recipe, Double> entry : map.entrySet()) {
-      System.out.println("Key: " + entry.getKey() + ". Value: " + entry.getValue());
-    }
-    map = user.findSimilarRecipes(recipeSelected);
-    for (Map.Entry<Recipe, Double> entry : map.entrySet()) {
-      System.out.println("Key: " + entry.getKey() + ". Value: " + entry.getValue());
-    }
+    app = new RecipeApp();
   }
 
   private static FreeMarkerEngine createEngine() {
@@ -138,6 +110,7 @@ public final class Main {
     Spark.post("/findSuggestions", new FindRecipeSuggestionsHandler());
     Spark.post("/enterIngredient", new EnterNewIngredientHandler());
     Spark.post("/newUser", new CreateNewUserHandler());
+    Spark.post("/recipe", new GetRecipeHandler());
     Spark.post("/newUserSignup", new CreateNewUserHandlerSignup());
   }
 
@@ -157,9 +130,22 @@ public final class Main {
       res.body(stacktrace.toString());
     }
   }
+  /**
+   * Handles returning values for a given recipe.
+   */
+  private class GetRecipeHandler implements Route {
+    @Override
+    public Object handle(Request request, Response response) throws Exception {
+      JSONObject data = new JSONObject(request.body());
+      String currentRecipeName = data.getString("recipe");
+      User currentUser = app.getCurUser();
+      Recipe recipe = currentUser.findRecipe(currentRecipeName);
+      return recipe.toJson();
+    }
+  }
 
   /**
-   * Handles finding similar recipes when prompted in front end
+   * Handles finding similar recipes when prompted in front end.
    */
   private class FindSimilarRecipesHandler implements Route {
     @Override
@@ -167,6 +153,7 @@ public final class Main {
       JSONObject data = new JSONObject(request.body());
       String currentRecipeName = data.getString("currentRecipe");
 
+      User currentUser = app.getCurUser();
       TreeMap<Recipe, Double> map = currentUser.findSimilarRecipes(currentRecipeName);
 
       Map<String, Object> variables = ImmutableMap.of("firstSimilar", map.firstKey().toString());
@@ -175,32 +162,33 @@ public final class Main {
   }
 
   /**
-   * Handles finding initial recipe suggestions
+   * Handles finding initial recipe suggestions.
    */
   private class FindRecipeSuggestionsHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
+      User currentUser = app.getCurUser();
       ArrayList<String> recipeSuggestions = currentUser.cook();
       Map<String, Object> variables = ImmutableMap.of("firstSuggestion", recipeSuggestions.get(0));
       return GSON.toJson(variables);
     }
   }
-
   /**
-   * Handles entering in a new ingredient to the current users fridge
+   * Handles entering in a new ingredient to the current users fridge.
    */
   private class EnterNewIngredientHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
       JSONObject data = new JSONObject(request.body());
       String ingredientName = data.getString("ingredientName");
+      User currentUser = app.getCurUser();
       currentUser.addIngredient(ingredientName);
       return null;
     }
   }
 
   /**
-   * Handles creating a new user object and updating the currentUser object
+   * Handles creating a new user object and updating the currentUser object.
    */
   private class CreateNewUserHandler implements Route {
     @Override
@@ -214,7 +202,7 @@ public final class Main {
         String[] values = string.split(",");
         HashSet<String> ingredients = new HashSet<>(Arrays.asList(values));
         User newUser = new User(username, ingredients);
-        currentUser = newUser;
+        app.setCurUser(newUser);
       } catch (SQLException e) {
         System.err.println("ERROR: Error connecting to database");
         return "error";
@@ -224,7 +212,7 @@ public final class Main {
   }
 
   /**
-   * Front end handler for creating new user off of signup
+   * Front end handler for creating new user off of signup.
    */
   private class CreateNewUserHandlerSignup implements Route {
     @Override
@@ -236,7 +224,7 @@ public final class Main {
         addUserToDatabase(username);
         HashSet<String> ingredients = new HashSet<>();
         User newUser = new User(username, ingredients);
-        currentUser = newUser;
+        app.setCurUser(newUser);
         return "";
       } catch (SQLException e) {
         System.err.println("ERROR: Error connecting to database");

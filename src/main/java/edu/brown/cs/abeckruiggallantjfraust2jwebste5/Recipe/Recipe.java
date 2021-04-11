@@ -1,9 +1,12 @@
 package edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.gson.Gson;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.User;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Graph.Vertex;
 
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -188,6 +191,17 @@ public class Recipe implements Vertex<Ingredient> {
     return "  -" + title + " : " + url;
   }
 
+  public String toJson() {
+    Map<String, String> mutableMap = new HashMap<>();
+    mutableMap.put("recipeName", this.title);
+    mutableMap.put("chefName", this.chef);
+    mutableMap.put("imageUrl", this.url);
+    ImmutableMap<String, String> immutableMap = ImmutableMap.<String, String>builder()
+            .putAll(mutableMap)
+            .build();
+    Gson gson = new Gson();
+    return gson.toJson(immutableMap);
+  }
   @Override
   public Double getValue() {
     return this.rating;
