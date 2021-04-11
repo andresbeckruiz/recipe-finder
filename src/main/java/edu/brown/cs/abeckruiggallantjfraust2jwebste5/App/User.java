@@ -83,5 +83,14 @@ public class User {
     }
     return recipeGraph.search(Database.getRecipeObject(recipe, this));
   }
+
+  public Recipe findRecipe(String recipeName) {
+    Recipe recipe = recipeGraph.getCentralNodeMap().get(recipeName);
+    if (recipe != null) {
+      return recipe;
+    } else {
+      return Database.getRecipeObject(recipeName, this);
+    }
+  }
 }
 
