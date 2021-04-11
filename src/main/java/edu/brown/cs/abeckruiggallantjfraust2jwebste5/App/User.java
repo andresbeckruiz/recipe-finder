@@ -5,15 +5,16 @@ import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Graph.Graph;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Ingredient;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeMap;
 
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.DEFAULT_RATING;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.NUM_RECOMMENDATIONS;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.RecipeFinder.findRecipesWithIngredients;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.userIngredientRatings;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.userRecipeRatings;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.*;
 
 public class User {
   private HashSet<String> ingredients;
@@ -50,15 +51,32 @@ public class User {
     this.ingredients = ingredients;
   }
 
-  public void addIngredient(String newIngredient) {
+
+  public void addIngredient(String newIngredient) throws SQLException {
     this.ingredients.add(newIngredient);
+    addUserIngredient(this.name, newIngredient);
+    this.addIngredientRating(newIngredient, DEFAULT_RATING);
+  }
+
+  public void removeIngredient(String ingredient) throws SQLException {
+    this.ingredients.remove(ingredient);
+    removeUserIngredient(this.name, ingredient);
+  }
+
+  public void addIngredientRating(String ingredient, Double rating) throws SQLException {
+    addUserIngredientRating(this.name, ingredient, rating);
+    ingredientRatings.put(ingredient, rating);
+  }
+
+  public void addRecipeRating(String recipe, Double rating) throws SQLException {
+    addUserRecipeRating(this.name, recipe, rating);
+    recipeRatings.put(recipe, rating);
   }
 
   public ArrayList<String> cook() {
-    // TODO: change for different number of top recipes
-    //map from number overlapping ingredients to recipe list
     return findRecipesWithIngredients(ingredients, NUM_RECOMMENDATIONS);
   }
+
   public TreeMap<Recipe, Double> findSimilarRecipes(String recipe) {
     if (recipeGraph.getCentralNodeMap().containsKey(recipe)) {
       return recipeGraph.search(recipeGraph.getCentralNodeMap().get(recipe));

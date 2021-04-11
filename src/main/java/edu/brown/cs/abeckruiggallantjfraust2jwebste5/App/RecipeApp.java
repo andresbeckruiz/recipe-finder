@@ -16,8 +16,6 @@ public class RecipeApp {
     } catch (ClassNotFoundException e) {
       System.out.println("ERROR");
     }
-
-    // Create Recipe Graph and Initialize
   }
 
   public User getCurUser() {

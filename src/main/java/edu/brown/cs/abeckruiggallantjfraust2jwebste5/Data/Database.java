@@ -137,6 +137,9 @@ public final class Database {
       String[] recipes = rs.getString(1).trim().split("\\s*,\\s*");
       for (String rec : recipes) {
         String[] tuple = rec.split(":");
+        if (tuple.length != 2) {
+          continue;
+        }
         ratingMap.put(tuple[0], Double.parseDouble(tuple[1]));
       }
       rs.close();
@@ -161,6 +164,9 @@ public final class Database {
       String[] ingredients = rs.getString(1).trim().split("\\s*,\\s*");
       for (String ing : ingredients) {
         String[] tuple = ing.split(":");
+        if (tuple.length != 2) {
+          continue;
+        }
         ratingMap.put(tuple[0], Double.parseDouble(tuple[1]));
       }
       rs.close();
@@ -204,7 +210,6 @@ public final class Database {
                 "INSERT INTO recipes "
                         + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         for (int i = 0; i < params.size(); i++) {
-
           prep.setString(i + 1, params.get(i));
         }
         prep.executeUpdate();
@@ -225,11 +230,159 @@ public final class Database {
       prep = conn.prepareStatement(
               "INSERT INTO users VALUES (?,?,?,?);");
       prep.setString(1, user);
-      prep.setString(2, "test");
-      prep.setString(3, "test");
-      prep.setString(4, "test");
+      prep.setString(2, "");
+      prep.setString(3, "");
+      prep.setString(4, "");
       prep.execute();
       System.out.println("Connected?");
     }
+  }
+
+
+
+
+
+
+  public static void addUserIngredient(String user, String ingredient) throws SQLException {
+    String currentInventory = getUserInventory(user);
+    currentInventory = currentInventory + ("," + ingredient);
+
+    //ToDo: Update entry in users table with new currnetInventory string
+    try {
+      if (conn != null) {
+        PreparedStatement prep;
+        prep = conn.prepareStatement(
+                "INSERT INTO users WHERE name = ? (?);");
+        prep.setString(1, user);
+        prep.setString(2, currentInventory);
+        prep.execute();
+        System.out.println("Connected?");
+      }
+    } catch (Exception e) {
+      System.out.println("SQL ERROR: Adding Ingredient");
+    }
+  }
+
+  public static void removeUserIngredient(String user, String ingredient) throws SQLException {
+    String currentInventory = getUserInventory(user);
+    // ToDo: update currentInventory string and update entry in users table
+    try {
+      if (conn != null) {
+        PreparedStatement prep;
+        prep = conn.prepareStatement(
+                "INSERT INTO users WHERE name = ? (?);");
+        prep.setString(1, user);
+        prep.setString(2, currentInventory);
+        prep.execute();
+        System.out.println("Connected?");
+      }
+    } catch (Exception e) {
+      System.out.println("SQL ERROR: Adding Ingredient");
+    }
+  }
+
+
+
+  public static void addUserIngredientRating(String user, String ingredient, Double rating) throws SQLException {
+    String currentRatings = getUserIngredientRatings(user);
+    //ToDo: update current ratings string and entry in table
+    try {
+      if (conn != null) {
+        PreparedStatement prep;
+        prep = conn.prepareStatement(
+                "INSERT INTO users WHERE name = ? (?);");
+        prep.setString(1, user);
+        prep.setString(2, currentRatings);
+        prep.execute();
+        System.out.println("Connected?");
+      }
+    } catch (Exception e) {
+      System.out.println("SQL ERROR");
+    }
+  }
+
+  public static String getUserIngredientRatings(String user) throws SQLException {
+    try {
+      if (conn != null) {
+        PreparedStatement prep;
+        prep = conn.prepareStatement(
+                "SELECT ratedIngredients FROM users WHERE name = ?;");
+        prep.setString(1, user);
+        ResultSet rs = prep.executeQuery();
+        while (rs.next()) {
+          String ratings = rs.getString(1);
+          return ratings;
+        }
+      }
+    } catch (Exception e) {
+      System.out.println("SQL ERROR");
+    }
+    return "";
+  }
+
+  public static void addUserRecipeRating(String user, String recipe, Double rating) throws SQLException {
+    String currentRatings = getUserRecipeRatings(user);
+    //ToDO: update current ratings string and entry in table
+    try {
+      if (conn != null) {
+        PreparedStatement prep;
+        prep = conn.prepareStatement(
+                "INSERT INTO users WHERE name = ? (?);");
+        prep.setString(1, user);
+        prep.setString(2, currentRatings);
+        prep.execute();
+        System.out.println("Connected?");
+      }
+    } catch (Exception e) {
+      System.out.println("SQL ERROR");
+    }
+  }
+
+  public static String getUserRecipeRatings(String user) throws SQLException {
+    try {
+      if (conn != null) {
+        PreparedStatement prep;
+        prep = conn.prepareStatement(
+                "SELECT ratedRecipes FROM users WHERE name = ?;");
+        prep.setString(1, user);
+        ResultSet rs = prep.executeQuery();
+        while (rs.next()) {
+          String ratings = rs.getString(1);
+          return ratings;
+        }
+      }
+    } catch (Exception e) {
+      System.out.println("SQL ERROR");
+    }
+    return "";
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  public static String getUserInventory(String user) throws SQLException {
+    if (conn != null) {
+      PreparedStatement prep;
+      prep = conn.prepareStatement(
+              "SELECT inventory FROM users WHERE name = ?;");
+      prep.setString(1, user);
+      ResultSet rs = prep.executeQuery();
+      while (rs.next()) {
+        String inventory = rs.getString(1);
+        return inventory;
+      }
+      return "";
+    }
+    return "";
   }
 }

@@ -9,12 +9,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.addUserToDatabase;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+
 import com.google.common.collect.ImmutableMap;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
 import joptsimple.OptionParser;
@@ -28,6 +24,8 @@ import spark.Spark;
 import spark.template.freemarker.FreeMarkerEngine;
 import com.google.gson.Gson;
 import freemarker.template.Configuration;
+
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.*;
 
 //import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.JsonToSql.parseJson;
 
@@ -49,12 +47,11 @@ public final class Main {
   }
 
   private final String[] args;
-  private User currentUser;
-  private boolean userSet;
+  private RecipeApp recipeApp;
 
   private Main(String[] args) {
     this.args = args;
-    this.userSet = false;
+    this.recipeApp = new RecipeApp();
   }
 
   /**
@@ -135,9 +132,15 @@ public final class Main {
     Spark.before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
     Spark.exception(Exception.class, new ExceptionPrinter());
 
-    Spark.post("/findSimilar", new FindSimilarRecipesHandler());
-    Spark.post("/findSuggestions", new FindRecipeSuggestionsHandler());
-    Spark.post("/enterIngredient", new EnterNewIngredientHandler());
+    Spark.post("/enter-ingredient", new AddIngredientHandler());
+    Spark.post("/rate-ingredient", new RateIngredientHandler());
+    Spark.post("/delete-ingredient", new DeleteIngredientHandler());
+
+    Spark.post("/find-suggestions", new FindRecipeSuggestionsHandler());
+    Spark.post("/recipe", new FindSimilarRecipesHandler());
+    Spark.post("/rate-recipe", new RateRecipeHandler());
+
+
     Spark.post("/newUser", new CreateNewUserHandler());
     Spark.post("/newUserSignup", new CreateNewUserHandlerSignup());
   }
@@ -159,19 +162,36 @@ public final class Main {
     }
   }
 
-  /**
-   * Handles finding similar recipes when prompted in front end
-   */
-  private class FindSimilarRecipesHandler implements Route {
+  private class AddIngredientHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
       JSONObject data = new JSONObject(request.body());
-      String currentRecipeName = data.getString("currentRecipe");
-
-      TreeMap<Recipe, Double> map = currentUser.findSimilarRecipes(currentRecipeName);
-
-      Map<String, Object> variables = ImmutableMap.of("firstSimilar", map.firstKey().toString());
+      String ingredientName = data.getString("ingredient");
+      recipeApp.getCurUser().addIngredient(ingredientName);
+      Double ingredientRating = recipeApp.getCurUser().getIngredientRatings().get(ingredientName);
+      Map<String, Object> variables = ImmutableMap.of("rating", ingredientRating);
       return GSON.toJson(variables);
+    }
+  }
+
+  private class RateIngredientHandler implements Route {
+    @Override
+    public Object handle(Request request, Response response) throws Exception {
+      JSONObject data = new JSONObject(request.body());
+      String ingredientName = data.getString("ingredient");
+      Double ingredientRating = data.getDouble("rating");
+      recipeApp.getCurUser().addIngredientRating(ingredientName, ingredientRating);
+      return null;
+    }
+  }
+
+  private class DeleteIngredientHandler implements Route {
+    @Override
+    public Object handle(Request request, Response response) throws Exception {
+      JSONObject data = new JSONObject(request.body());
+      String ingredientName = data.getString("ingredient");
+      recipeApp.getCurUser().removeIngredient(ingredientName);
+      return null;
     }
   }
 
@@ -181,21 +201,43 @@ public final class Main {
   private class FindRecipeSuggestionsHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-      ArrayList<String> recipeSuggestions = currentUser.cook();
+      ArrayList<String> recipeSuggestions = recipeApp.getCurUser().cook();
+
+      // ToDO: edit cook() to return correct info for front end
+
+
       Map<String, Object> variables = ImmutableMap.of("firstSuggestion", recipeSuggestions.get(0));
       return GSON.toJson(variables);
     }
   }
 
+
   /**
-   * Handles entering in a new ingredient to the current users fridge
+   * Handles finding similar recipes when prompted in front end
    */
-  private class EnterNewIngredientHandler implements Route {
+  private class FindSimilarRecipesHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
       JSONObject data = new JSONObject(request.body());
-      String ingredientName = data.getString("ingredientName");
-      currentUser.addIngredient(ingredientName);
+      String currentRecipeName = data.getString("recipe");
+
+      // ToDo: create method to get all info about "CurrentRecipeName"
+      // ToDo: change FindsimilarRecipes to return correct info
+
+      TreeMap<Recipe, Double> map = recipeApp.getCurUser().findSimilarRecipes(currentRecipeName);
+
+      Map<String, Object> variables = ImmutableMap.of("firstSimilar", map.firstKey().toString());
+      return GSON.toJson(variables);
+    }
+  }
+
+  private class RateRecipeHandler implements Route {
+    @Override
+    public Object handle(Request request, Response response) throws Exception {
+      JSONObject data = new JSONObject(request.body());
+      String recipeName = data.getString("recipe");
+      Double recipeRating = data.getDouble("rating");
+      recipeApp.getCurUser().addRecipeRating(recipeName, recipeRating);
       return null;
     }
   }
@@ -210,42 +252,23 @@ public final class Main {
       String username = data.getString("name");
 
       System.out.println("Username" + username);
-      //check if user exists. If not, create new row in table
       try {
-        Class.forName("org.sqlite.JDBC");
-        String urlToDB = "jdbc:sqlite:data/newdb.sqlite3";
-        Connection conn = DriverManager.getConnection(urlToDB);
-        PreparedStatement prep;
-        prep = conn.prepareStatement(
-                  "SELECT name FROM 'users' WHERE name = ?;");
-        prep.setString(1, username);
-        ResultSet rs = prep.executeQuery();
-        while (rs.next()) {
-          //create a Node object for each entry in table
-          String id = rs.getString(1);
-              //we want to make sure this is valid and that the table is well formatted. If
-              //it isn't we throw an error.
-        }
-        rs.close();
-        conn.close();
-        return "";
+        String string = getUserInventory(username);
+        //splitting to create hashset for user ingredients
+        String[] values = string.split(",");
+        HashSet<String> ingredients = new HashSet<>(Arrays.asList(values));
+        User newUser = new User(username, ingredients);
+        recipeApp.setCurUser(newUser);
       } catch (SQLException e) {
         System.err.println("ERROR: Error connecting to database");
         return "error";
-      } catch (ClassNotFoundException e) {
-        System.err.println("ERROR: Invalid database class");
-        return "error";
       }
-
-//        HashSet<String> ingredients = new HashSet<>();
-//        User newUser = new User(username, ingredients);
-//        currentUser = newUser;
-//        return "";
+      return "";
     }
   }
 
   /**
-   * Front end handler for creating new user off of signuo
+   * Front end handler for creating new user off of signup
    */
   private class CreateNewUserHandlerSignup implements Route {
     @Override
@@ -253,12 +276,11 @@ public final class Main {
       JSONObject data = new JSONObject(request.body());
       String username = data.getString("name");
       System.out.println("Username" + username);
-      //check if user exists. If not, create new row in table
       try {
         addUserToDatabase(username);
         HashSet<String> ingredients = new HashSet<>();
         User newUser = new User(username, ingredients);
-        currentUser = newUser;
+        recipeApp.setCurUser(newUser);
         return "";
       } catch (SQLException e) {
         System.err.println("ERROR: Error connecting to database");
