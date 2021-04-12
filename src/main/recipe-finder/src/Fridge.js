@@ -236,7 +236,7 @@ function Fridge() {
     //populates fridge with user inventory when page loads
     useEffect(() => {
         list = []
-        getUserInventory("georgia")
+        getUserInventory(currentUser.email)
     },[])
 
     return (
