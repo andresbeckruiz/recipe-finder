@@ -1,10 +1,37 @@
 TODO:
-- null inputs
-- test multiple users
-- not allowing adding multiple of same users
-- when not putting in password same way twice errors
-- when you put in wrong password, error is thrown
-- when ingredient is already in inventory what to do?
-- catch if any endpoitn curUser = null
-- figure out what to do if image is empty
-- when finding similar recipes sometimes even though json is returned, it isn't loaded
+Back end (Georgia + Jack)
+- testing (Georgia)
+- commenting (Georgia)
+- weighted average ratings (Jack)
+- adding ratings should overwrite rather than append (ingredient) (Georgia)
+- recipe ratings endpoint (Jack)
+- think of edge cases + test null inputs (Jack)
+- profile page routes (Jack)
+    - delete user
+    - view all ratings?
+
+Front end:
+- comment login (Andres)
+- error page for route that doesn't exist (/aa) (Andres)
+- rating of ingredients (Georgia)
+- autocorrect of ingredient add (Andres)
+- preventing non-ingredient input (Andres)
+- fixing aesthetic of recipe page (Jacob)
+- default image for recipes that don't have images (Jacob)
+- profile page (Andres)
+    - delete account
+    - update password (move from main page)
+    (maybe later see ratings)
+
+Test:
+- multiple users
+- when ingredient is already in inventory
+- empty image
+
+
+// TODO: weighted sum here
+    // TODO: interaction between logged in users?
+    // DEMO: one user with a bunch of data
+    // TODO: profile of past recipes
+    // TODO: delete account
+    // TODO: default image on front end (onerror=)
