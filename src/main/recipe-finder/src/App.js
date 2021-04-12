@@ -11,6 +11,7 @@ import UpdatePassword from "./UpdatePassword";
 import Recipe from "./Recipe";
 import ForgotPassword from "./ForgotPassword"
 import RecipeSelection from "./RecipeSelection";
+import Error from "./Error";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
                           <Route path={"/signup"} component={Signup}/>
                           <Route path={"/login"} component={Login}/>
                           <Route path={"/forgot-password"} component={ForgotPassword}/>
+                          <Route component={Error}/>
                       </Switch>
                   </AuthProvider>
               </Router>
