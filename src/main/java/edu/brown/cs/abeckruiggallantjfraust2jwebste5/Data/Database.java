@@ -243,7 +243,6 @@ public final class Database {
 
   public static void addUserIngredient(String user, String ingredient) throws SQLException {
     String currentInventory = getUserInventory(user);
-
     // if ingredient is at end
     String lastValue = currentInventory.substring(currentInventory.lastIndexOf(","));
     // if ingredient is at beginning
@@ -258,8 +257,6 @@ public final class Database {
       } else {
         currentInventory = ingredient;
       }
-
-      //ToDo: Update entry in users table with new currnetInventory string
       try {
         if (conn != null) {
           PreparedStatement prep;
@@ -268,10 +265,10 @@ public final class Database {
           prep.setString(1, currentInventory);
           prep.setString(2, user);
           prep.execute();
-          System.out.println("Connected?");
+          prep.close();
         }
       } catch (Exception e) {
-        System.out.println("SQL ERROR: Adding Ingredient");
+        System.out.println(e.getMessage());
       }
     }
   }
@@ -315,11 +312,16 @@ public final class Database {
   public static void addUserIngredientRating(User user,
                                              String ingredient, Double rating) throws SQLException {
     String currentRatings = getUserIngredientRatings(user.getName());
+
     if (currentRatings.contains(ingredient)) {
       currentRatings = currentRatings.replace(ingredient + ":"
               + user.getIngredientRatings().get(ingredient) + ",", "");
     }
-    currentRatings = currentRatings + (ingredient + ":" + rating.toString() + ",");
+    if (currentRatings.length() != 0) {
+      currentRatings = currentRatings + ("," + ingredient + ":" + rating.toString());
+    } else {
+      currentRatings = ingredient + ":" + rating.toString();
+    }
     try {
       if (conn != null) {
         PreparedStatement prep;

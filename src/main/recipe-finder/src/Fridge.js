@@ -10,7 +10,6 @@ import {Alert} from 'react-bootstrap'
 import {useAuth} from "./contexts/AuthContext"
 import Rating from "@material-ui/lab/Rating";
 
-let list = [];
 let ingredientRatings = {};
 
 // event listener for enter key
@@ -35,7 +34,7 @@ function Fridge() {
     const [input, setInput] = useState("");
 
     // useState variable for ingredients list
-    const [ingredients, setIngredients] = useState(list);
+    const [ingredients, setIngredients] = useState(ingredientRatings);
 
     // useState variables for deletion modal
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -77,7 +76,7 @@ function Fridge() {
             .then(response => {
                 //update ratings
                 ingredientRatings[curr] = response.data["rating"];
-
+                setIngredients(ingredientRatings)
             })
 
             .catch(function (error) {
@@ -89,7 +88,6 @@ function Fridge() {
     * Makes an axios request for ingredient rating
     */
     const rateIngredient = (curr, rating, event) => {
-
         const toSend = {
             ingredient: curr,
             rating: rating
@@ -108,6 +106,7 @@ function Fridge() {
             config
         )
             .then(response => {
+                console.log(rating)
                 //nothing
             })
 
@@ -165,18 +164,13 @@ function Fridge() {
 
     // function for submit button
     const onSubmit = () => {
-        console.log(ingredientRatings);
         let text = input.trim();
-        if(!list.includes(text)) {
-            //put current input into list
-            list.unshift(text);
-
-            //update ingredients
-            setIngredients(list);
-
+        if(ingredientRatings[text] !== undefined) {
             //clear from this scope and from input box
-            document.getElementById("inputBox").value = "";
-            setInput("");
+            if (document.getElementById("inputBox") != null) {
+                document.getElementById("inputBox").value = "";
+                setInput("");
+            }
         }
 
         //open modal if need be
@@ -185,7 +179,6 @@ function Fridge() {
         }
         //axios request
         addIngredient(text);
-
     }
 
     //set global for listener
@@ -221,11 +214,13 @@ function Fridge() {
             config
         )
             .then(response => {
+                console.log(response)
+                let inventory = response.data["inventory"]
                 //update ratings
-                response.data["inventory"].map((ingredient) => {
-                    list.push(ingredient)
-                })
-                setIngredients(list)
+                for (var ingredient in inventory) {
+                    ingredientRatings[ingredient] = inventory[ingredient]
+                }
+                setIngredients(ingredientRatings)
             })
 
             .catch(function (error) {
@@ -235,7 +230,7 @@ function Fridge() {
 
     //populates fridge with user inventory when page loads
     useEffect(() => {
-        list = []
+        ingredientRatings = {}
         getUserInventory(currentUser.email)
     },[])
 
