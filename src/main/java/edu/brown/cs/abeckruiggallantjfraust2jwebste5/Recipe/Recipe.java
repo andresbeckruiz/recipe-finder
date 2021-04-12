@@ -1,8 +1,6 @@
 package edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.User;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Graph.Vertex;
@@ -192,7 +190,7 @@ public class Recipe implements Vertex<Ingredient> {
     return "  -" + title + " : " + url;
   }
 
-  public ImmutableMap toMap() {
+  public ImmutableMap toSmallMap() {
     Map<String, String> mutableMap = new HashMap<>();
     mutableMap.put("recipeName", this.title);
     if (this.photourl == null) {
@@ -206,6 +204,27 @@ public class Recipe implements Vertex<Ingredient> {
             .build();
     return immutableMap;
   }
+
+  public ImmutableMap toBigMap() {
+    Map<String, String> map = new HashMap<>() {{
+        put("title", checkForNull(title));
+        put("description", checkForNull(description));
+        put("instructions", checkForNull(instructions));
+        put("url", checkForNull(url));
+        put("chefName", checkForNull(chef));
+      }
+    };
+    HashSet<String> recipeIngredients = ingredients;
+    int ingredeintNum = 0;
+    for (String ingredient : recipeIngredients) {
+      map.put("ingredient" + ingredeintNum, ingredient);
+      ingredeintNum++;
+    }
+    ImmutableMap<String, String> immutableMap = ImmutableMap.<String, String>builder()
+            .putAll(map)
+            .build();
+    return immutableMap;
+  }
   @Override
   public Double getValue() {
     return this.rating;
@@ -214,5 +233,13 @@ public class Recipe implements Vertex<Ingredient> {
   @Override
   public void setValue(double value) {
     this.rating = value;
+  }
+
+  private String checkForNull(String toCheck) {
+    if (toCheck != null) {
+      return toCheck;
+    } else {
+      return "";
+    }
   }
 }

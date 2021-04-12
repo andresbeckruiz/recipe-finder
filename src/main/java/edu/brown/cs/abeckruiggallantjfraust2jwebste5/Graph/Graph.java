@@ -45,9 +45,7 @@ public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex
 
     // get adjacent to adjacent vertices, and for each one compute similarity
     for (nonCentralVertex nonCentralAdj : adjacentVertices) {
-      System.out.println("name: " + nonCentralAdj.getName());
       if (nonCentralAdj == null || nonCentralAdj.getName().equals("null")) {
-        System.out.println("exiting");
         continue;
       }
       HashSet<centralVertex> adjToAdjVertices = nonCentralAdj.getAdjacentVertices(centralNodeMap);

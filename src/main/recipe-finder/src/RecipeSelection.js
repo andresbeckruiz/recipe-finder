@@ -55,12 +55,10 @@ function RecipeSelection() {
             config
         )
             .then(response => {
-                console.log(response.data)
                 let object = response.data;
                 //iterate through suggestions
                 recipes = []
                 for(var i in object) {
-                    console.log(object[i])
                     recipes.push(object[i]);
                 }
                 setRecipes(recipes);

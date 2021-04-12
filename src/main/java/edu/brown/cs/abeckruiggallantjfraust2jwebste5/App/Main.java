@@ -5,10 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Arrays;
+import java.util.*;
 
 import com.google.common.collect.ImmutableMap;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
@@ -175,17 +172,13 @@ public final class Main {
   private class FindRecipeSuggestionsHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-      System.out.println("cooking");
       ArrayList<Recipe> recipeSuggestions = recipeApp.getCurUser().cook();
-      System.out.println("user" + recipeApp.getCurUser().getName());
-      System.out.println(recipeSuggestions);
       // ToDO: edit cook() to return correct info for front end
       Map<String, Object> variables = ImmutableMap.of("firstSuggestion",
-              recipeSuggestions.get(0).toMap(),
-              "secondSuggestion", recipeSuggestions.get(1).toMap(),
-              "thirdSuggestion", recipeSuggestions.get(2).toMap());
+              recipeSuggestions.get(0).toSmallMap(),
+              "secondSuggestion", recipeSuggestions.get(1).toSmallMap(),
+              "thirdSuggestion", recipeSuggestions.get(2).toSmallMap());
       String json = GSON.toJson(variables);
-      System.out.println("json " + json);
       return json;
     }
   }
@@ -196,27 +189,23 @@ public final class Main {
   private class FindSimilarRecipesHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
+      Gson gson = new Gson();
       JSONObject data = new JSONObject(request.body());
-      System.out.println("here");
       String currentRecipeName = data.getString("recipe");
-      System.out.println(currentRecipeName);
       // ToDo: create method to get all info about "CurrentRecipeName"
       Recipe curRecipe = getRecipeObject(currentRecipeName, recipeApp.getCurUser());
-      Map<String, Object> recipeVariables = ImmutableMap.of("title", curRecipe.getName(),
-              "description,", curRecipe.getDescription(), "instructions",
-              curRecipe.getInstructions(), "url", curRecipe.getUrl(), "chefName",
-              curRecipe.getChef());
 
-      for (int i = 0; i < curRecipe.getIngredients().size(); i++) {
-        recipeVariables.put("ingredient" + i, curRecipe.getIngredients().toArray()[i]);
+      ArrayList<Map<String, String>> similarRecipes = new ArrayList<>();
+      TreeMap<Recipe, Double> map = recipeApp.getCurUser().findSimilarRecipes(currentRecipeName);
+      for (Map.Entry<Recipe, Double> entry : map.entrySet()) {
+        Recipe recipe = entry.getKey();
+        similarRecipes.add(recipe.toBigMap());
       }
-
-      // ToDo: change FindSimilarRecipes to return correct info
-
-      //TreeMap<Recipe, Double> map = recipeApp.getCurUser().findSimilarRecipes(currentRecipeName);
-
-      Map<String, Object> variables = ImmutableMap.of("recipeInformation", recipeVariables);
-      return GSON.toJson(recipeVariables);
+      Map<String, Object> variables = ImmutableMap.of("recipe",
+              curRecipe.toBigMap(), "similar1", similarRecipes.get(0),
+              "similar2", similarRecipes.get(1), "similar3", similarRecipes.get(2));
+      String json = GSON.toJson(variables);
+      return json;
     }
   }
 
@@ -227,7 +216,7 @@ public final class Main {
       String recipeName = data.getString("recipe");
       Double recipeRating = data.getDouble("rating");
       recipeApp.getCurUser().addRecipeRating(recipeName, recipeRating);
-      return null;
+      return "";
     }
   }
 
@@ -271,7 +260,6 @@ public final class Main {
     public Object handle(Request request, Response response) throws Exception {
       JSONObject data = new JSONObject(request.body());
       String username = data.getString("name");
-      System.out.println("Username" + username);
       try {
         addUserToDatabase(username);
         HashSet<String> ingredients = new HashSet<>();

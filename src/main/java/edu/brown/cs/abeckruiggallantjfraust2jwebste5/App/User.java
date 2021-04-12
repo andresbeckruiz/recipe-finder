@@ -87,10 +87,14 @@ public class User {
   }
 
   public TreeMap<Recipe, Double> findSimilarRecipes(String recipe) {
+    TreeMap<Recipe, Double> map;
     if (recipeGraph.getCentralNodeMap().containsKey(recipe)) {
-      return recipeGraph.search(recipeGraph.getCentralNodeMap().get(recipe));
+      map = recipeGraph.search(recipeGraph.getCentralNodeMap().get(recipe));
+
+      return map;
     }
-    return recipeGraph.search(Database.getRecipeObject(recipe, this));
+    map = recipeGraph.search(Database.getRecipeObject(recipe, this));
+    return map;
   }
 
   public Recipe findRecipe(String recipeName) {

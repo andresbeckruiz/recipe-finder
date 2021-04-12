@@ -41,23 +41,24 @@ function Recipe(props) {
             config
         )
             .then(response => {
-                let object = response.data["data"];
+                console.log(response.data)
+                let object = response.data;
 
-                //set up recipe itself
-                let recipe = object[0];
-                setName(recipe["title"]);
-                setIngredients(recipe["ingredients"]);
-                setPreparation(recipe["instructions"]);
                 //TODO: ADD THE REST PASSED IN
 
                 //set up suggestions!
-                for (let i = 1; i < Object.keys(object).length; i++) {
-                    let sugg = object[i];
-                    //get image and name
-                    let name = sugg["recipeName"];
-                    let img = sugg["src"];
-
-                    //store it dynamically to be accessed by SimilarRecipe objects
+                for (var key in object) {
+                    let recipe = object[key]
+                    //set up recipe itself
+                    if (key == 'recipe') {
+                        setName(recipe["title"]);
+                        setIngredients(recipe["ingredients"]);
+                        setPreparation(recipe["instructions"]);
+                    } else {  //store it dynamically to be accessed by SimilarRecipe objects
+                        //get image and name
+                        let name = recipe["recipeName"];
+                        let img = recipe["src"];
+                    }
                 }
 
             })
@@ -107,8 +108,8 @@ function Recipe(props) {
     //useEffect hook for initial render
     useEffect(() => {
         //set up recipe and similar recipes
-        setName(props.location.state.name);
-        // findSimilar();
+        //setName(props.location.state.name);
+         findSimilar(props.location.state.name);
         //get initial rating
     }, [])
 
