@@ -30,6 +30,7 @@ function App() {
                           <Route path={"/signup"} component={Signup}/>
                           <Route path={"/login"} component={Login}/>
                           <Route path={"/forgot-password"} component={ForgotPassword}/>
+                          {/*if none of above routes, error page will display*/}
                           <Route component={Error}/>
                       </Switch>
                   </AuthProvider>

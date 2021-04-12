@@ -12,7 +12,7 @@ Back end (Georgia + Jack)
 
 Front end:
 - comment login (Andres)
-- error page for route that doesn't exist (/aa) (Andres)
+- error page for route that doesn't exist (/aa) (Andres) DONE
 - rating of ingredients (Georgia)
 - autocorrect of ingredient add (Andres)
 - preventing non-ingredient input (Andres)

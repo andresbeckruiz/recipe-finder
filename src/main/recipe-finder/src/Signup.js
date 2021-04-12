@@ -5,7 +5,7 @@ import {Link, useHistory} from "react-router-dom"
 import axios from "axios"
 
 export default function Signup() {
-    //const nameRef = useRef()
+    const nameRef = useRef()
     const emailRef = useRef()
     const passwordRef = useRef()
     const passwordConfirmRef = useRef()
@@ -14,10 +14,11 @@ export default function Signup() {
     const [loading, setLoading] = useState(false)
     const history = useHistory()
 
-    const createUser = (email) => {
+    const createUser = (name, email) => {
         console.log(emailRef.current.value)
         const toSend = {
-            name: email
+            name: name,
+            email: email
         };
         let config = {
             headers: {
@@ -54,7 +55,7 @@ export default function Signup() {
             //don't want user to click sign up button multiple times
             setLoading(true)
             await signup(emailRef.current.value, passwordRef.current.value)
-            await createUser(emailRef.current.value)
+            await createUser(nameRef.current.value, emailRef.current.value)
             history.push("/fridge")
         } catch (error) {
             setError("Failed to create an account")
@@ -72,10 +73,10 @@ export default function Signup() {
                 <h2 className={"text-center mb-3"}> Sign Up</h2>
                   {error && <Alert variant={"danger"}> {error} </Alert>}
                 <Form onSubmit={handleSubmit}>
-                    {/*<Form.Group id="name">*/}
-                    {/*    <Form.Label>Name</Form.Label>*/}
-                    {/*    <Form.Control type={"name"} ref={{nameRef}} required/>*/}
-                    {/*</Form.Group>*/}
+                    <Form.Group id="name">
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control type={"name"} ref={nameRef} required/>
+                    </Form.Group>
                     <Form.Group id="email">
                         <Form.Label>Email</Form.Label>
                         <Form.Control type={"email"} ref={emailRef} required/>

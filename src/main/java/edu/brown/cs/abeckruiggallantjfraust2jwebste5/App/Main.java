@@ -5,7 +5,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.TreeMap;
 
 import com.google.common.collect.ImmutableMap;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
@@ -22,7 +27,11 @@ import com.google.gson.Gson;
 import freemarker.template.Configuration;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.DEFAULT_RATING;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.*;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.addUserToDatabase;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getName;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getRecipeObject;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserIngredientRatings;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserInventory;
 
 //import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.JsonToSql.parseJson;
 
@@ -66,8 +75,6 @@ public final class Main {
     if (options.has("gui")) {
       runSparkServer((int) options.valueOf("port"));
     }
-
-    System.out.println("Running");
   }
 
   private static FreeMarkerEngine createEngine() {
@@ -115,6 +122,7 @@ public final class Main {
     Spark.post("/newUser", new CreateNewUserHandler());
     Spark.post("/newUserSignup", new CreateNewUserHandlerSignup());
     Spark.post("/inventory", new GetUserInventory());
+    Spark.post("/name", new GetName());
   }
 
   /**
@@ -268,11 +276,14 @@ public final class Main {
     @Override
     public Object handle(Request request, Response response) throws Exception {
       JSONObject data = new JSONObject(request.body());
-      String username = data.getString("name");
+      String name = data.getString("name");
+      String email = data.getString("email");
+      System.out.println("NAME:" + name);
+      System.out.println("EMAIL:" + email);
       try {
-        addUserToDatabase(username);
+        addUserToDatabase(name, email);
         HashSet<String> ingredients = new HashSet<>();
-        User newUser = new User(username, ingredients);
+        User newUser = new User(email, ingredients);
         recipeApp.setCurUser(newUser);
         return "";
       } catch (SQLException e) {
@@ -317,6 +328,22 @@ public final class Main {
         }
         return GSON.toJson(map);
 
+      } catch (SQLException e) {
+        System.err.println("ERROR: Error connecting to database");
+        return "error";
+      }
+    }
+  }
+
+  private class GetName implements Route {
+    @Override
+    public Object handle(Request request, Response response) throws Exception {
+      JSONObject data = new JSONObject(request.body());
+      String email = data.getString("name");
+      try {
+        String name = getName(email);
+        Map<String, String> map = ImmutableMap.of("name", name);
+        return GSON.toJson(map);
       } catch (SQLException e) {
         System.err.println("ERROR: Error connecting to database");
         return "error";

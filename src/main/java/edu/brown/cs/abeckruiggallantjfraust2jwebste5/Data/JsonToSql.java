@@ -16,6 +16,7 @@ import java.util.HashMap;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.createIngredientDatabase;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.createRecipeDatabase;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.createUserDatabase;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.initialize;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.addToRecipeDatabase;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.addIngredient;
@@ -30,6 +31,7 @@ public final class JsonToSql {
       initialize("data/newdb.sqlite3");
       createRecipeDatabase();
       createIngredientDatabase();
+      createUserDatabase();
       JSONParser parser = new JSONParser();
       BufferedReader bufferedReader = new BufferedReader(new FileReader("data/recipes2.json"));
       String line;

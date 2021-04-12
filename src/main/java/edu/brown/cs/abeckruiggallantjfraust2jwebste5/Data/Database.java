@@ -47,26 +47,6 @@ public final class Database {
     }
   }
 
-  public static void addIngredient(String ingredient, String recipes) {
-    try {
-      if (conn != null) {
-        PreparedStatement prep = conn.prepareStatement(
-                "INSERT INTO ingredientMap "
-                        + "VALUES (?, ?)");
-        prep.setString(1, ingredient);
-        prep.setString(2, recipes);
-        prep.execute();
-        prep.close();
-      }
-    } catch (Exception e) {
-      if (e.getMessage().contains("constraint violation")) {
-        return;
-      } else {
-        System.out.println(e.getMessage());
-      }
-    }
-
-  }
   public static void createRecipeDatabase() throws SQLException {
     try {
       PreparedStatement prep = conn.prepareStatement("DROP TABLE IF EXISTS recipes");
@@ -88,6 +68,44 @@ public final class Database {
       prep.close();
     } catch (Exception e) {
       System.out.println(e.getMessage());
+    }
+  }
+
+  public static void createUserDatabase() throws SQLException {
+    try {
+      PreparedStatement prep = conn.prepareStatement("DROP TABLE IF EXISTS users");
+      prep.execute();
+      prep = conn.prepareStatement(
+              "CREATE TABLE IF NOT EXISTS users("
+                      + "name TEXT, "
+                      + "email TEXT PRIMARY KEY,"
+                      + "ratedRecipes TEXT,"
+                      + "ratedIngredients TEXT,"
+                      + "inventory);");
+      prep.execute();
+      prep.close();
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+  }
+
+  public static void addIngredient(String ingredient, String recipes) {
+    try {
+      if (conn != null) {
+        PreparedStatement prep = conn.prepareStatement(
+                "INSERT INTO ingredientMap "
+                        + "VALUES (?, ?)");
+        prep.setString(1, ingredient);
+        prep.setString(2, recipes);
+        prep.execute();
+        prep.close();
+      }
+    } catch (Exception e) {
+      if (e.getMessage().contains("constraint violation")) {
+        return;
+      } else {
+        System.out.println(e.getMessage());
+      }
     }
   }
 
@@ -130,7 +148,7 @@ public final class Database {
   public static HashMap<String, Double> userRecipeRatings(String username) {
     try {
       PreparedStatement prep = conn.prepareStatement("SELECT ratedRecipes FROM users "
-              + "WHERE name IS ?");
+              + "WHERE email IS ?");
       prep.setString(1, username);
       ResultSet rs = prep.executeQuery();
       if (!rs.isBeforeFirst()) {
@@ -157,7 +175,7 @@ public final class Database {
   public static HashMap<String, Double> userIngredientRatings(String username) {
     try {
       PreparedStatement prep = conn.prepareStatement("SELECT ratedIngredients FROM users "
-              + "WHERE name IS ?");
+              + "WHERE email IS ?");
       prep.setString(1, username);
       ResultSet rs = prep.executeQuery();
       if (!rs.isBeforeFirst()) {
@@ -227,15 +245,16 @@ public final class Database {
     }
   }
 
-  public static void addUserToDatabase(String user) throws SQLException {
+  public static void addUserToDatabase(String name, String email) throws SQLException {
     if (conn != null) {
       PreparedStatement prep;
       prep = conn.prepareStatement(
-              "INSERT INTO users VALUES (?,?,?,?);");
-      prep.setString(1, user);
-      prep.setString(2, "");
+              "INSERT INTO users VALUES (?,?,?,?,?);");
+      prep.setString(1, name);
+      prep.setString(2, email);
       prep.setString(3, "");
       prep.setString(4, "");
+      prep.setString(5, "");
       prep.execute();
     }
   }
@@ -261,7 +280,7 @@ public final class Database {
         if (conn != null) {
           PreparedStatement prep;
           prep = conn.prepareStatement(
-                  "UPDATE users SET inventory = ? WHERE name = ?;");
+                  "UPDATE users SET inventory = ? WHERE email = ?;");
           prep.setString(1, currentInventory);
           prep.setString(2, user);
           prep.execute();
@@ -297,7 +316,7 @@ public final class Database {
       if (conn != null) {
         PreparedStatement prep;
         prep = conn.prepareStatement(
-                "UPDATE users SET inventory = ? WHERE name = ?;");
+                "UPDATE users SET inventory = ? WHERE email = ?;");
         prep.setString(1, currentInventory);
         prep.setString(2, user);
         prep.execute();
@@ -326,7 +345,7 @@ public final class Database {
       if (conn != null) {
         PreparedStatement prep;
         prep = conn.prepareStatement(
-                "UPDATE users SET ratedIngredients = ? WHERE name = ?;");
+                "UPDATE users SET ratedIngredients = ? WHERE email = ?;");
         prep.setString(1, currentRatings);
         prep.setString(2, user.getName());
         prep.execute();
@@ -342,7 +361,7 @@ public final class Database {
       if (conn != null) {
         PreparedStatement prep;
         prep = conn.prepareStatement(
-                "SELECT ratedIngredients FROM users WHERE name = ?;");
+                "SELECT ratedIngredients FROM users WHERE email = ?;");
         prep.setString(1, user);
         ResultSet rs = prep.executeQuery();
         while (rs.next()) {
@@ -370,7 +389,7 @@ public final class Database {
       if (conn != null) {
         PreparedStatement prep;
         prep = conn.prepareStatement(
-                "UPDATE users SET ratedRecipes = ? WHERE name = ?;");
+                "UPDATE users SET ratedRecipes = ? WHERE email = ?;");
         prep.setString(1, currentRatings);
         prep.setString(2, user.getName());
         prep.execute();
@@ -386,7 +405,7 @@ public final class Database {
       if (conn != null) {
         PreparedStatement prep;
         prep = conn.prepareStatement(
-                "SELECT ratedRecipes FROM users WHERE name = ?;");
+                "SELECT ratedRecipes FROM users WHERE email = ?;");
         prep.setString(1, user);
         ResultSet rs = prep.executeQuery();
         while (rs.next()) {
@@ -404,7 +423,7 @@ public final class Database {
     if (conn != null) {
       PreparedStatement prep;
       prep = conn.prepareStatement(
-              "SELECT inventory FROM users WHERE name = ?;");
+              "SELECT inventory FROM users WHERE email = ?;");
       prep.setString(1, user);
       ResultSet rs = prep.executeQuery();
       String inventory = "";
@@ -417,4 +436,24 @@ public final class Database {
     }
     return "";
   }
+
+  public static String getName(String email) throws SQLException {
+    if (conn != null) {
+      PreparedStatement prep;
+      prep = conn.prepareStatement(
+              "SELECT name FROM users WHERE email = ?;");
+      prep.setString(1, email);
+      ResultSet rs = prep.executeQuery();
+      String name = "";
+      while (rs.next()) {
+        name = rs.getString(1);
+      }
+      rs.close();
+      prep.close();
+      return name;
+    }
+    return "";
+  }
+
+
 }

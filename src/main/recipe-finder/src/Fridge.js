@@ -195,6 +195,35 @@ function Fridge() {
         }
     }
 
+    const getName = (email) => {
+
+        const toSend = {
+            name: email
+        };
+
+        let config = {
+            headers: {
+                "Content-Type": "application/json",
+                'Access-Control-Allow-Origin': '*',
+            }
+        }
+
+        axios.post(
+            "http://localhost:4567/name",
+            toSend,
+            config
+        )
+            .then(response => {
+                console.log(response)
+                let name = response.data["name"]
+                //update name variable
+                setName(name)
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
     const getUserInventory = (email) => {
 
         const toSend = {
@@ -228,16 +257,17 @@ function Fridge() {
             });
     }
 
-    //populates fridge with user inventory when page loads
+    //populates fridge with user inventory when page loads and gets user name
     useEffect(() => {
         ingredientRatings = {}
+        getName(currentUser.email)
         getUserInventory(currentUser.email)
     },[])
 
     return (
         <div style={rootStyle} className="Fridge">
             {/*dynamic header*/}
-            <h1 style={{marginTop: 25}}>{currentUser.email}'s Fridge</h1>
+            <h1 style={{marginTop: 25}}>{name}'s Fridge</h1>
             {error && <Alert variant={"danger"}> {error} </Alert>}
             {/*two buttons on side of page*/}
             <Link to={"/RecipeSelection"}>
