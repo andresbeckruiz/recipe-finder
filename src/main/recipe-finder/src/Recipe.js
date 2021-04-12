@@ -23,6 +23,7 @@ function Recipe(props) {
 
     const [similarLabels, setSimilarLabels] = useState([]);
     const [photos, setPhotos] = useState([]);
+    const [url, setUrl] = useState("");
 
 
     // Axios Requests
@@ -70,6 +71,7 @@ function Recipe(props) {
                         setName(recipe["title"].replace(/\b\w/g, l => l.toUpperCase()));
                         setIngredients(recipeIngredients.toString());
                         setPreparation(recipe["instructions"]);
+                        setUrl(recipe["url"]);
                     } else {  //store it dynamically to be accessed by SimilarRecipe objects
                         //get image and name
                         labels.push(recipe["recipeName"]);
@@ -129,9 +131,13 @@ function Recipe(props) {
         return isNaN(str.slice(-1)) ? false : true;
     }
 
-    function setNewRecipe (name){
+    function setNewRecipe(name){
         setLoading(true);
         findSimilar(name);
+    }
+
+    function openPage() {
+        window.open(url);
     }
 
     //useEffect hook for initial render
@@ -177,7 +183,7 @@ function Recipe(props) {
             <Link to={"/fridge"}>
                 <Button variant="success" size= "lg" style={{position: "absolute", left: 50, top: 85, width: 175}}>Back to Fridge</Button>
             </Link>
-            <Button variant="primary" size= "lg" style={{position: "absolute", right: 50, top: 25}}>Cook!</Button>
+            <Button variant="primary" size= "lg" style={{position: "absolute", right: 50, top: 25}} onClick={openPage}>Cook!</Button>
 
             <div style={{position: "relative", left: -500, marginTop: 150, marginLeft: 0, width: 1200}}>
 
