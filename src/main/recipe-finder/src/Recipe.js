@@ -161,7 +161,7 @@ function Recipe(props) {
             {/*loader for loading*/}
             <div className={"centered"}>
                 <Loader
-                    type="Puff"
+                    type="TailSpin"
                     color="#2776ED"
                     height={400}
                     width={400}
