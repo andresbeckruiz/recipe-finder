@@ -162,11 +162,11 @@ public final class Main {
   private class DeleteIngredientHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-      System.out.println("hiiiii");
       JSONObject data = new JSONObject(request.body());
+      System.out.println(data);
       String ingredientName = data.getString("ingredient");
       recipeApp.getCurUser().removeIngredient(ingredientName);
-      return null;
+      return "";
     }
   }
 
@@ -176,9 +176,12 @@ public final class Main {
   private class FindRecipeSuggestionsHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-      ArrayList<String> recipeSuggestions = recipeApp.getCurUser().cook();
+      ArrayList<Recipe> recipeSuggestions = recipeApp.getCurUser().cook();
       // ToDO: edit cook() to return correct info for front end
-      Map<String, Object> variables = ImmutableMap.of("firstSuggestion", recipeSuggestions.get(0));
+      Map<String, Object> variables = ImmutableMap.of("firstSuggestion",
+              recipeSuggestions.get(0).toJson(),
+              "secondSuggestion", recipeSuggestions.get(1).toJson(),
+              "thirdSuggestion", recipeSuggestions.get(2).toJson());
       return GSON.toJson(variables);
     }
   }

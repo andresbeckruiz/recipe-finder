@@ -1,7 +1,5 @@
 TODO:
 - null inputs
-- cache of similarities
 - test multiple users
-- connect to front end
-- error handling
-- setting rating
+- not allowing adding multiple of same users
+- when not putting in password same way twice errors

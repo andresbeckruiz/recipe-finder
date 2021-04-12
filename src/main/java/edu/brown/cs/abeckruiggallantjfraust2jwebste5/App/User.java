@@ -74,8 +74,13 @@ public class User {
     recipeRatings.put(recipe, rating);
   }
 
-  public ArrayList<String> cook() {
-    return findRecipesWithIngredients(ingredients, NUM_RECOMMENDATIONS);
+  public ArrayList<Recipe> cook() {
+    ArrayList<String> recipeNames = findRecipesWithIngredients(ingredients, NUM_RECOMMENDATIONS);
+    ArrayList<Recipe> recipes = new ArrayList<>();
+    for (String recipe : recipeNames) {
+      recipes.add(getRecipeObject(recipe, this));
+    }
+    return recipes;
   }
 
   public TreeMap<Recipe, Double> findSimilarRecipes(String recipe) {
