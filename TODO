@@ -7,3 +7,4 @@ TODO:
 - when ingredient is already in inventory what to do?
 - catch if any endpoitn curUser = null
 - figure out what to do if image is empty
+- when finding similar recipes sometimes even though json is returned, it isn't loaded

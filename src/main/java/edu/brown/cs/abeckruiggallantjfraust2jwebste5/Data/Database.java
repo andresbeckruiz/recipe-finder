@@ -243,7 +243,16 @@ public final class Database {
 
   public static void addUserIngredient(String user, String ingredient) throws SQLException {
     String currentInventory = getUserInventory(user);
-    if (!currentInventory.contains(ingredient)) {
+
+    // if ingredient is at end
+    String lastValue = currentInventory.substring(currentInventory.lastIndexOf(","));
+    // if ingredient is at beginning
+    String firstValue = currentInventory.substring(0, currentInventory.indexOf(","));
+
+
+    if (!(currentInventory.contains("," + ingredient + ","))
+            && !lastValue.equals(ingredient)
+            && !firstValue.equals(ingredient)) {
       if (currentInventory.length() != 0) {
         currentInventory = currentInventory + ("," + ingredient);
       } else {
@@ -269,8 +278,21 @@ public final class Database {
 
   public static void removeUserIngredient(String user, String ingredient) throws SQLException {
     String currentInventory = getUserInventory(user);
-    currentInventory = currentInventory.replace(ingredient, "");
-    currentInventory = currentInventory.replace(",,", ",");
+    // if ingredient is in middle
+    currentInventory = currentInventory.replace("," + ingredient + ",", ",");
+
+    // if ingredient is at end
+    String lastValue = currentInventory.substring(currentInventory.lastIndexOf(","));
+    if (lastValue.equals(ingredient)) {
+      currentInventory = currentInventory.substring(0, currentInventory.lastIndexOf(","));
+    }
+
+    // if ingredient is at beginning
+    String firstValue = currentInventory.substring(0, currentInventory.indexOf(","));
+    if (firstValue.equals(ingredient)) {
+      currentInventory = currentInventory.substring(currentInventory.indexOf(","));
+    }
+
     if (currentInventory.startsWith(",")) {
       currentInventory = currentInventory.substring(1);
     }
@@ -285,7 +307,8 @@ public final class Database {
         prep.close();
       }
     } catch (Exception e) {
-      System.out.println("SQL ERROR: Adding Ingredient");
+      System.out.println(e.getMessage());
+      System.out.println("SQL ERROR: Removing Ingredient");
     }
   }
 
@@ -297,7 +320,6 @@ public final class Database {
               + user.getIngredientRatings().get(ingredient) + ",", "");
     }
     currentRatings = currentRatings + (ingredient + ":" + rating.toString() + ",");
-    //ToDo: update current ratings string and entry in table
     try {
       if (conn != null) {
         PreparedStatement prep;
@@ -383,11 +405,13 @@ public final class Database {
               "SELECT inventory FROM users WHERE name = ?;");
       prep.setString(1, user);
       ResultSet rs = prep.executeQuery();
+      String inventory = "";
       while (rs.next()) {
-        String inventory = rs.getString(1);
-        return inventory;
+        inventory = rs.getString(1);
       }
-      return "";
+      rs.close();
+      prep.close();
+      return inventory;
     }
     return "";
   }

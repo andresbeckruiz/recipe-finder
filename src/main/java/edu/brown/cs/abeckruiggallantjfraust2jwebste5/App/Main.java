@@ -163,7 +163,6 @@ public final class Main {
     @Override
     public Object handle(Request request, Response response) throws Exception {
       JSONObject data = new JSONObject(request.body());
-      System.out.println(data);
       String ingredientName = data.getString("ingredient");
       recipeApp.getCurUser().removeIngredient(ingredientName);
       return "";
@@ -176,13 +175,17 @@ public final class Main {
   private class FindRecipeSuggestionsHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
+      System.out.println("cooking");
       ArrayList<Recipe> recipeSuggestions = recipeApp.getCurUser().cook();
+      System.out.println("user" + recipeApp.getCurUser().getName());
+      System.out.println(recipeSuggestions);
       // ToDO: edit cook() to return correct info for front end
       Map<String, Object> variables = ImmutableMap.of("firstSuggestion",
               recipeSuggestions.get(0).toMap(),
               "secondSuggestion", recipeSuggestions.get(1).toMap(),
               "thirdSuggestion", recipeSuggestions.get(2).toMap());
       String json = GSON.toJson(variables);
+      System.out.println("json " + json);
       return json;
     }
   }
@@ -194,8 +197,9 @@ public final class Main {
     @Override
     public Object handle(Request request, Response response) throws Exception {
       JSONObject data = new JSONObject(request.body());
+      System.out.println("here");
       String currentRecipeName = data.getString("recipe");
-
+      System.out.println(currentRecipeName);
       // ToDo: create method to get all info about "CurrentRecipeName"
       Recipe curRecipe = getRecipeObject(currentRecipeName, recipeApp.getCurUser());
       Map<String, Object> recipeVariables = ImmutableMap.of("title", curRecipe.getName(),

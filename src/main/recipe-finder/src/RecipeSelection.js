@@ -3,11 +3,9 @@ import Button from "react-bootstrap/Button";
 import { makeStyles } from '@material-ui/core/styles';
 import {Card, CardActions, CardMedia, CardContent, Typography} from '@material-ui/core';
 import axios from "axios";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
-let recipes = [{recipeName:"Roast Chicken with Lemon and Garlic", chef: "Claire Saffitz", src: "https://assets.bonappetit.com/photos/5a8749c98e5ab504d767b208/16:9/w_2048,c_limit/no-fail-roast-chicken-with-lemon-and-garlic.jpg"},
-    {recipeName:"Spicy Shrimp Pilaf", chef: "Andy Baraghani", src: "https://assets.bonappetit.com/photos/6048f5c9b5ad3ffa9fef04d7/1:1/w_2560%2Cc_limit/Comfort-Spicy-Shrimp-Pilaf.jpg"},
-    {recipeName:"Granola Scones", chef: "Roxana Jullapat", src: "https://assets.bonappetit.com/photos/5ff4b06aa74c1e30caf0ee9b/1:1/w_2560%2Cc_limit/Mother-Grains-Granola-Scones.jpg"}]
+
 let alt = false;
 
 const useStyles = makeStyles({
@@ -31,6 +29,7 @@ const useStyles = makeStyles({
 });
 
 function RecipeSelection() {
+    let [recipes, setRecipes] = useState([]);
 
     // Axios Requests
 
@@ -59,10 +58,12 @@ function RecipeSelection() {
                 console.log(response.data)
                 let object = response.data;
                 //iterate through suggestions
+                recipes = []
                 for(var i in object) {
                     console.log(object[i])
                     recipes.push(object[i]);
                 }
+                setRecipes(recipes);
 
             })
 
