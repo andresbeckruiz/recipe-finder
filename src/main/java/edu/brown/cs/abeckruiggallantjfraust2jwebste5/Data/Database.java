@@ -252,9 +252,9 @@ public final class Database {
       if (conn != null) {
         PreparedStatement prep;
         prep = conn.prepareStatement(
-                "INSERT INTO users WHERE name = ? (?);");
-        prep.setString(1, user);
-        prep.setString(2, currentInventory);
+                "UPDATE users SET inventory = ? WHERE name = ?;");
+        prep.setString(1, currentInventory);
+        prep.setString(2, user);
         prep.execute();
         System.out.println("Connected?");
       }

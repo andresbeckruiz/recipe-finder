@@ -156,7 +156,9 @@ public final class Main {
       JSONObject data = new JSONObject(request.body());
       String ingredientName = data.getString("ingredient");
       recipeApp.getCurUser().addIngredient(ingredientName);
-      return null;
+      Map<String, Object> variables = ImmutableMap.of("rating",
+              recipeApp.getCurUser().getIngredientRatings().get(ingredientName));
+      return GSON.toJson(variables);
     }
   }
 

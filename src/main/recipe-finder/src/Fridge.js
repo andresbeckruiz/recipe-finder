@@ -1,5 +1,6 @@
 import List from "./List";
 import React, {useState} from 'react';
+import axios from "axios";
 import TextBox from "./TextBox";
 import SubmitButton from "./SubmitButton";
 import Button from 'react-bootstrap/Button';
@@ -48,6 +49,41 @@ function Fridge() {
     const [current, setCurrent] = useState("");
 
 
+    // Axios Requests
+
+    /*
+     * Makes an axios request for the ways command; uses tile caching.
+     */
+    const addIngredient = (curr, event) => {
+
+        const toSend = {
+            ingredient: curr
+        };
+
+        let config = {
+            headers: {
+                "Content-Type": "application/json",
+                'Access-Control-Allow-Origin': '*',
+            }
+        }
+
+        axios.post(
+            "http://localhost:4567/enter-ingredient",
+            toSend,
+            config
+        )
+            .then(response => {
+                //update ratings
+                ingredientRatings[curr] = response.data["rating"];
+
+            })
+
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+
     // style details for root page
     const rootStyle = {
         backgroundColor: "white",
@@ -64,6 +100,7 @@ function Fridge() {
 
     // function for submit button
     const onSubmit = () => {
+        console.log(ingredientRatings);
         let text = input.trim();
         if(!list.includes(text)) {
             //put current input into list
@@ -81,6 +118,9 @@ function Fridge() {
         if (!ingredientRatings.hasOwnProperty(currentToRate)) {
             setRatingIsOpen(true);
         }
+        //axios request
+        addIngredient(text);
+
     }
 
     //set global for listener
@@ -146,7 +186,7 @@ function Fridge() {
                     <Rating
                         style={{position: "relative", left: 150}}
                         name="simple-controlled"
-                        value={2.5}
+                        value={ingredientRatings[input.trim()]}
                         precision={0.5}
                         size={"large"}
                         onChange={(event, newValue) => {
