@@ -1,5 +1,5 @@
 import List from "./List";
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from "axios";
 import TextBox from "./TextBox";
 import SubmitButton from "./SubmitButton";
@@ -199,6 +199,43 @@ function Fridge() {
             setError("Failed to log out")
         }
     }
+
+    const getUserInventory = (email) => {
+
+        const toSend = {
+            name: email
+        };
+
+        let config = {
+            headers: {
+                "Content-Type": "application/json",
+                'Access-Control-Allow-Origin': '*',
+            }
+        }
+
+        axios.post(
+            "http://localhost:4567/inventory",
+            toSend,
+            config
+        )
+            .then(response => {
+                //update ratings
+                response.data["inventory"].map((ingredient) => {
+                    list.push(ingredient)
+                })
+            })
+
+            .catch(function (error) {
+                console.log(error);
+            });
+        setIngredients(list)
+    }
+
+    //populates fridge with user inventory when page loads
+    useEffect(() => {
+        list = []
+        getUserInventory("georgia")
+    },[])
 
     return (
         <div style={rootStyle} className="Fridge">

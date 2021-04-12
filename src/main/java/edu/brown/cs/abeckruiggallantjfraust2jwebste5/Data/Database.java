@@ -234,7 +234,6 @@ public final class Database {
       prep.setString(3, "");
       prep.setString(4, "");
       prep.execute();
-      System.out.println("Connected?");
     }
   }
 
