@@ -265,8 +265,11 @@ public final class Database {
 
   public static void removeUserIngredient(String user, String ingredient) throws SQLException {
     String currentInventory = getUserInventory(user);
-    System.out.println("current inventory: " + currentInventory + " to remove: " + ingredient + ",");
-    currentInventory = currentInventory.replace(ingredient + ",", "");
+    currentInventory = currentInventory.replace(ingredient, "");
+    currentInventory = currentInventory.replace(",,", ",");
+    if (currentInventory.startsWith(",")) {
+      currentInventory = currentInventory.substring(1);
+    }
     try {
       if (conn != null) {
         PreparedStatement prep;
@@ -275,10 +278,8 @@ public final class Database {
         prep.setString(1, currentInventory);
         prep.setString(2, user);
         prep.execute();
-        System.out.println("Connected?");
         prep.close();
       }
-      System.out.println(currentInventory);
     } catch (Exception e) {
       System.out.println("SQL ERROR: Adding Ingredient");
     }

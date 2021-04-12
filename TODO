@@ -3,3 +3,4 @@ TODO:
 - test multiple users
 - not allowing adding multiple of same users
 - when not putting in password same way twice errors
+- when you put in wrong password, error is thrown
