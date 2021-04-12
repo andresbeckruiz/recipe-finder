@@ -117,6 +117,7 @@ public final class Main {
 
     Spark.post("/newUser", new CreateNewUserHandler());
     Spark.post("/newUserSignup", new CreateNewUserHandlerSignup());
+    Spark.post("/inventory", new GetUserInventory());
   }
 
   /**
@@ -276,6 +277,29 @@ public final class Main {
         User newUser = new User(username, ingredients);
         recipeApp.setCurUser(newUser);
         return "";
+      } catch (SQLException e) {
+        System.err.println("ERROR: Error connecting to database");
+        return "error";
+      }
+    }
+  }
+
+  /**
+   * Front end handler for returning user inventory when Fridge loads
+   */
+  private class GetUserInventory implements Route {
+    @Override
+    public Object handle(Request request, Response response) throws Exception {
+      JSONObject data = new JSONObject(request.body());
+      String username = data.getString("name");
+      try {
+        String string = getUserInventory(username);
+        //splitting to create hashset for user ingredients
+        String[] values = string.split(",");
+        HashSet<String> ingredients = new HashSet<>(Arrays.asList(values));
+        Map<String, Object> map = ImmutableMap.of("inventory", ingredients);
+        System.out.println("user inventory working!");
+        return GSON.toJson(map);
       } catch (SQLException e) {
         System.err.println("ERROR: Error connecting to database");
         return "error";
