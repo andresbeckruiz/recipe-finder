@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Button from 'react-bootstrap/Button';
 import SimilarRecipe from "./SimilarRecipe";
 import Rating from '@material-ui/lab/Rating';
 import {Link} from "react-router-dom";
+import axios from "axios";
 
-function Recipe() {
+function Recipe(props) {
 
     // useState variable for name
     const [name, setName] = useState("Recipe Name");
@@ -16,11 +17,100 @@ function Recipe() {
     const [preparation, setPreparation] = useState("preparation");
 
 
+    // Axios Requests
+
+    /*
+     * Makes an axios request for finding similar recipes
+     */
+    const findSimilar = (name, event) => {
+
+        const toSend = {
+            recipe: name
+        };
+
+        let config = {
+            headers: {
+                "Content-Type": "application/json",
+                'Access-Control-Allow-Origin': '*',
+            }
+        }
+
+        axios.post(
+            "http://localhost:4567/recipe",
+            toSend,
+            config
+        )
+            .then(response => {
+                let object = response.data["data"];
+
+                //set up recipe itself
+                let recipe = object[0];
+                setName(recipe["title"]);
+                setIngredients(recipe["ingredients"]);
+                setPreparation(recipe["instructions"]);
+                //TODO: ADD THE REST PASSED IN
+
+                //set up suggestions!
+                for (let i = 1; i < Object.keys(object).length; i++) {
+                    let sugg = object[i];
+                    //get image and name
+                    let name = sugg["recipeName"];
+                    let img = sugg["src"];
+
+                    //store it dynamically to be accessed by SimilarRecipe objects
+                }
+
+            })
+
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    /*
+     * Makes an axios request for rating the recipe
+     */
+    const rateRecipe = (rating, event) => {
+
+        const toSend = {
+            rating: rating
+        };
+
+        let config = {
+            headers: {
+                "Content-Type": "application/json",
+                'Access-Control-Allow-Origin': '*',
+            }
+        }
+
+        axios.post(
+            "http://localhost:4567/rate-recipe",
+            toSend,
+            config
+        )
+            .then(response => {
+                //nothing
+            })
+
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+
     // style details for root page
     const rootStyle = {
         backgroundColor: "white",
         height: '100vh'
     }
+
+    //useEffect hook for initial render
+    useEffect(() => {
+        //set up recipe and similar recipes
+        setName(props.location.state.name);
+        // findSimilar();
+        //get initial rating
+    }, [])
 
 
     return (
