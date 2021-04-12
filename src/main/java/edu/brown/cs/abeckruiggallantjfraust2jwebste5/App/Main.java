@@ -288,7 +288,6 @@ public final class Main {
         String[] values = string.split(",");
         HashSet<String> ingredients = new HashSet<>(Arrays.asList(values));
         Map<String, Object> map = ImmutableMap.of("inventory", ingredients);
-        System.out.println("user inventory working!");
         return GSON.toJson(map);
       } catch (SQLException e) {
         System.err.println("ERROR: Error connecting to database");
