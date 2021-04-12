@@ -157,7 +157,8 @@ function Fridge() {
     const handleCloseDelete = () => {
         setDeleteIngredient(true);
         setModalIsOpen(false);
-        deleteIngredientRequest(input.trim());
+        console.log(current);
+        deleteIngredientRequest(current.trim());
     };
 
     // function for submit button
