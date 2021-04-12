@@ -234,8 +234,6 @@ public final class Main {
     public Object handle(Request request, Response response) throws Exception {
       JSONObject data = new JSONObject(request.body());
       String username = data.getString("name");
-
-      System.out.println("Username" + username);
       try {
         //get inventory
         String inventoryString = getUserInventory(username);
@@ -244,14 +242,11 @@ public final class Main {
         HashSet<String> ingredients = new HashSet<>(Arrays.asList(inventoryArr));
         //get rating
         String ratingString = getUserIngredientRatings(username);
-        System.out.println("rating string: " + ratingString);
         //splitting to create hashset for user ingredients
         String[] ratingArr = ratingString.split(",");
-        System.out.println(" rating arr: " + ratingArr[0] + " : " + ratingArr[1]);
         User newUser = new User(username, ingredients);
         for (String review : ratingArr) {
           String[] rating = review.split(":");
-          System.out.println("RATING: " + rating[0] + " : " + rating[1]);
           newUser.addIngredientRating(rating[0], Double.parseDouble(rating[1]));
         }
         recipeApp.setCurUser(newUser);

@@ -66,8 +66,10 @@ public class User {
   }
 
   public void addIngredientRating(String ingredient, Double rating) throws SQLException {
-    addUserIngredientRating(this, ingredient, rating);
-    ingredientRatings.put(ingredient, rating);
+    if (!ingredientRatings.containsKey(ingredient)) {
+      addUserIngredientRating(this, ingredient, rating);
+      ingredientRatings.put(ingredient, rating);
+    }
   }
 
   public void addRecipeRating(String recipe, Double rating) throws SQLException {
