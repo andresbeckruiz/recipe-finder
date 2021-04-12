@@ -5,3 +5,5 @@ TODO:
 - when not putting in password same way twice errors
 - when you put in wrong password, error is thrown
 - when ingredient is already in inventory what to do?
+- catch if any endpoitn curUser = null
+- figure out what to do if image is empty

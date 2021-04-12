@@ -179,10 +179,11 @@ public final class Main {
       ArrayList<Recipe> recipeSuggestions = recipeApp.getCurUser().cook();
       // ToDO: edit cook() to return correct info for front end
       Map<String, Object> variables = ImmutableMap.of("firstSuggestion",
-              recipeSuggestions.get(0).toJson(),
-              "secondSuggestion", recipeSuggestions.get(1).toJson(),
-              "thirdSuggestion", recipeSuggestions.get(2).toJson());
-      return GSON.toJson(variables);
+              recipeSuggestions.get(0).toMap(),
+              "secondSuggestion", recipeSuggestions.get(1).toMap(),
+              "thirdSuggestion", recipeSuggestions.get(2).toMap());
+      String json = GSON.toJson(variables);
+      return json;
     }
   }
 

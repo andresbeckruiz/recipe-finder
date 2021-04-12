@@ -25,6 +25,9 @@ public final class RecipeFinder {
     // count how many ingredients in ingredientList overlap with recipe ingredients
     for (String ingredient : ingredientList) {
       String recipesString = getRecipesWithIngredient(ingredient);
+      if (recipesString == null) {
+        continue;
+      }
       String[] rec = recipesString.trim().split("\\s*,\\s*");
       for (String recipe : rec) {
         // get the value of the specified key

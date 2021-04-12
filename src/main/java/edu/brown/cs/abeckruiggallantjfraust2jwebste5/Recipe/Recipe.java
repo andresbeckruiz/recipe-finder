@@ -2,6 +2,7 @@ package edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.User;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Graph.Vertex;
@@ -191,16 +192,19 @@ public class Recipe implements Vertex<Ingredient> {
     return "  -" + title + " : " + url;
   }
 
-  public String toJson() {
+  public ImmutableMap toMap() {
     Map<String, String> mutableMap = new HashMap<>();
     mutableMap.put("recipeName", this.title);
-    mutableMap.put("chefName", this.chef);
-    mutableMap.put("imageUrl", this.url);
+    if (this.photourl == null) {
+      mutableMap.put("src", "https://assets.bonappetit.com/photos/5a8749c98e5ab504d767b208/16:9/w_2048,c_limit/no-fail-roast-chicken-with-lemon-and-garlic.jpg");
+    } else {
+      mutableMap.put("src", this.photourl);
+    }
+    mutableMap.put("chef", this.chef);
     ImmutableMap<String, String> immutableMap = ImmutableMap.<String, String>builder()
             .putAll(mutableMap)
             .build();
-    Gson gson = new Gson();
-    return gson.toJson(immutableMap);
+    return immutableMap;
   }
   @Override
   public Double getValue() {

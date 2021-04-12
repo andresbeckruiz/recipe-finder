@@ -97,6 +97,9 @@ public final class Database {
               + "WHERE ingredient IS ?");
       prep.setString(1, ingredient);
       ResultSet rs = prep.executeQuery();
+      if (!rs.isBeforeFirst()) {
+        return null;
+      }
       String recipes = rs.getString(1);
       rs.close();
       prep.close();
@@ -240,25 +243,27 @@ public final class Database {
 
   public static void addUserIngredient(String user, String ingredient) throws SQLException {
     String currentInventory = getUserInventory(user);
-    if (currentInventory.length() != 0) {
-      currentInventory = currentInventory + ("," + ingredient);
-    } else {
-      currentInventory = ingredient;
-    }
-
-    //ToDo: Update entry in users table with new currnetInventory string
-    try {
-      if (conn != null) {
-        PreparedStatement prep;
-        prep = conn.prepareStatement(
-                "UPDATE users SET inventory = ? WHERE name = ?;");
-        prep.setString(1, currentInventory);
-        prep.setString(2, user);
-        prep.execute();
-        System.out.println("Connected?");
+    if (!currentInventory.contains(ingredient)) {
+      if (currentInventory.length() != 0) {
+        currentInventory = currentInventory + ("," + ingredient);
+      } else {
+        currentInventory = ingredient;
       }
-    } catch (Exception e) {
-      System.out.println("SQL ERROR: Adding Ingredient");
+
+      //ToDo: Update entry in users table with new currnetInventory string
+      try {
+        if (conn != null) {
+          PreparedStatement prep;
+          prep = conn.prepareStatement(
+                  "UPDATE users SET inventory = ? WHERE name = ?;");
+          prep.setString(1, currentInventory);
+          prep.setString(2, user);
+          prep.execute();
+          System.out.println("Connected?");
+        }
+      } catch (Exception e) {
+        System.out.println("SQL ERROR: Adding Ingredient");
+      }
     }
   }
 
