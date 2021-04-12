@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
-
+import Rating from "@material-ui/lab/Rating";
+import './List.css';
 let current;
 
 function List(props) {
 
     // useState hooks for list and flag
-    const [list, setList] = useState([]);
+    const [list, setList] = useState({});
     const [flag, setFlag] = useState(0);
 
 
@@ -28,12 +29,7 @@ function List(props) {
 
     function deleteCurrent() {
         let list = props.ingredients;
-        for(let i = 0; i < list.length; i++){
-
-            if (list[i] === current) {
-                list.splice(i, 1);
-            }
-        }
+        delete list[current];
         props.setter(list);
         setFlag(flag+1);
         props.setDeleteCurr(false);
@@ -55,13 +51,23 @@ function List(props) {
             <h4 style={{position: "absolute", top: -40}}>{props.label}</h4>
             <div style={innerStyle} className="List">
                 <div style={{marginTop: 25}}>
-                {list.map((r) =>
-                    <p style={{textAlign: "center", cursor: "pointer"}} onClick={() =>{
+                {Array.from(Object.keys(list)).map(r =>
+
+                   <div className="ingredient">
+
+                       <p style={{textAlign: "center", cursor: "pointer"}} onClick={() =>{
                         props.setModalIsOpen(true);
                         props.setCurrent(r);
                         current = r;
-                    }
-                    }>{r}</p>
+                        }
+                       }>{r}</p>
+                       <Rating
+                           name="test"
+                           value={list[r]}
+                           precision={0.5}
+                           size={"small"}
+                       />
+                   </div>
                 )}
                 </div>
             </div>

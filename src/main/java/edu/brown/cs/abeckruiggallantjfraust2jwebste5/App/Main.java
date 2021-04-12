@@ -21,6 +21,7 @@ import spark.template.freemarker.FreeMarkerEngine;
 import com.google.gson.Gson;
 import freemarker.template.Configuration;
 
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.DEFAULT_RATING;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.*;
 
 //import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.JsonToSql.parseJson;
@@ -152,7 +153,7 @@ public final class Main {
       String ingredientName = data.getString("ingredient");
       Double ingredientRating = data.getDouble("rating");
       recipeApp.getCurUser().addIngredientRating(ingredientName, ingredientRating);
-      return null;
+      return "";
     }
   }
 
@@ -228,20 +229,28 @@ public final class Main {
     public Object handle(Request request, Response response) throws Exception {
       JSONObject data = new JSONObject(request.body());
       String username = data.getString("name");
+      User newUser;
       try {
         //get inventory
         String inventoryString = getUserInventory(username);
         //splitting to create hashset for user ingredients
-        String[] inventoryArr = inventoryString.split(",");
-        HashSet<String> ingredients = new HashSet<>(Arrays.asList(inventoryArr));
-        //get rating
-        String ratingString = getUserIngredientRatings(username);
-        //splitting to create hashset for user ingredients
-        String[] ratingArr = ratingString.split(",");
-        User newUser = new User(username, ingredients);
-        for (String review : ratingArr) {
-          String[] rating = review.split(":");
-          newUser.addIngredientRating(rating[0], Double.parseDouble(rating[1]));
+        if (inventoryString.length() > 0) {
+          String[] inventoryArr = inventoryString.split(",");
+          HashSet<String> ingredients = new HashSet<>(Arrays.asList(inventoryArr));
+          //get rating
+          String ratingString = getUserIngredientRatings(username);
+          newUser = new User(username, ingredients);
+
+          //splitting to create hashset for user ingredients
+          if (ratingString.length() > 0) {
+            String[] ratingArr = ratingString.split(",");
+            for (String review : ratingArr) {
+              String[] rating = review.split(":");
+              newUser.addIngredientRating(rating[0], Double.parseDouble(rating[1]));
+            }
+          }
+        } else {
+          newUser = new User(username, null);
         }
         recipeApp.setCurUser(newUser);
       } catch (SQLException e) {
@@ -280,14 +289,34 @@ public final class Main {
     @Override
     public Object handle(Request request, Response response) throws Exception {
       JSONObject data = new JSONObject(request.body());
+      Map<String, Object> map = new HashMap<>();
       String username = data.getString("name");
       try {
         String string = getUserInventory(username);
         //splitting to create hashset for user ingredients
-        String[] values = string.split(",");
-        HashSet<String> ingredients = new HashSet<>(Arrays.asList(values));
-        Map<String, Object> map = ImmutableMap.of("inventory", ingredients);
+        if (string.length() > 0) {
+          String[] values = string.split(",");
+          HashSet<String> ingredients = new HashSet<>(Arrays.asList(values));
+          //get ratings for ingredients
+
+          User user = recipeApp.getCurUser();
+          HashMap<String, Double> preRated = user.getIngredientRatings();
+          HashMap<String, String> ingRatings = new HashMap<>();
+
+          for (String ingredient : ingredients) {
+            boolean rated = preRated.containsKey(ingredient);
+            if (rated) {
+              ingRatings.put(ingredient, Double.toString(preRated.get(ingredient)));
+            } else {
+              ingRatings.put(ingredient, Double.toString(DEFAULT_RATING));
+            }
+            map = ImmutableMap.of("inventory", ingRatings);
+          }
+        } else {
+          map = ImmutableMap.of("inventory", "");
+        }
         return GSON.toJson(map);
+
       } catch (SQLException e) {
         System.err.println("ERROR: Error connecting to database");
         return "error";
