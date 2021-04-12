@@ -51,6 +51,7 @@ public class User {
     this.ingredients = ingredients;
   }
 
+  public String getName() { return name; }
 
   public void addIngredient(String newIngredient) throws SQLException {
     this.ingredients.add(newIngredient);
@@ -69,7 +70,7 @@ public class User {
   }
 
   public void addRecipeRating(String recipe, Double rating) throws SQLException {
-    addUserRecipeRating(this.name, recipe, rating);
+    addUserRecipeRating(this, recipe, rating);
     recipeRatings.put(recipe, rating);
   }
 

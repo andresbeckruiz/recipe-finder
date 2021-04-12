@@ -206,12 +206,22 @@ public final class Main {
       String currentRecipeName = data.getString("recipe");
 
       // ToDo: create method to get all info about "CurrentRecipeName"
-      // ToDo: change FindsimilarRecipes to return correct info
+      Recipe curRecipe = getRecipeObject(currentRecipeName, recipeApp.getCurUser());
+      Map<String, Object> recipeVariables = ImmutableMap.of("title", curRecipe.getName(),
+              "description,", curRecipe.getDescription(), "instructions",
+              curRecipe.getInstructions(), "url", curRecipe.getUrl(), "chefName",
+              curRecipe.getChef());
 
-      TreeMap<Recipe, Double> map = recipeApp.getCurUser().findSimilarRecipes(currentRecipeName);
+      for (int i = 0; i < curRecipe.getIngredients().size(); i++) {
+        recipeVariables.put("ingredient" + i, curRecipe.getIngredients().toArray()[i]);
+      }
 
-      Map<String, Object> variables = ImmutableMap.of("firstSimilar", map.firstKey().toString());
-      return GSON.toJson(variables);
+      // ToDo: change FindSimilarRecipes to return correct info
+
+      //TreeMap<Recipe, Double> map = recipeApp.getCurUser().findSimilarRecipes(currentRecipeName);
+
+      Map<String, Object> variables = ImmutableMap.of("recipeInformation", recipeVariables);
+      return GSON.toJson(recipeVariables);
     }
   }
 
