@@ -48,6 +48,8 @@ function Fridge() {
     // useState hook for current ingredient to delete
     const [current, setCurrent] = useState("");
 
+    const [loading, setLoading] = useState(true)
+
 
     // Axios Requests
 
@@ -223,12 +225,12 @@ function Fridge() {
                 response.data["inventory"].map((ingredient) => {
                     list.push(ingredient)
                 })
+                setIngredients(list)
             })
 
             .catch(function (error) {
                 console.log(error);
             });
-        setIngredients(list)
     }
 
     //populates fridge with user inventory when page loads
@@ -251,6 +253,7 @@ function Fridge() {
             <Button variant="primary" size= "sm" style={{position: "absolute", right: 50, top: 80}}>Update Password</Button>
             </Link>
             {/*two panes for lists and input*/}
+
             <List x={200} width={250} label={"Current Ingredients"} ingredients={ingredients} setter={setIngredients}
              setModalIsOpen={setModalIsOpen} deleteCurr={deleteIngredient} setDeleteCurr={setDeleteIngredient}
             setCurrent={setCurrent}/>
