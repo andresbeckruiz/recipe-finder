@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Arrays;
 
 import com.google.common.collect.ImmutableMap;
@@ -237,11 +236,23 @@ public final class Main {
 
       System.out.println("Username" + username);
       try {
-        String string = getUserInventory(username);
+        //get inventory
+        String inventoryString = getUserInventory(username);
         //splitting to create hashset for user ingredients
-        String[] values = string.split(",");
-        HashSet<String> ingredients = new HashSet<>(Arrays.asList(values));
+        String[] inventoryArr = inventoryString.split(",");
+        HashSet<String> ingredients = new HashSet<>(Arrays.asList(inventoryArr));
+        //get rating
+        String ratingString = getUserIngredientRatings(username);
+        System.out.println("rating string: " + ratingString);
+        //splitting to create hashset for user ingredients
+        String[] ratingArr = ratingString.split(",");
+        System.out.println(" rating arr: " + ratingArr[0] + " : " + ratingArr[1]);
         User newUser = new User(username, ingredients);
+        for (String review : ratingArr) {
+          String[] rating = review.split(":");
+          System.out.println("RATING: " + rating[0] + " : " + rating[1]);
+          newUser.addIngredientRating(rating[0], Double.parseDouble(rating[1]));
+        }
         recipeApp.setCurUser(newUser);
       } catch (SQLException e) {
         System.err.println("ERROR: Error connecting to database");

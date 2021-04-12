@@ -50,8 +50,9 @@ public class User {
   public void setIngredients(HashSet<String> ingredients) {
     this.ingredients = ingredients;
   }
-
-  public String getName() { return name; }
+  public String getName() {
+    return name;
+  }
 
   public void addIngredient(String newIngredient) throws SQLException {
     this.ingredients.add(newIngredient);
@@ -65,7 +66,7 @@ public class User {
   }
 
   public void addIngredientRating(String ingredient, Double rating) throws SQLException {
-    addUserIngredientRating(this.name, ingredient, rating);
+    addUserIngredientRating(this, ingredient, rating);
     ingredientRatings.put(ingredient, rating);
   }
 

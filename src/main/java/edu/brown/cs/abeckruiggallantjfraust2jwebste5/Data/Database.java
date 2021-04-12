@@ -285,8 +285,13 @@ public final class Database {
     }
   }
 
-  public static void addUserIngredientRating(String user, String ingredient, Double rating) throws SQLException {
-    String currentRatings = getUserIngredientRatings(user);
+  public static void addUserIngredientRating(User user,
+                                             String ingredient, Double rating) throws SQLException {
+    String currentRatings = getUserIngredientRatings(user.getName());
+    if (currentRatings.contains(ingredient)) {
+      currentRatings = currentRatings.replace(ingredient + ":"
+              + user.getIngredientRatings().get(ingredient) + ",", "");
+    }
     currentRatings = currentRatings + (ingredient + ":" + rating.toString() + ",");
     //ToDo: update current ratings string and entry in table
     try {
@@ -295,7 +300,7 @@ public final class Database {
         prep = conn.prepareStatement(
                 "UPDATE users SET ratedIngredients = ? WHERE name = ?;");
         prep.setString(1, currentRatings);
-        prep.setString(2, user);
+        prep.setString(2, user.getName());
         prep.execute();
         System.out.println("Connected?");
       }
@@ -323,7 +328,8 @@ public final class Database {
     return "";
   }
 
-  public static void addUserRecipeRating(User user, String recipe, Double rating) throws SQLException {
+  public static void addUserRecipeRating(User user,
+                                         String recipe, Double rating) throws SQLException {
     String currentRatings = getUserRecipeRatings(user.getName());
     if (currentRatings.contains(recipe)) {
       currentRatings = currentRatings.replace(recipe + ":"
