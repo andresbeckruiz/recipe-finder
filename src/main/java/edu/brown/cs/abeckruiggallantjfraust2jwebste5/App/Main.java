@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Arrays;
 
 import com.google.common.collect.ImmutableMap;
@@ -235,14 +234,21 @@ public final class Main {
     public Object handle(Request request, Response response) throws Exception {
       JSONObject data = new JSONObject(request.body());
       String username = data.getString("name");
-
-      System.out.println("Username" + username);
       try {
-        String string = getUserInventory(username);
+        //get inventory
+        String inventoryString = getUserInventory(username);
         //splitting to create hashset for user ingredients
-        String[] values = string.split(",");
-        HashSet<String> ingredients = new HashSet<>(Arrays.asList(values));
+        String[] inventoryArr = inventoryString.split(",");
+        HashSet<String> ingredients = new HashSet<>(Arrays.asList(inventoryArr));
+        //get rating
+        String ratingString = getUserIngredientRatings(username);
+        //splitting to create hashset for user ingredients
+        String[] ratingArr = ratingString.split(",");
         User newUser = new User(username, ingredients);
+        for (String review : ratingArr) {
+          String[] rating = review.split(":");
+          newUser.addIngredientRating(rating[0], Double.parseDouble(rating[1]));
+        }
         recipeApp.setCurUser(newUser);
       } catch (SQLException e) {
         System.err.println("ERROR: Error connecting to database");
