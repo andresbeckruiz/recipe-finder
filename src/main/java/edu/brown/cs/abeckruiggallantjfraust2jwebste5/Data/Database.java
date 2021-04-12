@@ -243,11 +243,16 @@ public final class Database {
 
   public static void addUserIngredient(String user, String ingredient) throws SQLException {
     String currentInventory = getUserInventory(user);
-    // if ingredient is at end
-    String lastValue = currentInventory.substring(currentInventory.lastIndexOf(","));
-    // if ingredient is at beginning
-    String firstValue = currentInventory.substring(0, currentInventory.indexOf(","));
-
+    String lastValue = "";
+    String firstValue = "";
+    if (currentInventory.lastIndexOf(",") != -1) {
+      // if ingredient is at end
+      lastValue = currentInventory.substring(currentInventory.lastIndexOf(","));
+    }
+    if (currentInventory.indexOf(",") != -1) {
+      // if ingredient is at beginning
+      firstValue = currentInventory.substring(0, currentInventory.indexOf(","));
+    }
 
     if (!(currentInventory.contains("," + ingredient + ","))
             && !lastValue.equals(ingredient)
@@ -322,6 +327,7 @@ public final class Database {
     } else {
       currentRatings = ingredient + ":" + rating.toString();
     }
+
     try {
       if (conn != null) {
         PreparedStatement prep;
@@ -330,7 +336,7 @@ public final class Database {
         prep.setString(1, currentRatings);
         prep.setString(2, user.getName());
         prep.execute();
-        System.out.println("Connected?");
+        prep.close();
       }
     } catch (Exception e) {
       System.out.println("SQL ERROR");

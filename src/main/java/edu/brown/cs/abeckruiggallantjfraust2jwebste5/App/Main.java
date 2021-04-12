@@ -293,6 +293,7 @@ public final class Main {
       String username = data.getString("name");
       try {
         String string = getUserInventory(username);
+
         //splitting to create hashset for user ingredients
         if (string.length() > 0) {
           String[] values = string.split(",");
