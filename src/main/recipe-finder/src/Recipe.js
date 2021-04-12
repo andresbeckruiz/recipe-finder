@@ -4,6 +4,7 @@ import SimilarRecipe from "./SimilarRecipe";
 import Rating from '@material-ui/lab/Rating';
 import {Link} from "react-router-dom";
 import axios from "axios";
+import Loader from 'react-loader-spinner';
 
 function Recipe(props) {
 
@@ -15,6 +16,13 @@ function Recipe(props) {
     const [ingredients, setIngredients] = useState("ingredients");
 
     const [preparation, setPreparation] = useState("preparation");
+
+    const [loading, setLoading] = useState(false);
+    const [loader, setLoader] = useState(false);
+    const [opacity, setOpacity] = useState(1.0);
+
+    const [similarLabels, setSimilarLabels] = useState([]);
+    const [photos, setPhotos] = useState([]);
 
 
     // Axios Requests
@@ -43,24 +51,34 @@ function Recipe(props) {
             .then(response => {
                 console.log(response.data)
                 let object = response.data;
+                let labels = [];
+                let pics = [];
 
                 //TODO: ADD THE REST PASSED IN
 
                 //set up suggestions!
-                for (var key in object) {
+                for (let key in object) {
                     let recipe = object[key]
+                    let recipeIngredients = [];
                     //set up recipe itself
                     if (key == 'recipe') {
-                        setName(recipe["title"]);
-                        setIngredients(recipe["ingredients"]);
+                        for (const i of Object.keys(recipe)) {
+                            if (endsWithNumber(i)){
+                                recipeIngredients.push(recipe[i]);
+                            }
+                        }
+                        setName(recipe["title"].replace(/\b\w/g, l => l.toUpperCase()));
+                        setIngredients(recipeIngredients.toString());
                         setPreparation(recipe["instructions"]);
                     } else {  //store it dynamically to be accessed by SimilarRecipe objects
                         //get image and name
-                        let name = recipe["recipeName"];
-                        let img = recipe["src"];
+                        labels.push(recipe["recipeName"]);
+                        pics.push(recipe["src"])
                     }
                 }
-
+                setSimilarLabels(labels);
+                setPhotos(pics);
+                setLoading(false);
             })
 
             .catch(function (error) {
@@ -102,20 +120,54 @@ function Recipe(props) {
     // style details for root page
     const rootStyle = {
         backgroundColor: "white",
-        height: '100vh'
+        height: '100vh',
+        opacity: opacity
+    }
+
+    //helper function w/ axios request
+    function endsWithNumber( str ){
+        return isNaN(str.slice(-1)) ? false : true;
+    }
+
+    function setNewRecipe (name){
+        setLoading(true);
+        findSimilar(name);
     }
 
     //useEffect hook for initial render
     useEffect(() => {
         //set up recipe and similar recipes
         //setName(props.location.state.name);
+        setLoading(true);
          findSimilar(props.location.state.name);
         //get initial rating
     }, [])
 
 
+    // useEffect hook for loading
+    useEffect(() => {
+        if(loading){
+            setLoader(true);
+            setOpacity(0.5)
+        } else{
+            setLoader(false);
+            setOpacity(1.0);
+        }
+    }, [loading]);
+
+
     return (
         <div style={rootStyle} className="Recipe">
+            {/*loader for loading*/}
+            <div className={"centered"}>
+                <Loader
+                    type="Puff"
+                    color="#2776ED"
+                    height={400}
+                    width={400}
+                    visible={loader}
+                />
+            </div>
             {/*dynamic header*/}
             <h1 style={{top: 25, color: "#000"}}><b>{name}</b></h1>
             {/*two buttons on side of page*/}
@@ -127,7 +179,7 @@ function Recipe(props) {
             </Link>
             <Button variant="primary" size= "lg" style={{position: "absolute", right: 50, top: 25}}>Cook!</Button>
 
-            <div style={{position: "relative", left: -500, marginTop: 150, marginLeft: 0}}>
+            <div style={{position: "relative", left: -500, marginTop: 150, marginLeft: 0, width: 1200}}>
 
                 {/*ratings in header*/}
                 <Rating
@@ -160,9 +212,10 @@ function Recipe(props) {
             </div>
             {/*three similar recipes as suggestions*/}
             <div style={{position:"absolute", left: 0, right:0}} className={"flex-container"}>
-                <SimilarRecipe label={"Recipe 1"}/>
-                <SimilarRecipe label={"Recipe 2"}/>
-                <SimilarRecipe label={"Recipe 3"}/>
+
+                <SimilarRecipe label={similarLabels[0]} photo={photos[0]} set={setNewRecipe}/>
+                <SimilarRecipe label={similarLabels[1]} photo={photos[1]} set={setNewRecipe}/>
+                <SimilarRecipe label={similarLabels[2]} photo={photos[2]} set={setNewRecipe}/>
             </div>
         </div>
     );
