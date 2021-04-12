@@ -261,7 +261,8 @@ public final class Database {
 
   public static void removeUserIngredient(String user, String ingredient) throws SQLException {
     String currentInventory = getUserInventory(user);
-    currentInventory = currentInventory.replace("," + ingredient, "");
+    currentInventory = currentInventory.replace(",", "");
+    currentInventory = currentInventory.replace(ingredient, "");
 
     // ToDo: update currentInventory string and update entry in users table
     try {
