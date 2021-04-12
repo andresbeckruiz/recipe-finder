@@ -55,6 +55,9 @@ public class User {
   }
 
   public void addIngredient(String newIngredient) throws SQLException {
+    if (this.ingredients == null) {
+      this.ingredients = new HashSet<String>();
+    }
     this.ingredients.add(newIngredient);
     addUserIngredient(this.name, newIngredient);
     this.addIngredientRating(newIngredient, DEFAULT_RATING);

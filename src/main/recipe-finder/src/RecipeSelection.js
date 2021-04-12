@@ -58,7 +58,7 @@ function RecipeSelection() {
                 let object = response.data;
                 //iterate through suggestions
                 recipes = []
-                for(var i in object) {
+                for(let i in object) {
                     recipes.push(object[i]);
                 }
                 setRecipes(recipes);

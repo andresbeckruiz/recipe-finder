@@ -204,11 +204,15 @@ public final class Main {
       // ToDo: create method to get all info about "CurrentRecipeName"
       Recipe curRecipe = getRecipeObject(currentRecipeName, recipeApp.getCurUser());
 
+      //set ingredients to parsed string
+      curRecipe.setInstructions(curRecipe.getInstructions().replaceAll("[\\[\\]()\\//{}\"]",
+              "").replaceAll("[\b,]", "").replaceAll("[.]", ". "));
+
       ArrayList<Map<String, String>> similarRecipes = new ArrayList<>();
       TreeMap<Recipe, Double> map = recipeApp.getCurUser().findSimilarRecipes(currentRecipeName);
       for (Map.Entry<Recipe, Double> entry : map.entrySet()) {
         Recipe recipe = entry.getKey();
-        similarRecipes.add(recipe.toBigMap());
+        similarRecipes.add(recipe.toSmallMap());
       }
       Map<String, Object> variables = ImmutableMap.of("recipe",
               curRecipe.toBigMap(), "similar1", similarRecipes.get(0),
@@ -304,6 +308,7 @@ public final class Main {
       String username = data.getString("name");
       try {
         String string = getUserInventory(username);
+
         //splitting to create hashset for user ingredients
         if (string.length() > 0) {
           String[] values = string.split(",");

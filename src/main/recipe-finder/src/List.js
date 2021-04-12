@@ -6,7 +6,7 @@ let current;
 function List(props) {
 
     // useState hooks for list and flag
-    const [list, setList] = useState({});
+    const [list, setList] = useState([]);
     const [flag, setFlag] = useState(0);
 
 
@@ -62,10 +62,17 @@ function List(props) {
                         }
                        }>{r}</p>
                        <Rating
-                           name="test"
-                           value={list[r]}
+                           name="ingredient-rating"
                            precision={0.5}
                            size={"small"}
+                           // onChange={(event, newValue) => {
+                           //     let test = list;
+                           //     test[r] = newValue;
+                           //     setList(test);
+                           //     props.ingredientRater(r, newValue);
+                           // }}
+                           readOnly
+                           value={list[r]}
                        />
                    </div>
                 )}

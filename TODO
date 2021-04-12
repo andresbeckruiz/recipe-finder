@@ -16,8 +16,8 @@ Front end:
 - rating of ingredients (Georgia)
 - autocorrect of ingredient add (Andres)
 - preventing non-ingredient input (Andres)
-- fixing aesthetic of recipe page (Jacob)
-- default image for recipes that don't have images (Jacob)
+x fixing aesthetic of recipe page (Jacob)
+x default image for recipes that don't have images (Jacob)
 - profile page (Andres)
     - delete account
     - update password (move from main page)

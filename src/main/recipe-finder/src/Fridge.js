@@ -106,7 +106,7 @@ function Fridge() {
             config
         )
             .then(response => {
-                console.log(rating)
+                ingredientRatings[currentToRate] = rating;
                 //nothing
             })
 
@@ -158,7 +158,6 @@ function Fridge() {
     const handleCloseDelete = () => {
         setDeleteIngredient(true);
         setModalIsOpen(false);
-        console.log(current);
         deleteIngredientRequest(current.trim());
     };
 
@@ -167,10 +166,8 @@ function Fridge() {
         let text = input.trim();
         if(ingredientRatings[text] !== undefined) {
             //clear from this scope and from input box
-            if (document.getElementById("inputBox") != null) {
-                document.getElementById("inputBox").value = "";
-                setInput("");
-            }
+            document.getElementById("inputBox").value = "";
+            setInput("");
         }
 
         //open modal if need be
@@ -243,7 +240,6 @@ function Fridge() {
             config
         )
             .then(response => {
-                console.log(response)
                 let inventory = response.data["inventory"]
                 //update ratings
                 for (var ingredient in inventory) {
@@ -279,7 +275,7 @@ function Fridge() {
             </Link>
             {/*two panes for lists and input*/}
 
-            <List x={200} width={250} label={"Current Ingredients"} ingredients={ingredients} setter={setIngredients}
+            <List x={200} width={250} label={"Current Ingredients"} ingredients={ingredients} ingredientRater={rateIngredient} setter={setIngredients}
              setModalIsOpen={setModalIsOpen} deleteCurr={deleteIngredient} setDeleteCurr={setDeleteIngredient}
             setCurrent={setCurrent}/>
 
@@ -314,7 +310,7 @@ function Fridge() {
                         precision={0.5}
                         size={"large"}
                         onChange={(event, newValue) => {
-                            ingredientRatings[currentToRate] = newValue;
+
                             rateIngredient(currentToRate, newValue);
                             handleRatingClose();
                         }}

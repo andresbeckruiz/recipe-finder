@@ -194,7 +194,7 @@ public class Recipe implements Vertex<Ingredient> {
     Map<String, String> mutableMap = new HashMap<>();
     mutableMap.put("recipeName", this.title);
     if (this.photourl == null) {
-      mutableMap.put("src", "https://assets.bonappetit.com/photos/5a8749c98e5ab504d767b208/16:9/w_2048,c_limit/no-fail-roast-chicken-with-lemon-and-garlic.jpg");
+      mutableMap.put("src", "https://demofree.sirv.com/nope-not-here.jpg");
     } else {
       mutableMap.put("src", this.photourl);
     }
