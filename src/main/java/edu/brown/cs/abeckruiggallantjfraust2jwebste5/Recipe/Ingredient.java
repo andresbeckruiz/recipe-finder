@@ -21,7 +21,7 @@ public class Ingredient implements Vertex<Recipe> {
     this.name = name;
     this.owner = user;
     if (user.getIngredientRatings().keySet().contains(name)) {
-      this.rating = user.getIngredientRatings().get(name) / TOTAL_RATING;
+      this.rating = user.getIngredientRatings().get(name);
     } else {
       this.rating = DEFAULT_RATING;
     }

@@ -2,6 +2,8 @@ import {Link} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { makeStyles } from '@material-ui/core/styles';
 import {Card, CardActions, CardMedia, CardContent, Typography} from '@material-ui/core';
+import axios from "axios";
+import {useEffect} from "react";
 
 let recipes = [{recipeName:"Roast Chicken with Lemon and Garlic", chef: "Claire Saffitz", src: "https://assets.bonappetit.com/photos/5a8749c98e5ab504d767b208/16:9/w_2048,c_limit/no-fail-roast-chicken-with-lemon-and-garlic.jpg"},
     {recipeName:"Spicy Shrimp Pilaf", chef: "Andy Baraghani", src: "https://assets.bonappetit.com/photos/6048f5c9b5ad3ffa9fef04d7/1:1/w_2560%2Cc_limit/Comfort-Spicy-Shrimp-Pilaf.jpg"},
@@ -29,6 +31,44 @@ const useStyles = makeStyles({
 });
 
 function RecipeSelection() {
+
+    // Axios Requests
+
+    /*
+     * Makes an axios request for finding suggestions
+     */
+    const findSuggestions = (event) => {
+
+        const toSend = {
+            //empty
+        };
+
+        let config = {
+            headers: {
+                "Content-Type": "application/json",
+                'Access-Control-Allow-Origin': '*',
+            }
+        }
+
+        axios.post(
+            "http://localhost:4567/find-suggestions",
+            toSend,
+            config
+        )
+            .then(response => {
+                let object = response.data["data"];
+
+                //iterate through suggestions
+                for(const i of object) {
+                    recipes.push(i);
+                }
+
+            })
+
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
 
     // style details for root page
     const rootStyle = {
@@ -59,7 +99,10 @@ function RecipeSelection() {
 
     const classes = useStyles();
 
-
+    //useEffect hook for first render
+    useEffect(() => {
+        findSuggestions();
+    }, []);
 
 
     return (
@@ -89,7 +132,13 @@ function RecipeSelection() {
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
-                                        <Link to={"/recipe"}>
+                                        {/*<Link to={{"/recipe"} recipeName={"YEET"}>*/}
+                                        <Link
+                                            to={{
+                                                pathname: "/recipe",
+                                                state: { name: r.recipeName}
+                                            }}
+                                        >
                                         <Button size="small">See Recipe</Button>
                                         </Link>
                                     </CardActions>
@@ -118,7 +167,12 @@ function RecipeSelection() {
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
-                                        <Link to={"/recipe"}>
+                                        <Link
+                                            to={{
+                                                pathname: "/recipe",
+                                                state: { name: r.recipeName}
+                                            }}
+                                        >
                                             <Button style={{marginLeft:475}} size="small">See Recipe</Button>
                                         </Link>
                                     </CardActions>

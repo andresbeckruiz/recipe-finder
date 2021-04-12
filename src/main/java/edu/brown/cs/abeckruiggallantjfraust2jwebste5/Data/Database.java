@@ -240,7 +240,11 @@ public final class Database {
 
   public static void addUserIngredient(String user, String ingredient) throws SQLException {
     String currentInventory = getUserInventory(user);
-    currentInventory = currentInventory + ("," + ingredient);
+    if (currentInventory.length() != 0) {
+      currentInventory = currentInventory + ("," + ingredient);
+    } else {
+      currentInventory = ingredient;
+    }
 
     //ToDo: Update entry in users table with new currnetInventory string
     try {
@@ -260,10 +264,11 @@ public final class Database {
 
   public static void removeUserIngredient(String user, String ingredient) throws SQLException {
     String currentInventory = getUserInventory(user);
-    currentInventory = currentInventory.replace(",", "");
     currentInventory = currentInventory.replace(ingredient, "");
-
-    // ToDo: update currentInventory string and update entry in users table
+    currentInventory = currentInventory.replace(",,", ",");
+    if (currentInventory.startsWith(",")) {
+      currentInventory = currentInventory.substring(1);
+    }
     try {
       if (conn != null) {
         PreparedStatement prep;
@@ -272,7 +277,7 @@ public final class Database {
         prep.setString(1, currentInventory);
         prep.setString(2, user);
         prep.execute();
-        System.out.println("Connected?");
+        prep.close();
       }
     } catch (Exception e) {
       System.out.println("SQL ERROR: Adding Ingredient");

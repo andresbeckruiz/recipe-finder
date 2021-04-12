@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeMap;
 
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.TOTAL_RATING;
+
 public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex> {
 
   private HashMap<String, nonCentralVertex> nonCentralNodeMap = new HashMap<>();
@@ -75,7 +77,7 @@ public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex
     setOne.retainAll(setTwo);
     int intersectionSize = setOne.size();
     int totalNumSharedAdjNodes = initialSetOneSize + setTwo.size();
-    return adjToAdj.getValue() * (double) intersectionSize
+    return (adjToAdj.getValue() / TOTAL_RATING) * (double) intersectionSize
             / (double) totalNumSharedAdjNodes;
   }
 }

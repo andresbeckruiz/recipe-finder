@@ -52,7 +52,7 @@ function Fridge() {
     // Axios Requests
 
     /*
-     * Makes an axios request for the ways command; uses tile caching.
+     * Makes an axios request for adding ingredients
      */
     const addIngredient = (curr, event) => {
 
@@ -83,6 +83,67 @@ function Fridge() {
             });
     }
 
+    /*
+    * Makes an axios request for ingredient rating
+    */
+    const rateIngredient = (curr, rating, event) => {
+
+        const toSend = {
+            ingredient: curr,
+            rating: rating
+        };
+
+        let config = {
+            headers: {
+                "Content-Type": "application/json",
+                'Access-Control-Allow-Origin': '*',
+            }
+        }
+
+        axios.post(
+            "http://localhost:4567/rate-ingredient",
+            toSend,
+            config
+        )
+            .then(response => {
+                //nothing
+            })
+
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    /*
+ * Makes an axios request for ingredient rating
+ */
+    const deleteIngredientRequest = (curr, event) => {
+
+        const toSend = {
+            ingredient: curr
+        };
+
+        let config = {
+            headers: {
+                "Content-Type": "application/json",
+                'Access-Control-Allow-Origin': '*',
+            }
+        }
+
+        axios.post(
+            "http://localhost:4567/delete-ingredient",
+            toSend,
+            config
+        )
+            .then(response => {
+                //nothing
+            })
+
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
 
     // style details for root page
     const rootStyle = {
@@ -96,6 +157,8 @@ function Fridge() {
     const handleCloseDelete = () => {
         setDeleteIngredient(true);
         setModalIsOpen(false);
+        console.log(current);
+        deleteIngredientRequest(current.trim());
     };
 
     // function for submit button
@@ -125,10 +188,6 @@ function Fridge() {
 
     //set global for listener
     submit = onSubmit;
-
-    const onChange = () => {
-
-    }
 
     async function handleLogout() {
         setError("")
@@ -228,6 +287,7 @@ function Fridge() {
                         size={"large"}
                         onChange={(event, newValue) => {
                             ingredientRatings[currentToRate] = newValue;
+                            rateIngredient(currentToRate, newValue);
                             handleRatingClose();
                         }}
                     />
@@ -243,7 +303,7 @@ function Fridge() {
             <div>
             <List x={600} width={800} label={"Add an Ingredient"} ingredients={[]}>
                 <div style={{position: "relative", top: 225, left: 0, right:0}}>
-                    <TextBox input={setInput} change={onChange} label={"Name of Ingredient"} setCurr={setCurrentToRate}/>
+                    <TextBox input={setInput} label={"Name of Ingredient"} setCurr={setCurrentToRate}/>
                     <div id={"submit"} style={{position: "relative", top: 50, left: 150}}>
                         {/*submission button*/}
                         <SubmitButton label={"Submit"} onClick={onSubmit}/>
