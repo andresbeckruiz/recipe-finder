@@ -136,20 +136,6 @@ public final class Main {
     }
   }
 
-  /**
-   * Handles returning values for a given recipe.
-   */
-  private class GetRecipeHandler implements Route {
-    @Override
-    public Object handle(Request request, Response response) throws Exception {
-      JSONObject data = new JSONObject(request.body());
-      String currentRecipeName = data.getString("recipe");
-      User currentUser = recipeApp.getCurUser();
-      Recipe recipe = currentUser.findRecipe(currentRecipeName);
-      return recipe.toJson();
-    }
-  }
-
   private class AddIngredientHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
@@ -176,6 +162,7 @@ public final class Main {
   private class DeleteIngredientHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
+      System.out.println("hiiiii");
       JSONObject data = new JSONObject(request.body());
       String ingredientName = data.getString("ingredient");
       recipeApp.getCurUser().removeIngredient(ingredientName);
@@ -197,7 +184,7 @@ public final class Main {
   }
 
   /**
-   * Handles finding similar recipes when prompted in front end
+   * Handles finding similar recipes when prompted in front end.
    */
   private class FindSimilarRecipesHandler implements Route {
     @Override

@@ -54,7 +54,7 @@ public class Recipe implements Vertex<Ingredient> {
     this.owner = user;
     if (user.getRecipeRatings().keySet().contains(title)) {
       ratingSet = true;
-      this.rating = user.getRecipeRatings().get(title) / TOTAL_RATING;
+      this.rating = user.getRecipeRatings().get(title);
     } else {
       this.rating = DEFAULT_RATING;
     }

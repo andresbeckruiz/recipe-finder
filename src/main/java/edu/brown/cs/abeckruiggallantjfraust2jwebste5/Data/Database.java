@@ -241,7 +241,11 @@ public final class Database {
 
   public static void addUserIngredient(String user, String ingredient) throws SQLException {
     String currentInventory = getUserInventory(user);
-    currentInventory = currentInventory + ("," + ingredient);
+    if (currentInventory.length() != 0) {
+      currentInventory = currentInventory + ("," + ingredient);
+    } else {
+      currentInventory = ingredient;
+    }
 
     //ToDo: Update entry in users table with new currnetInventory string
     try {
@@ -261,8 +265,7 @@ public final class Database {
 
   public static void removeUserIngredient(String user, String ingredient) throws SQLException {
     String currentInventory = getUserInventory(user);
-    currentInventory = currentInventory.replace(",", "");
-    currentInventory = currentInventory.replace(ingredient, "");
+    currentInventory = currentInventory.replace(ingredient+",", "");
 
     // ToDo: update currentInventory string and update entry in users table
     try {
