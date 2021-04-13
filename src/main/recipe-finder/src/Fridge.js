@@ -270,8 +270,8 @@ function Fridge() {
             <Button variant="success" size= "lg" style={{position: "absolute", left: 50, top: 25}}>Search for Recipes</Button>
             </Link>
             <Button onClick={handleLogout} variant="danger" size= "lg" style={{position: "absolute", right: 50, top: 25}}>Logout</Button>
-            <Link to={"/update-password"}>
-            <Button variant="primary" size= "sm" style={{position: "absolute", right: 50, top: 80}}>Update Password</Button>
+            <Link to={"/profile"}>
+            <Button variant="primary" size= "sm" style={{position: "absolute", right: 50, top: 80}}>Profile</Button>
             </Link>
             {/*two panes for lists and input*/}
 
