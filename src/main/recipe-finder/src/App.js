@@ -12,6 +12,7 @@ import Recipe from "./Recipe";
 import ForgotPassword from "./ForgotPassword"
 import RecipeSelection from "./RecipeSelection";
 import Error from "./Error";
+import Profile from "./Profile";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
                           <PrivateRoute path={"/fridge"} component={Fridge}/>
                           <PrivateRoute path={"/recipe"} component={Recipe}/>
                           <PrivateRoute path={"/RecipeSelection"} component={RecipeSelection}/>
+                          <PrivateRoute path={"/profile"} component={Profile}/>
                           {/*is there a way to prevent a user typing in these routes once
                           logged in? or does this really matter*/}
                           <Route path={"/signup"} component={Signup}/>
