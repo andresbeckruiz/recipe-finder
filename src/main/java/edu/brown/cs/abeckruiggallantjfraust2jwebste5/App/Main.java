@@ -27,11 +27,7 @@ import com.google.gson.Gson;
 import freemarker.template.Configuration;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.DEFAULT_RATING;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.addUserToDatabase;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getName;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getRecipeObject;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserIngredientRatings;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserInventory;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.*;
 
 //import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.JsonToSql.parseJson;
 
@@ -123,6 +119,7 @@ public final class Main {
     Spark.post("/newUserSignup", new CreateNewUserHandlerSignup());
     Spark.post("/inventory", new GetUserInventory());
     Spark.post("/name", new GetName());
+    Spark.post("/profile", new GetProfileInfo());
   }
 
   /**
@@ -354,6 +351,26 @@ public final class Main {
       try {
         String name = getName(email);
         Map<String, String> map = ImmutableMap.of("name", name);
+        return GSON.toJson(map);
+      } catch (SQLException e) {
+        System.err.println("ERROR: Error connecting to database");
+        return "error";
+      }
+    }
+  }
+
+  private class GetProfileInfo implements Route {
+    @Override
+    public Object handle(Request request, Response response) throws Exception {
+      JSONObject data = new JSONObject(request.body());
+      String email = data.getString("name");
+      try {
+        String name = getName(email);
+        String recipes = getUserRecipeRatings(email);
+        String ingredients = getUserIngredientRatings(email);
+        //TODO: PARSE RECIPES AND INGREDIENTS
+        Map<String, String> map = ImmutableMap.of("name", name, "recipes",
+                recipes, "ingredients", ingredients);
         return GSON.toJson(map);
       } catch (SQLException e) {
         System.err.println("ERROR: Error connecting to database");
