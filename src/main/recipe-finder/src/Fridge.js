@@ -211,7 +211,6 @@ function Fridge() {
             config
         )
             .then(response => {
-                console.log(response)
                 let name = response.data["name"]
                 //update name variable
                 setName(name)
@@ -241,11 +240,14 @@ function Fridge() {
         )
             .then(response => {
                 let inventory = response.data["inventory"]
+                console.log("Inventory" + inventory)
                 //update ratings
                 for (var ingredient in inventory) {
                     ingredientRatings[ingredient] = inventory[ingredient]
+                    console.log("INDIVIDUAL INGREDIENT" + ingredient)
                 }
                 setIngredients(ingredientRatings)
+                console.log("Ingredient ratings:" + ingredientRatings)
             })
 
             .catch(function (error) {

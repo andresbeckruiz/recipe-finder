@@ -4,7 +4,6 @@ import Signup from "./Signup"
 import {Container} from 'react-bootstrap'
 import {AuthProvider} from "./contexts/AuthContext"
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom"
-import Dashboard from "./Dashboard"
 import Login from "./Login"
 import PrivateRoute from "./PrivateRoute"
 import UpdatePassword from "./UpdatePassword";
@@ -21,7 +20,6 @@ function App() {
               <Router>
                   <AuthProvider>
                       <Switch>
-                          <PrivateRoute exact path={"/"} component={Dashboard}/>
                           <PrivateRoute path={"/update-password"} component={UpdatePassword}/>
                           <PrivateRoute path={"/fridge"} component={Fridge}/>
                           <PrivateRoute path={"/recipe"} component={Recipe}/>

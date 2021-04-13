@@ -306,31 +306,37 @@ public final class Main {
       JSONObject data = new JSONObject(request.body());
       Map<String, Object> map = new HashMap<>();
       String username = data.getString("name");
+      System.out.println("Username" + username);
       try {
         String string = getUserInventory(username);
-
+        System.out.println("User inventory" + string);
         //splitting to create hashset for user ingredients
         if (string.length() > 0) {
           String[] values = string.split(",");
           HashSet<String> ingredients = new HashSet<>(Arrays.asList(values));
           //get ratings for ingredients
-
+          System.out.println("Broken before recipeApp.getCurrUser");
           User user = recipeApp.getCurUser();
+          System.out.println("Broken at recipeApp.getCurrUser");
           HashMap<String, Double> preRated = user.getIngredientRatings();
           HashMap<String, String> ingRatings = new HashMap<>();
 
           for (String ingredient : ingredients) {
             boolean rated = preRated.containsKey(ingredient);
+            System.out.println("Contains key got here");
             if (rated) {
               ingRatings.put(ingredient, Double.toString(preRated.get(ingredient)));
+              System.out.println("GOT here if rated");
             } else {
               ingRatings.put(ingredient, Double.toString(DEFAULT_RATING));
+              System.out.println("GOT here else");
             }
             map = ImmutableMap.of("inventory", ingRatings);
           }
         } else {
           map = ImmutableMap.of("inventory", "");
         }
+        System.out.println("GOT TO END");
         return GSON.toJson(map);
 
       } catch (SQLException e) {
