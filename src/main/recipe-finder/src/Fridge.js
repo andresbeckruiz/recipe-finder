@@ -12,14 +12,6 @@ import Rating from "@material-ui/lab/Rating";
 
 let ingredientRatings = {};
 
-// event listener for enter key
-function submit() {}
-document.addEventListener('keydown',function(e){
-    if (e.key === "Enter") {
-        submit();
-    }
-});
-
 function Fridge() {
 
     // useState variable for name
@@ -48,6 +40,7 @@ function Fridge() {
     const [current, setCurrent] = useState("");
 
     const [loading, setLoading] = useState(true)
+
 
 
     // Axios Requests
@@ -166,7 +159,7 @@ function Fridge() {
         let text = input.trim();
         if(ingredientRatings[text] !== undefined) {
             //clear from this scope and from input box
-            document.getElementById("inputBox").value = "";
+            document.getElementsByClassName("inputBox")[0].value = "";
             setInput("");
         }
 
@@ -179,7 +172,12 @@ function Fridge() {
     }
 
     //set global for listener
-    submit = onSubmit;
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            onSubmit();
+        }
+    }
 
     async function handleLogout() {
         setError("")
@@ -260,10 +258,11 @@ function Fridge() {
         ingredientRatings = {}
         getName(currentUser.email)
         getUserInventory(currentUser.email)
-    },[])
+    },[]);
+
 
     return (
-        <div style={rootStyle} className="Fridge">
+        <div style={rootStyle} className="Fridge" onKeyDown={handleKeyDown}>
             {/*dynamic header*/}
             <h1 style={{marginTop: 25}}>{name}'s Fridge</h1>
             {error && <Alert variant={"danger"}> {error} </Alert>}
@@ -312,7 +311,6 @@ function Fridge() {
                         precision={0.5}
                         size={"large"}
                         onChange={(event, newValue) => {
-
                             rateIngredient(currentToRate, newValue);
                             handleRatingClose();
                         }}
