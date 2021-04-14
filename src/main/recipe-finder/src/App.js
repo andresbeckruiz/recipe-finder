@@ -3,7 +3,7 @@ import Fridge from "./Fridge"
 import Signup from "./Signup"
 import {Container} from 'react-bootstrap'
 import {AuthProvider} from "./contexts/AuthContext"
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom"
+import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom"
 import Login from "./Login"
 import PrivateRoute from "./PrivateRoute"
 import UpdatePassword from "./UpdatePassword";
@@ -25,8 +25,8 @@ function App() {
                           <PrivateRoute path={"/recipe"} component={Recipe}/>
                           <PrivateRoute path={"/RecipeSelection"} component={RecipeSelection}/>
                           <PrivateRoute path={"/profile"} component={Profile}/>
-                          {/*is there a way to prevent a user typing in these routes once
-                          logged in? or does this really matter*/}
+                          {/*want "/" to redirect to login page when server starts up*/}
+                          <Route exact path={"/"}> <Redirect to={"/fridge"}/> </Route>
                           <Route path={"/signup"} component={Signup}/>
                           <Route path={"/login"} component={Login}/>
                           <Route path={"/forgot-password"} component={ForgotPassword}/>
