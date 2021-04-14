@@ -14,6 +14,7 @@ function Profile() {
     const [name, setName] = useState("");
     const [ratedRecipes, setRatedRecipes] = useState([]);
     const [ratedIngredients, setRatedIngredients] = useState([]);
+    const [loading, setLoading] = useState(false)
 
 
     // Axios Requests
@@ -44,6 +45,7 @@ function Profile() {
                 let recipes = response.data["recipes"];
                 let ingredients = response.data["ingredients"];
 
+                console.log("name" + name)
                 console.log(recipes);
                 console.log(ingredients);
 
@@ -55,6 +57,42 @@ function Profile() {
             .catch(function (error) {
                 console.log(error);
             });
+    }
+
+    /**
+     * This method deletes the user account and removes the user data from the SQL database
+     * @param email
+     */
+    const deleteUser = (email) => {
+
+        const toSend = {
+            name: email
+        };
+
+        let config = {
+            headers: {
+                "Content-Type": "application/json",
+                'Access-Control-Allow-Origin': '*',
+            }
+        }
+
+        axios.post(
+            "http://localhost:4567/delete-user",
+            toSend,
+            config
+        )
+            .then(() => {
+                currentUser.delete()
+                    .then(() => {
+                        history.push("/login")
+                    }).catch(function(error) {
+                    console.log(error)
+                });
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        setLoading(false)
     }
 
     const rootStyle = {
@@ -71,6 +109,11 @@ function Profile() {
         } catch {
             setError("Failed to log out")
         }
+    }
+
+    async function handleDelete() {
+        setLoading(true)
+        deleteUser(currentUser.email)
     }
 
     //useEffect hook for initial render
@@ -98,6 +141,9 @@ function Profile() {
             </Card>
             <div className={"w-100 text-center mt-2"}>
                 <Button variant={"link"} onClick={handleLogout}> Log Out</Button>
+            </div>
+            <div className={"w-100 text-center mt-2"}>
+                <Button variant={"danger"} onClick={handleDelete} disabled={loading}> Delete Account</Button>
             </div>
             <br/>
             <Card>

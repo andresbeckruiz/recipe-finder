@@ -461,5 +461,14 @@ public final class Database {
     return "";
   }
 
-
+  public static void deleteUser(String email) throws SQLException {
+    if (conn != null) {
+      PreparedStatement prep;
+      prep = conn.prepareStatement(
+              "DELETE FROM users WHERE email = ?;");
+      prep.setString(1, email);
+      prep.execute();
+      prep.close();
+    }
+  }
 }

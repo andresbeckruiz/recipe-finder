@@ -120,6 +120,7 @@ public final class Main {
     Spark.post("/inventory", new GetUserInventory());
     Spark.post("/name", new GetName());
     Spark.post("/profile", new GetProfileInfo());
+    Spark.post("/delete-user", new DeleteUser());
   }
 
   /**
@@ -360,6 +361,21 @@ public final class Main {
         Map<String, String> map = ImmutableMap.of("name", name, "recipes",
                 recipes, "ingredients", ingredients);
         return GSON.toJson(map);
+      } catch (SQLException e) {
+        System.err.println("ERROR: Error connecting to database");
+        return "error";
+      }
+    }
+  }
+
+  private class DeleteUser implements Route {
+    @Override
+    public Object handle(Request request, Response response) throws Exception {
+      JSONObject data = new JSONObject(request.body());
+      String email = data.getString("name");
+      try {
+        deleteUser(email);
+        return "success";
       } catch (SQLException e) {
         System.err.println("ERROR: Error connecting to database");
         return "error";
