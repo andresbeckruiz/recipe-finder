@@ -10,12 +10,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import com.google.common.collect.ImmutableMap;
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Autocorrect.Autocorrector;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import org.json.JSONException;
 import org.json.JSONObject;
 import spark.ExceptionHandler;
 import spark.Request;
@@ -27,7 +30,13 @@ import com.google.gson.Gson;
 import freemarker.template.Configuration;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.DEFAULT_RATING;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.*;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.addUserToDatabase;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.deleteUser;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getName;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getRecipeObject;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserIngredientRatings;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserInventory;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserRecipeRatings;
 
 //import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.JsonToSql.parseJson;
 
@@ -36,6 +45,7 @@ import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.*;
  */
 
 public final class Main {
+  private static Autocorrector ac;
   private static final int DEFAULT_PORT = 4567;
   private static final Gson GSON = new Gson();
 
@@ -61,6 +71,7 @@ public final class Main {
    * to take in user input.
    */
   private void run() {
+    ac = new Autocorrector("data/dictionary.txt", true, true, 1);
     // Parse command line arguments
     OptionParser parser = new OptionParser();
     parser.accepts("gui");
@@ -121,6 +132,9 @@ public final class Main {
     Spark.post("/name", new GetName());
     Spark.post("/profile", new GetProfileInfo());
     Spark.post("/delete-user", new DeleteUser());
+
+    //for autocorrect
+    Spark.post("/result", new ResultsHandler());
   }
 
   /**
@@ -379,6 +393,30 @@ public final class Main {
       } catch (SQLException e) {
         System.err.println("ERROR: Error connecting to database");
         return "error";
+      }
+    }
+  }
+
+  /** Handles requests for autocorrect on an input
+   *  @return GSON which contains the result of autocorrect.suggest()
+   */
+  private static class ResultsHandler implements Route {
+    @Override
+    public String handle(Request req, Response res) {
+      //Get JSONObject from req and use it to get the value of the input you want to
+      // generate suggestions for
+      try {
+        JSONObject obj = new JSONObject(req.body());
+        String input = obj.getString("text");
+        //use the global autocorrect instance to get the suggestions
+        Set<String> response = ac.suggest(input);
+        //create an immutable map using the suggestions
+        Map<String, Set<String>> suggestions = ImmutableMap.of("results", response);
+        //return a Json of the suggestions (HINT: use the GSON.Json())
+        return GSON.toJson(suggestions);
+      } catch (JSONException e) {
+        System.err.println("Error parsing JSON Object" + e);
+        return null;
       }
     }
   }
