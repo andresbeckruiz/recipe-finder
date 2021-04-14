@@ -31,7 +31,9 @@ export default function Signup() {
             "http://localhost:4567/newUserSignup",
             toSend,
             config
-        )
+        ).then(() => {
+            history.push("/fridge")
+        })
             .catch(function (error) {
                 console.log(error);
             });
@@ -56,7 +58,6 @@ export default function Signup() {
             setLoading(true)
             await signup(emailRef.current.value, passwordRef.current.value)
             await createUser(nameRef.current.value, emailRef.current.value)
-            history.push("/fridge")
         } catch (error) {
             setError("Failed to create an account")
             console.log(error)

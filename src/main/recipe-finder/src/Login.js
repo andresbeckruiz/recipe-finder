@@ -29,7 +29,10 @@ export default function Login() {
             "http://localhost:4567/newUser",
             toSend,
             config
-        )
+        ).then((response) => {
+            console.log(response)
+            history.push("/fridge")
+        })
             .catch(function (error) {
                 console.log(error);
             });
@@ -45,7 +48,6 @@ export default function Login() {
             setLoading(true)
             await login(emailRef.current.value, passwordRef.current.value)
             await createUser(emailRef.current.value)
-            history.push("/fridge")
         } catch (error) {
             setError("Failed to log in")
             console.log(error)
