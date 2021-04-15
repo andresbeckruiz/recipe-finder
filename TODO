@@ -2,12 +2,8 @@ TODO:
 Back end (Georgia + Jack)
 - testing (Georgia)
 - commenting (Georgia)
-- weighted average ratings (Jack)
-- adding ratings should overwrite rather than append (ingredient) (Georgia)
-- recipe ratings endpoint (Jack)
 - think of edge cases + test null inputs (Jack)
 - profile page routes (Jack)
-    - delete user
     - view all ratings?
 
 Front end:

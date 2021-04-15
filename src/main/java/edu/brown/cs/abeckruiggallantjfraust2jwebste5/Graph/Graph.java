@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeMap;
 
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.TOTAL_RATING;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.*;
 
 public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex> {
 
@@ -75,7 +75,7 @@ public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex
     setOne.retainAll(setTwo);
     int intersectionSize = setOne.size();
     int totalNumSharedAdjNodes = initialSetOneSize + setTwo.size();
-    return (adjToAdj.getValue() / TOTAL_RATING) * (double) intersectionSize
-            / (double) totalNumSharedAdjNodes;
+    return ((SCORE_WEIGHT)*(adjToAdj.getValue()) + ((SIMILARITY_WEIGHT)) * ((double) intersectionSize
+            / (double) totalNumSharedAdjNodes));
   }
 }
