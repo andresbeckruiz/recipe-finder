@@ -3,10 +3,11 @@ import Rating from "@material-ui/lab/Rating";
 import './List.css';
 let current;
 
+let ingredients = [];
 function List(props) {
 
     // useState hooks for list and flag
-    const [list, setList] = useState([]);
+    const [list, setList] = useState({});
     const [flag, setFlag] = useState(0);
 
 
@@ -28,9 +29,9 @@ function List(props) {
     }
 
     function deleteCurrent() {
-        let list = props.ingredients;
-        delete list[current];
-        props.setter(list);
+        let curr = props.ingredients;
+        delete curr[current];
+        props.setter(curr);
         setFlag(flag+1);
         props.setDeleteCurr(false);
     }
@@ -38,6 +39,7 @@ function List(props) {
     // useEffect hook for ingredient list updates
     useEffect(() => {
         setList(props.ingredients);
+        ingredients = props.list;
     }, [props.ingredients, flag])
 
     useEffect(() => {
