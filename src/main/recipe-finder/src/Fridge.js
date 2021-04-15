@@ -402,7 +402,7 @@ function Fridge() {
                     <ul aria-live={"polite"}>
                         {suggestions.map(item => {
                             return (
-                                <ListItem item={item} setInput={setInput} />
+                                <ListItem item={item} setInput={setInput} input={input} setCurr={setCurrentToRate} curr={currentToRate} />
                             )
                         })}
                     </ul>

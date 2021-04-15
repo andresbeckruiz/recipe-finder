@@ -7,6 +7,7 @@ function TextBox(props) {
         props.input(val);
         props.setCurr(val);
         props.onKeyUp();
+        console.log("triggered");
     }
 
     // Style of label

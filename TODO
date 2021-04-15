@@ -38,14 +38,8 @@ Test:
 
 TODO bugs:
 
-1) when you click an autocorrect list item, state is not updated in the modal. For example, if you type in
-"chicke" and then click the suggestion that says "chicken", the modal will say "chicke" when you
-click submit, even though the textbox says "chicken". When you submit, the fridge will also say "chicke".
-The database stores it as "chicken" though and when you click away from the page and return it will
-say "chicken" in the fridge, so I think it has to do with asynchronous state
+1) the trim function is preventing valid ingredients with two words from being found. ?? (example?)
 
-2) the trim function is preventing valid ingredients with two words from being found.
+2) (for andres to handle) get list of suggestions to dissappear when textbox is empty
 
-3) (for andres to handle) get list of suggestions to dissappear when textbox is empty
-
-4) not urgent, but submit button placement jumps around depending on suggestions
+3) not urgent, but submit button placement jumps around depending on suggestions
