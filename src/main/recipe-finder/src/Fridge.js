@@ -229,19 +229,19 @@ function Fridge() {
         bottom: 10,
         overflow: "auto"
     }
-
-    function deleteCurrent() {
-        let curr = ingredientRatings;
-        delete curr[this.current];
-        setIngredientRatings(curr);
-        setDeleteIngredient(false);
-    }
-
-    useEffect(() => {
-        if(deleteIngredient) {
-            deleteCurrent();
-        }
-    }, [deleteIngredient])
+    //
+    // function deleteCurrent() {
+    //     let curr = ingredientRatings;
+    //     delete curr[this.current];
+    //     setIngredientRatings(curr);
+    //     setDeleteIngredient(false);
+    // }
+    //
+    // useEffect(() => {
+    //     if(deleteIngredient) {
+    //         deleteCurrent();
+    //     }
+    // }, [deleteIngredient])
 
     //set global for listener
 
@@ -383,32 +383,32 @@ function Fridge() {
 
 
             <div>{Object.keys(ingredientRatings)}</div>
-            <div style={style} className="List">
-                <h4 style={{position: "absolute", top: -40}}>"Current Ingredients"</h4>
-                <div style={innerStyle} className="List">
-                    <div style={{marginTop: 25}}>
-                        {Array.from(Object.keys(ingredientRatings)).map(r =>
-                            <div key={r} className="ingredient">
-                                <p style={{textAlign: "center", cursor: "pointer"}} onClick={() =>{
-                                    setModalIsOpen(true);
-                                    setCurrent(r);
-                                    this.current = r;
-                                }
-                                }>{r}</p>
-                                <Rating
-                                    name="ingredient-rating"
-                                    precision={0.5}
-                                    size={"small"}
-                                    onChange={(event, newValue) => {
-                                        rateIngredient(r, newValue);
-                                    }}
-                                    readOnly
-                                    value={parseFloat(ingredientRatings[r])}
-                                />
-                            </div>
-                        )}
-                    </div>
-                </div>
+            {/*<div style={style} className="List">*/}
+            {/*    <h4 style={{position: "absolute", top: -40}}>"Current Ingredients"</h4>*/}
+            {/*    <div style={innerStyle} className="List">*/}
+            {/*        <div style={{marginTop: 25}}>*/}
+            {/*            {Array.from(Object.keys(ingredientRatings)).map(r =>*/}
+            {/*                <div key={r} className="ingredient">*/}
+            {/*                    <p style={{textAlign: "center", cursor: "pointer"}} onClick={() =>{*/}
+            {/*                        setModalIsOpen(true);*/}
+            {/*                        setCurrent(r);*/}
+            {/*                        this.current = r;*/}
+            {/*                    }*/}
+            {/*                    }>{r}</p>*/}
+            {/*                    <Rating*/}
+            {/*                        name="ingredient-rating"*/}
+            {/*                        precision={0.5}*/}
+            {/*                        size={"small"}*/}
+            {/*                        onChange={(event, newValue) => {*/}
+            {/*                            rateIngredient(r, newValue);*/}
+            {/*                        }}*/}
+            {/*                        readOnly*/}
+            {/*                        value={parseFloat(ingredientRatings[r])}*/}
+            {/*                    />*/}
+            {/*                </div>*/}
+            {/*            )}*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
 
             {/*Modal for deletion*/}
             <Modal show={modalIsOpen} onHide={handleClose}>
