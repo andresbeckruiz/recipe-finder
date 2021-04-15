@@ -12,8 +12,7 @@ import Rating from "@material-ui/lab/Rating";
 import ListItem from "./ListItem";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-let ingredientRatings = {};
+let current;
 
 function Fridge() {
 
@@ -29,7 +28,7 @@ function Fridge() {
     const [input, setInput] = useState("");
 
     // useState variable for ingredients list
-    const [ingredients, setIngredients] = useState(ingredientRatings);
+    const [ingredientRatings, setIngredientRatings] = useState({});
 
     // useState variables for deletion modal
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -41,9 +40,6 @@ function Fridge() {
 
     // useState hook for current ingredient to delete
     const [current, setCurrent] = useState("");
-
-    //fixes a bug with displaying ratings
-    const [list, setList] = useState([]);
 
 
     const [suggestions, setSuggestions] = useState([])
@@ -102,9 +98,12 @@ function Fridge() {
             config
         )
             .then(response => {
-                ingredientRatings[currentToRate] = rating;
-                setIngredients(ingredientRatings);
-                setList(Object.keys(ingredients))
+                let ratings = ingredientRatings;
+                ratings[currentToRate] = rating;
+                if(ingredientRatings == ratings) {
+                    console.log('sammmeee')
+                }
+                setIngredientRatings(ratings);
                 //nothing
             })
 
@@ -214,6 +213,36 @@ function Fridge() {
         addIngredient(text);
     }
 
+    const style = {
+        backgroundColor: "#2776ED",
+        height: 600,
+        width: 250,
+        position: "absolute",
+        top: 150,
+        left: 200
+    }
+
+    const innerStyle = {
+        height: 590,
+        width: 250,
+        position: "absolute",
+        bottom: 10,
+        overflow: "auto"
+    }
+
+    function deleteCurrent() {
+        let curr = ingredientRatings;
+        delete curr[this.current];
+        setIngredientRatings(curr);
+        setDeleteIngredient(false);
+    }
+
+    useEffect(() => {
+        if(deleteIngredient) {
+            deleteCurrent();
+        }
+    }, [deleteIngredient])
+
     //set global for listener
 
     const handleKeyDown = (event) => {
@@ -281,11 +310,15 @@ function Fridge() {
         )
             .then(response => {
                 let inventory = response.data["inventory"]
+                console.log('getting inventory')
                 //update ratings
+                let ratings = ingredientRatings;
                 for (var ingredient in inventory) {
-                    ingredientRatings[ingredient] = inventory[ingredient]
+                    ratings[ingredient] = inventory[ingredient]
                 }
-                setIngredients(ingredientRatings)
+                setIngredientRatings(ratings)
+                console.log("SET RATING TO: ")
+                console.log(ratings)
             })
 
             .catch(function (error) {
@@ -321,9 +354,13 @@ function Fridge() {
             })
     }
 
+    useEffect(() => {
+      console.log("RATINGS: ")
+      console.log(ingredientRatings)
+    }, [ingredientRatings])
+
     //populates fridge with user inventory when page loads and gets user name
     useEffect(() => {
-        ingredientRatings = {}
         getName(currentUser.email)
         getUserInventory(currentUser.email)
     },[]);
@@ -344,9 +381,34 @@ function Fridge() {
             </Link>
             {/*two panes for lists and input*/}
 
-            <List x={200} width={250} label={"Current Ingredients"} ingredients={ingredients} ingredientRater={rateIngredient} setter={setIngredients}
-             setModalIsOpen={setModalIsOpen} deleteCurr={deleteIngredient} setDeleteCurr={setDeleteIngredient}
-            setCurrent={setCurrent} list={list}/>
+
+            <div>{Object.keys(ingredientRatings)}</div>
+            <div style={style} className="List">
+                <h4 style={{position: "absolute", top: -40}}>"Current Ingredients"</h4>
+                <div style={innerStyle} className="List">
+                    <div style={{marginTop: 25}}>
+                        {Array.from(Object.keys(ingredientRatings)).map(r =>
+                            <div key={r} className="ingredient">
+                                <p style={{textAlign: "center", cursor: "pointer"}} onClick={() =>{
+                                    setModalIsOpen(true);
+                                    setCurrent(r);
+                                    this.current = r;
+                                }
+                                }>{r}</p>
+                                <Rating
+                                    name="ingredient-rating"
+                                    precision={0.5}
+                                    size={"small"}
+                                    onChange={(event, newValue) => {
+                                        rateIngredient(r, newValue);
+                                    }}
+                                    readOnly
+                                    value={parseFloat(ingredientRatings[r])}
+                                />
+                            </div>
+                        )}
+                    </div>
+                </div>
 
             {/*Modal for deletion*/}
             <Modal show={modalIsOpen} onHide={handleClose}>
@@ -391,30 +453,30 @@ function Fridge() {
                     </Button>
                 </Modal.Footer>
             </Modal>
-
+            </div>
             <div>
-            <List x={600} width={800} label={"Add an Ingredient"} ingredients={[]}>
-                {/*original top number was 225*/}
-                <div style={{position: "relative", top: 100, left: 0, right:0}}>
-                    <TextBox val={input} input={setInput} onKeyUp={createSuggestions}
-                             label={"Name of Ingredient"} setCurr={setCurrentToRate}/>
-                    <h4 hidden={autocorrectLoading} className={"text-dark"}> Loading...</h4>
-                    <ul aria-live={"polite"}>
-                        {suggestions.map(item => {
-                            return (
-                                <ListItem item={item} setInput={setInput} input={input} setCurr={setCurrentToRate} curr={currentToRate} />
-                            )
-                        })}
-                    </ul>
-                    {/*original top number was 50*/}
-                    <div id={"submit"} style={{position: "relative", top: 0, left: 150}}>
-                        {/*submission button*/}
-                        <SubmitButton label={"Submit"} onClick={checkValidIngredient}/>
-                        {/*this is for setting an error notification if ingredient is invalid*/}
-                        <ToastContainer/>
-                    </div>
-                </div>
-            </List>
+            {/*<List x={600} width={800} label={"Add an Ingredient"} ingredients={[]}>*/}
+            {/*    /!*original top number was 225*!/*/}
+            {/*    <div style={{position: "relative", top: 100, left: 0, right:0}}>*/}
+            {/*        <TextBox val={input} input={setInput} onKeyUp={createSuggestions}*/}
+            {/*                 label={"Name of Ingredient"} setCurr={setCurrentToRate}/>*/}
+            {/*        <h4 hidden={autocorrectLoading} className={"text-dark"}> Loading...</h4>*/}
+            {/*        <ul aria-live={"polite"}>*/}
+            {/*            {suggestions.map(item => {*/}
+            {/*                return (*/}
+            {/*                    <ListItem item={item} setInput={setInput} input={input} setCurr={setCurrentToRate} curr={currentToRate} />*/}
+            {/*                )*/}
+            {/*            })}*/}
+            {/*        </ul>*/}
+            {/*        /!*original top number was 50*!/*/}
+            {/*        <div id={"submit"} style={{position: "relative", top: 0, left: 150}}>*/}
+            {/*            /!*submission button*!/*/}
+            {/*            <SubmitButton label={"Submit"} onClick={checkValidIngredient}/>*/}
+            {/*            /!*this is for setting an error notification if ingredient is invalid*!/*/}
+            {/*            <ToastContainer/>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*</List>*/}
             {/*textbox for input*/}
             </div>
         </div>

@@ -3,12 +3,12 @@ import Rating from "@material-ui/lab/Rating";
 import './List.css';
 let current;
 
-let ingredients = [];
+
 function List(props) {
 
     // useState hooks for list and flag
-    const [list, setList] = useState({});
     const [flag, setFlag] = useState(0);
+    const [ingredientRatings, setIngredientRatings] = useState(props.ingredients);
 
 
     const style = {
@@ -36,24 +36,22 @@ function List(props) {
         props.setDeleteCurr(false);
     }
 
-    // useEffect hook for ingredient list updates
-    useEffect(() => {
-        setList(props.ingredients);
-        ingredients = props.list;
-    }, [props.ingredients, flag])
-
     useEffect(() => {
         if(props.deleteCurr) {
             deleteCurrent();
         }
     }, [props.deleteCurr])
 
+    useEffect(() => {
+        console.log('hi');
+        setIngredientRatings(props.ingredients);
+    }, [props.ingredients])
     return (
         <div style={style} className="List">
             <h4 style={{position: "absolute", top: -40}}>{props.label}</h4>
             <div style={innerStyle} className="List">
                 <div style={{marginTop: 25}}>
-                {Array.from(Object.keys(list)).map(r =>
+                {Array.from(Object.keys(props.ingredients)).map(r =>
 
                    <div key={r} className="ingredient">
 
@@ -68,13 +66,10 @@ function List(props) {
                            precision={0.5}
                            size={"small"}
                            onChange={(event, newValue) => {
-                               let test = list;
-                               test[r] = newValue;
-                               setList(test);
                                props.ingredientRater(r, newValue);
                            }}
                            readOnly
-                           value={parseFloat(list[r])}
+                           value={parseFloat(props.ingredients[r])}
                        />
                    </div>
                 )}
