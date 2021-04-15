@@ -40,7 +40,9 @@ function Fridge() {
     // useState hook for current ingredient to delete
     const [current, setCurrent] = useState("");
 
-    //const [loading, setLoading] = useState(true)
+    //fixes a bug with displaying ratings
+    const [list, setList] = useState([]);
+
 
     const [suggestions, setSuggestions] = useState([])
     const [autocorrectLoading, setAutocorrectLoading] = useState(true)
@@ -68,9 +70,7 @@ function Fridge() {
             config
         )
             .then(response => {
-                //update ratings
-                ingredientRatings[curr] = response.data["rating"];
-                setIngredients(ingredientRatings)
+                // nothing
             })
 
             .catch(function (error) {
@@ -101,6 +101,8 @@ function Fridge() {
         )
             .then(response => {
                 ingredientRatings[currentToRate] = rating;
+                setIngredients(ingredientRatings);
+                setList(Object.keys(ingredients))
                 //nothing
             })
 
@@ -158,9 +160,9 @@ function Fridge() {
     // function for submit button
     const onSubmit = () => {
         let text = input.trim();
-        if(ingredientRatings[text] !== undefined) {
+        if(input !== "") {
             //clear from this scope and from input box
-            document.getElementsByClassName("inputBox")[0].value = "";
+            document.getElementById("inputBox").value = "";
             setInput("");
         }
 
@@ -290,12 +292,6 @@ function Fridge() {
             })
     }
 
-    const replaceInput = (item) => {
-        console.log("CLICKED!!!")
-        setInput("hello")
-    }
-
-
     //populates fridge with user inventory when page loads and gets user name
     useEffect(() => {
         ingredientRatings = {}
@@ -352,7 +348,7 @@ function Fridge() {
 
             <List x={200} width={250} label={"Current Ingredients"} ingredients={ingredients} ingredientRater={rateIngredient} setter={setIngredients}
              setModalIsOpen={setModalIsOpen} deleteCurr={deleteIngredient} setDeleteCurr={setDeleteIngredient}
-            setCurrent={setCurrent}/>
+            setCurrent={setCurrent} list={list}/>
 
             {/*Modal for deletion*/}
             <Modal show={modalIsOpen} onHide={handleClose}>
@@ -381,7 +377,7 @@ function Fridge() {
                     <Rating
                         style={{position: "relative", left: 150}}
                         name="simple-controlled"
-                        value={ingredientRatings[input.trim()]}
+                        value={2.5}
                         precision={0.5}
                         size={"large"}
                         onChange={(event, newValue) => {
