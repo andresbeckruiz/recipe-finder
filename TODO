@@ -41,5 +41,6 @@ TODO bugs:
 2) when you click an autocorrect list item, state is not updated in the modal (it submits properly though
 and shows up in the fridge as what you clickded). For example, if you type in "chicke" and then click
 the suggestion that says "chicken", the modal will say "chicke" when you click submit, even though the
-textbox says "chicken". When you submit, the fridge will properly say "chicken".
+textbox says "chicken". When you submit, the fridge will also say "chicke"
+3) the trim function is preventing valid ingredients with two words from being found.
 

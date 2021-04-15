@@ -6,10 +6,12 @@ import SubmitButton from "./SubmitButton";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import {Link, useHistory} from 'react-router-dom'
-import {Alert} from 'react-bootstrap'
+import {Alert, Toast} from 'react-bootstrap'
 import {useAuth} from "./contexts/AuthContext"
 import Rating from "@material-ui/lab/Rating";
 import ListItem from "./ListItem";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 let ingredientRatings = {};
 
@@ -143,6 +145,11 @@ function Fridge() {
 
     const checkValidIngredient = () => {
         let text = input.trim();
+        //don't want to submit empty ingredient
+        if (text == ""){
+            toast.error("Cannot submit empty form, please enter an ingredient.")
+            return
+        }
         const toSend = {
             ingredient: text
         };
@@ -164,17 +171,13 @@ function Fridge() {
                 //only want to submit anything if the ingredient isn't valid
                 if (valid){
                     onSubmit(text)
+                } else {
+                    toast.error("Ingredient not found, please enter a valid ingredient.")
                 }
             })
             .catch(function (error) {
                 console.log(error);
             });
-        //if the ingredient is not in our database
-        // if (valid){
-        //     return false
-        // } else {
-        //     return true
-        // }
     }
 
 
@@ -314,13 +317,6 @@ function Fridge() {
                     suggestionsTemp.push(word)
                 }
                 setSuggestions(suggestionsTemp)
-                // const listItems = document.getElementsByTagName("li")
-                // for (let item of listItems) {
-                //     console.log(item)
-                //     item.addEventListener("click", (e) => {
-                //         setInput(e.target.innerHTML)
-                //     })
-                // }
                 setAutocorrectLoading(true)
             })
     }
@@ -414,6 +410,8 @@ function Fridge() {
                     <div id={"submit"} style={{position: "relative", top: 0, left: 150}}>
                         {/*submission button*/}
                         <SubmitButton label={"Submit"} onClick={checkValidIngredient}/>
+                        {/*this is for setting an error notification if ingredient is invalid*/}
+                        <ToastContainer/>
                     </div>
                 </div>
             </List>
