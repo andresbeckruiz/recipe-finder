@@ -30,6 +30,7 @@ import com.google.gson.Gson;
 import freemarker.template.Configuration;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.DEFAULT_RATING;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.JsonFormatter.ratingMapToJson;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.addUserToDatabase;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.deleteUser;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getName;
@@ -37,7 +38,6 @@ import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getRec
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserIngredientRatings;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserInventory;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserRecipeRatings;
-
 //import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.JsonToSql.parseJson;
 
 /**
@@ -170,6 +170,7 @@ public final class Main {
   private class RateIngredientHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
+      System.out.println("rating ingredient");
       JSONObject data = new JSONObject(request.body());
       String ingredientName = data.getString("ingredient");
       Double ingredientRating = data.getDouble("rating");
@@ -241,7 +242,6 @@ public final class Main {
       JSONObject data = new JSONObject(request.body());
       String recipeName = data.getString("recipe");
       Double recipeRating = data.getDouble("rating");
-      System.out.println("Recipe to be rated" + recipeName);
       recipeApp.getCurUser().addRecipeRating(recipeName, recipeRating);
       return "";
     }
@@ -308,7 +308,7 @@ public final class Main {
   }
 
   /**
-   * Front end handler for returning user inventory when Fridge loads
+   * Front end handler for returning user inventory when Fridge loads.
    */
   private class GetUserInventory implements Route {
     @Override
@@ -367,15 +367,17 @@ public final class Main {
   private class GetProfileInfo implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
+      System.out.println("profile");
       JSONObject data = new JSONObject(request.body());
       String email = data.getString("name");
       try {
         String name = getName(email);
         String recipes = getUserRecipeRatings(email);
         String ingredients = getUserIngredientRatings(email);
-        //TODO: PARSE RECIPES AND INGREDIENTS
-        Map<String, String> map = ImmutableMap.of("name", name, "recipes",
-                recipes, "ingredients", ingredients);
+        Map<String, String> recipeRating = ratingMapToJson(recipes);
+        Map<String, String> ingredientRating = ratingMapToJson(ingredients);
+        Map<String, Object> map = ImmutableMap.of("name", name, "recipes",
+                recipeRating, "ingredients", ingredientRating);
         return GSON.toJson(map);
       } catch (SQLException e) {
         System.err.println("ERROR: Error connecting to database");
@@ -399,7 +401,7 @@ public final class Main {
     }
   }
 
-  /** Handles requests for autocorrect on an input
+  /** Handles requests for autocorrect on an input.
    *  @return GSON which contains the result of autocorrect.suggest()
    */
   private static class AutocorrectHandler implements Route {
@@ -423,7 +425,7 @@ public final class Main {
     }
   }
 
-  /** Handles requests to tell if input is valid ingredient
+  /** Handles requests to tell if input is valid ingredient.
    *  @return GSON which contains the result of autocorrect.suggest()
    */
   private static class ValidIngredient implements Route {

@@ -335,9 +335,6 @@ public final class Database {
   public static void addUserIngredientRating(User user,
                                              String ingredient, Double rating) throws SQLException {
     String currentRatings = getUserIngredientRatings(user.getName());
-    System.out.println("CurrentRatings: " + currentRatings);
-    System.out.println(currentRatings.contains(ingredient));
-
     if (currentRatings.contains(ingredient)) {
       currentRatings = currentRatings.replace(ingredient + ":"
               + user.getIngredientRatings().get(ingredient) + ",", "");
@@ -416,7 +413,6 @@ public final class Database {
         prep.setString(1, currentRatings);
         prep.setString(2, user.getName());
         prep.execute();
-        System.out.println("Connected?");
       }
     } catch (Exception e) {
       System.out.println("SQL ERROR");

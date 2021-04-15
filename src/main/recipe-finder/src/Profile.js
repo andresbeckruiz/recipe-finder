@@ -3,6 +3,7 @@ import {Link, useHistory} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {useAuth} from "./contexts/AuthContext";
 import axios from "axios";
+import Rating from "@material-ui/lab/Rating";
 
 function Profile() {
 
@@ -44,10 +45,6 @@ function Profile() {
                 let name = response.data["name"];
                 let recipes = response.data["recipes"];
                 let ingredients = response.data["ingredients"];
-
-                console.log("name" + name)
-                console.log(recipes);
-                console.log(ingredients);
 
                 //update variables
                 setName(name);
@@ -100,6 +97,14 @@ function Profile() {
         height: '100vh'
     }
 
+    // used to display error message (in which case map is a string)
+    function checkIfMap(map, key) {
+        if(map[key] != undefined) {
+            return parseFloat(map[key]);
+        } else {
+            return "";
+        }
+    }
     async function handleLogout() {
         setError("")
 
@@ -120,6 +125,7 @@ function Profile() {
     useEffect(() => {
         getName(currentUser.email);
     },[]);
+
 
 
     return (
@@ -152,6 +158,19 @@ function Profile() {
                     {Array.from(Object.keys(ratedRecipes)).map(r =>
                         <div>
                             <p>{r}</p>
+                            <Rating
+                                name="recipe-prof-rating"
+                                precision={0.5}
+                                size={"small"}
+                                // onChange={(event, newValue) => {
+                                //     let test = list;
+                                //     test[r] = newValue;
+                                //     setList(test);
+                                //     props.ingredientRater(r, newValue);
+                                // }}
+                                readOnly
+                                value={checkIfMap(ratedRecipes, r)}
+                            />
                         </div>
                     )}
                 </Card.Body>
@@ -161,8 +180,21 @@ function Profile() {
                 <Card.Body>
                     <h2 className={"text-center mb-4"}>Rated Ingredients</h2>
                     {Array.from(Object.keys(ratedIngredients)).map(r =>
-                        <div>
+                        <div className="ingredient">
                             <p>{r}</p>
+                            <Rating
+                            name="ingredient-prof-rating"
+                            precision={0.5}
+                            size={"small"}
+                            // onChange={(event, newValue) => {
+                            //     let test = list;
+                            //     test[r] = newValue;
+                            //     setList(test);
+                            //     props.ingredientRater(r, newValue);
+                            // }}
+                            readOnly
+                            value={checkIfMap(ratedIngredients, r)}
+                            />
                         </div>
                     )}
                 </Card.Body>
