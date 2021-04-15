@@ -241,6 +241,7 @@ public final class Main {
       JSONObject data = new JSONObject(request.body());
       String recipeName = data.getString("recipe");
       Double recipeRating = data.getDouble("rating");
+      System.out.println("Recipe to be rated" + recipeName);
       recipeApp.getCurUser().addRecipeRating(recipeName, recipeRating);
       return "";
     }

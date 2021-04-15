@@ -6,4 +6,6 @@ public final class ConstantHyperparameters {
   public static final int TOTAL_RATING = 5;
   public static final double DEFAULT_RATING = 2.5;
   public static final int NUM_RECOMMENDATIONS = 10;
+  public static final double SCORE_WEIGHT = 0.3;
+  public static final double SIMILARITY_WEIGHT = 1 - SCORE_WEIGHT;
 }

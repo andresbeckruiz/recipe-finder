@@ -92,9 +92,10 @@ function Recipe(props) {
      * Makes an axios request for rating the recipe
      */
     const rateRecipe = (rating, event) => {
-
+        console.log("hey")
         const toSend = {
-            rating: rating
+            rating: rating,
+            recipe: name
         };
 
         let config = {
@@ -196,6 +197,7 @@ function Recipe(props) {
                     size={"large"}
                     onChange={(event, newValue) => {
                         setValue(newValue);
+                        rateRecipe(newValue);
                     }}
                 />
 

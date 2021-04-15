@@ -259,7 +259,6 @@ public final class Database {
     }
   }
 
-
   public static void addUserIngredient(String user, String ingredient) throws SQLException {
     String currentInventory = getUserInventory(user);
     String lastValue = "";
@@ -336,10 +335,18 @@ public final class Database {
   public static void addUserIngredientRating(User user,
                                              String ingredient, Double rating) throws SQLException {
     String currentRatings = getUserIngredientRatings(user.getName());
+    System.out.println("CurrentRatings: " + currentRatings);
+    System.out.println(currentRatings.contains(ingredient));
 
     if (currentRatings.contains(ingredient)) {
       currentRatings = currentRatings.replace(ingredient + ":"
               + user.getIngredientRatings().get(ingredient) + ",", "");
+
+      currentRatings = currentRatings.replace("," + ingredient + ":"
+              + user.getIngredientRatings().get(ingredient), "");
+
+      currentRatings = currentRatings.replace(ingredient + ":"
+              + user.getIngredientRatings().get(ingredient), "");
     }
     if (currentRatings.length() != 0) {
       currentRatings = currentRatings + ("," + ingredient + ":" + rating.toString());
@@ -387,8 +394,18 @@ public final class Database {
     if (currentRatings.contains(recipe)) {
       currentRatings = currentRatings.replace(recipe + ":"
               + user.getRecipeRatings().get(recipe) + ",", "");
+
+      currentRatings = currentRatings.replace("," + recipe + ":"
+              + user.getRecipeRatings().get(recipe), "");
+
+      currentRatings = currentRatings.replace(recipe + ":"
+              + user.getRecipeRatings().get(recipe), "");
     }
-    currentRatings = currentRatings + (recipe + ":" + rating.toString() + ",");
+    if (currentRatings.length() != 0) {
+      currentRatings = currentRatings + ("," + recipe + ":" + rating.toString());
+    } else {
+      currentRatings = recipe + ":" + rating.toString();
+    }
 
     //ToDO: update current ratings string and entry in table
     try {
