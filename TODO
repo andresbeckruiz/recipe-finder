@@ -10,14 +10,15 @@ Front end:
 - comment login (Andres)
 - error page for route that doesn't exist (/aa) (Andres) DONE
 - rating of ingredients (Georgia)
-- autocorrect of ingredient add (Andres)
-- preventing non-ingredient input (Andres)
+- autocorrect of ingredient add (Andres) DONE
+- preventing non-ingredient input (Andres) DONE
 x fixing aesthetic of recipe page (Jacob)
 x default image for recipes that don't have images (Jacob)
 x cook button to open link in new page (Jacob)
 - profile page (Andres)
-    - delete account
-    x update password (move from main page)
+    - delete account DONE
+    x update password (move from main page) DONE
+    -update name? (Andres)
     (maybe later see ratings)
 
 Test:
@@ -37,10 +38,14 @@ Test:
 
 TODO bugs:
 
-1) fridge items not deleting in backend
-2) when you click an autocorrect list item, state is not updated in the modal (it submits properly though
-and shows up in the fridge as what you clickded). For example, if you type in "chicke" and then click
-the suggestion that says "chicken", the modal will say "chicke" when you click submit, even though the
-textbox says "chicken". When you submit, the fridge will also say "chicke"
-3) the trim function is preventing valid ingredients with two words from being found.
+1) when you click an autocorrect list item, state is not updated in the modal. For example, if you type in
+"chicke" and then click the suggestion that says "chicken", the modal will say "chicke" when you
+click submit, even though the textbox says "chicken". When you submit, the fridge will also say "chicke".
+The database stores it as "chicken" though and when you click away from the page and return it will
+say "chicken" in the fridge, so I think it has to do with asynchronous state
 
+2) the trim function is preventing valid ingredients with two words from being found.
+
+3) (for andres to handle) get list of suggestions to dissappear when textbox is empty
+
+4) not urgent, but submit button placement jumps around depending on suggestions
