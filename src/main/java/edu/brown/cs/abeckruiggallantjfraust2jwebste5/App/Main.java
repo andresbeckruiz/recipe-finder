@@ -134,7 +134,7 @@ public final class Main {
     Spark.post("/delete-user", new DeleteUser());
 
     //for autocorrect
-    Spark.post("/result", new ResultsHandler());
+    Spark.post("/autocorrect", new AutocorrectHandler());
   }
 
   /**
@@ -400,7 +400,7 @@ public final class Main {
   /** Handles requests for autocorrect on an input
    *  @return GSON which contains the result of autocorrect.suggest()
    */
-  private static class ResultsHandler implements Route {
+  private static class AutocorrectHandler implements Route {
     @Override
     public String handle(Request req, Response res) {
       //Get JSONObject from req and use it to get the value of the input you want to

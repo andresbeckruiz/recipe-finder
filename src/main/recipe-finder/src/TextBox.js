@@ -6,6 +6,7 @@ function TextBox(props) {
         let val = event.target.value;
         props.input(val);
         props.setCurr(val);
+        props.onKeyUp();
     }
 
     // Style of label
@@ -22,7 +23,8 @@ function TextBox(props) {
         <div>
             <label style={labelStyle}>{props.label}</label>
             <br/>
-            <input style={{fontSize:24}} className="inputBox" type={"text"} onChange={value} id={"inputBox"}></input>
+            <input value={props.val} style={{fontSize:24}} className="inputBox" type={"text"}
+                   onChange={value} id={"inputBox"}></input>
         </div>
     );
 }

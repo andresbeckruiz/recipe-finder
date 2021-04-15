@@ -9,6 +9,7 @@ import {Link, useHistory} from 'react-router-dom'
 import {Alert} from 'react-bootstrap'
 import {useAuth} from "./contexts/AuthContext"
 import Rating from "@material-ui/lab/Rating";
+import ListItem from "./ListItem";
 
 let ingredientRatings = {};
 
@@ -39,10 +40,10 @@ function Fridge() {
     // useState hook for current ingredient to delete
     const [current, setCurrent] = useState("");
 
-    const [loading, setLoading] = useState(true)
+    //const [loading, setLoading] = useState(true)
 
-
-
+    const [suggestions, setSuggestions] = useState([])
+    const [autocorrectLoading, setAutocorrectLoading] = useState(true)
     // Axios Requests
 
     /*
@@ -253,11 +254,84 @@ function Fridge() {
             });
     }
 
+    const createSuggestions = () => {
+        console.log("YEP THIS IS BEING CALLED")
+        setSuggestions([])
+        setAutocorrectLoading(false)
+
+        const postParameters = {
+            text: input
+        };
+
+        fetch('http://localhost:4567/autocorrect', {
+            method: 'post',
+            body: JSON.stringify(postParameters),
+            headers: {
+                "Content-Type": "application/json",
+                'Access-Control-Allow-Origin': '*',
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                let suggestionsTemp = []
+                for (let word of data.results) {
+                    console.log(word);
+                    suggestionsTemp.push(word)
+                }
+                setSuggestions(suggestionsTemp)
+                // const listItems = document.getElementsByTagName("li")
+                // for (let item of listItems) {
+                //     console.log(item)
+                //     item.addEventListener("click", (e) => {
+                //         setInput(e.target.innerHTML)
+                //     })
+                // }
+                setAutocorrectLoading(true)
+            })
+    }
+
+    const replaceInput = (item) => {
+        console.log("CLICKED!!!")
+        setInput("hello")
+    }
+
+
     //populates fridge with user inventory when page loads and gets user name
     useEffect(() => {
         ingredientRatings = {}
         getName(currentUser.email)
         getUserInventory(currentUser.email)
+        // autocorrectInput.addEventListener("keyup", () => {
+        //     suggestionList.innerHTML = "";
+        //     autocorrectLoading.style.display = "block";
+        //
+        //     const postParameters = {
+        //         text: autocorrectInput.value
+        //     };
+        //
+        //     fetch('/result', {
+        //         method: 'post',
+        //         body: JSON.stringify(postParameters),
+        //         headers: {
+        //             'Content-type': 'application/json; charset=UTF-8',
+        //         },
+        //     })
+        //         .then((response) => response.json())
+        //         .then((data) => {
+        //             for (let word of data.results) {
+        //                 console.log(word);
+        //                 suggestionList.innerHTML += `<li tabIndex="0"> ${word} </li>`;
+        //             }
+        //             const listItems = document.getElementsByTagName("li")
+        //             for (let item of listItems) {
+        //                 console.log(item)
+        //                 item.addEventListener("click", (e) => {
+        //                     autocorrectInput.value = e.target.innerHTML
+        //                 })
+        //             }
+        //             autocorrectLoading.style.display = "none";
+        //         })
+        // });
     },[]);
 
 
@@ -326,9 +400,20 @@ function Fridge() {
 
             <div>
             <List x={600} width={800} label={"Add an Ingredient"} ingredients={[]}>
-                <div style={{position: "relative", top: 225, left: 0, right:0}}>
-                    <TextBox input={setInput} label={"Name of Ingredient"} setCurr={setCurrentToRate}/>
-                    <div id={"submit"} style={{position: "relative", top: 50, left: 150}}>
+                {/*original top number was 225*/}
+                <div style={{position: "relative", top: 100, left: 0, right:0}}>
+                    <TextBox val={input} input={setInput} onKeyUp={createSuggestions}
+                             label={"Name of Ingredient"} setCurr={setCurrentToRate}/>
+                    <h4 hidden={autocorrectLoading} className={"text-dark"}> Loading...</h4>
+                    <ul aria-live={"polite"}>
+                        {suggestions.map(item => {
+                            return (
+                                <ListItem item={item} setInput={setInput} />
+                            )
+                        })}
+                    </ul>
+                    {/*original top number was 50*/}
+                    <div id={"submit"} style={{position: "relative", top: 0, left: 150}}>
                         {/*submission button*/}
                         <SubmitButton label={"Submit"} onClick={onSubmit}/>
                     </div>
