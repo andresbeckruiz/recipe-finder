@@ -429,18 +429,16 @@ public final class Main {
   private static class ValidIngredient implements Route {
     @Override
     public Object handle(Request req, Response res) {
-      //Get JSONObject from req and use it to get the value of the input you want to
-      // generate suggestions for
       try {
         JSONObject obj = new JSONObject(req.body());
-        String input = obj.getString("text");
+        String input = obj.getString("ingredient");
         //check if input is in the autocorrect word list (which is the ingredients)
         if (ac.getWordList().contains(input)) {
           Map<String, Boolean> validity = ImmutableMap.of("result", true);
-          return validity;
+          return GSON.toJson(validity);
         } else {
           Map<String, Boolean> validity = ImmutableMap.of("result", false);
-          return validity;
+          return GSON.toJson(validity);
         }
       } catch (JSONException e) {
         System.err.println("Error parsing JSON Object" + e);

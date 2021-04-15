@@ -141,6 +141,42 @@ function Fridge() {
             });
     }
 
+    const checkValidIngredient = () => {
+        let text = input.trim();
+        const toSend = {
+            ingredient: text
+        };
+
+        let config = {
+            headers: {
+                "Content-Type": "application/json",
+                'Access-Control-Allow-Origin': '*',
+            }
+        }
+
+        axios.post(
+            "http://localhost:4567/valid-ingredient",
+            toSend,
+            config
+        )
+            .then(response => {
+                let valid = response.data["result"]
+                //only want to submit anything if the ingredient isn't valid
+                if (valid){
+                    onSubmit(text)
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        //if the ingredient is not in our database
+        // if (valid){
+        //     return false
+        // } else {
+        //     return true
+        // }
+    }
+
 
     // style details for root page
     const rootStyle = {
@@ -158,9 +194,10 @@ function Fridge() {
     };
 
     // function for submit button
-    const onSubmit = () => {
-        let text = input.trim();
-        if(input !== "") {
+    const onSubmit = (text) => {
+        console.log("Submitting happening, valid!")
+        //don't want to submit anything if the ingredient isn't valid
+        if (input !== "") {
             //clear from this scope and from input box
             document.getElementById("inputBox").value = "";
             setInput("");
@@ -241,14 +278,11 @@ function Fridge() {
         )
             .then(response => {
                 let inventory = response.data["inventory"]
-                console.log("Inventory" + inventory)
                 //update ratings
                 for (var ingredient in inventory) {
                     ingredientRatings[ingredient] = inventory[ingredient]
-                    console.log("INDIVIDUAL INGREDIENT" + ingredient)
                 }
                 setIngredients(ingredientRatings)
-                console.log("Ingredient ratings:" + ingredientRatings)
             })
 
             .catch(function (error) {
@@ -257,7 +291,6 @@ function Fridge() {
     }
 
     const createSuggestions = () => {
-        console.log("YEP THIS IS BEING CALLED")
         setSuggestions([])
         setAutocorrectLoading(false)
 
@@ -297,37 +330,6 @@ function Fridge() {
         ingredientRatings = {}
         getName(currentUser.email)
         getUserInventory(currentUser.email)
-        // autocorrectInput.addEventListener("keyup", () => {
-        //     suggestionList.innerHTML = "";
-        //     autocorrectLoading.style.display = "block";
-        //
-        //     const postParameters = {
-        //         text: autocorrectInput.value
-        //     };
-        //
-        //     fetch('/result', {
-        //         method: 'post',
-        //         body: JSON.stringify(postParameters),
-        //         headers: {
-        //             'Content-type': 'application/json; charset=UTF-8',
-        //         },
-        //     })
-        //         .then((response) => response.json())
-        //         .then((data) => {
-        //             for (let word of data.results) {
-        //                 console.log(word);
-        //                 suggestionList.innerHTML += `<li tabIndex="0"> ${word} </li>`;
-        //             }
-        //             const listItems = document.getElementsByTagName("li")
-        //             for (let item of listItems) {
-        //                 console.log(item)
-        //                 item.addEventListener("click", (e) => {
-        //                     autocorrectInput.value = e.target.innerHTML
-        //                 })
-        //             }
-        //             autocorrectLoading.style.display = "none";
-        //         })
-        // });
     },[]);
 
 
@@ -411,7 +413,7 @@ function Fridge() {
                     {/*original top number was 50*/}
                     <div id={"submit"} style={{position: "relative", top: 0, left: 150}}>
                         {/*submission button*/}
-                        <SubmitButton label={"Submit"} onClick={onSubmit}/>
+                        <SubmitButton label={"Submit"} onClick={checkValidIngredient}/>
                     </div>
                 </div>
             </List>
