@@ -135,6 +135,7 @@ public final class Main {
 
     //for autocorrect
     Spark.post("/autocorrect", new AutocorrectHandler());
+    Spark.post("/valid-ingredient", new ValidIngredient());
   }
 
   /**
@@ -414,6 +415,32 @@ public final class Main {
         Map<String, Set<String>> suggestions = ImmutableMap.of("results", response);
         //return a Json of the suggestions (HINT: use the GSON.Json())
         return GSON.toJson(suggestions);
+      } catch (JSONException e) {
+        System.err.println("Error parsing JSON Object" + e);
+        return null;
+      }
+    }
+  }
+
+  /** Handles requests to tell if input is valid ingredient
+   *  @return GSON which contains the result of autocorrect.suggest()
+   */
+  private static class ValidIngredient implements Route {
+    @Override
+    public Object handle(Request req, Response res) {
+      //Get JSONObject from req and use it to get the value of the input you want to
+      // generate suggestions for
+      try {
+        JSONObject obj = new JSONObject(req.body());
+        String input = obj.getString("text");
+        //check if input is in the autocorrect word list (which is the ingredients)
+        if (ac.getWordList().contains(input)) {
+          Map<String, Boolean> validity = ImmutableMap.of("result", true);
+          return validity;
+        } else {
+          Map<String, Boolean> validity = ImmutableMap.of("result", false);
+          return validity;
+        }
       } catch (JSONException e) {
         System.err.println("Error parsing JSON Object" + e);
         return null;

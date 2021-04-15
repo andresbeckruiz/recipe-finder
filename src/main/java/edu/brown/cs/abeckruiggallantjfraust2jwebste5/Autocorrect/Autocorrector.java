@@ -19,12 +19,13 @@ public class Autocorrector {
   private Trie trie;
   private boolean prefix;
   private boolean whitespace;
+  private List<String> wordList;
   private int led;
 
   public Autocorrector(String files, boolean prefixIn, boolean whitespaceIn, int ledIn) {
     trie = new Trie();
     trie.insertAll(parseCorpus(files));
-
+    wordList = parseCorpus(files);
     prefix = prefixIn;
     whitespace = whitespaceIn;
     led = ledIn;
@@ -37,7 +38,6 @@ public class Autocorrector {
    * @return List of strings parsed from files.
    */
   private static List<String> parseCorpus(String files) {
-
     List<String> fileNames = new ArrayList<String>(Arrays.asList(files.split(",")));;
     List<String> words = new ArrayList<String>();
 
@@ -105,5 +105,8 @@ public class Autocorrector {
     return suggestions;
   }
 
+  public List<String> getWordList() {
+    return wordList;
+  }
 }
 
