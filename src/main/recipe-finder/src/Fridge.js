@@ -355,10 +355,10 @@ function Fridge() {
     //         })
     // }
 
-    useEffect(() => {
-      console.log("RATINGS: ")
-      console.log(ingredientRatings)
-    }, [ingredientRatings])
+    // useEffect(() => {
+    //   console.log("RATINGS: ")
+    //   console.log(ingredientRatings)
+    // }, [ingredientRatings])
 
     //populates fridge with user inventory when page loads and gets user name
     useEffect(() => {
