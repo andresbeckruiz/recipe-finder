@@ -453,7 +453,7 @@ function Fridge() {
                     </Button>
                 </Modal.Footer>
             </Modal>
-            </div>
+            {/*</div>*/}
             <div>
             {/*<List x={600} width={800} label={"Add an Ingredient"} ingredients={[]}>*/}
             {/*    /!*original top number was 225*!/*/}
