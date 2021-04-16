@@ -413,7 +413,7 @@ function Fridge() {
                         : <h5>Start typing to see suggestions!</h5>}
                     </ul>
                     {/*original top number was 50*/}
-                    <div id={"submit"} style={{position: "relative", top: 0, left: 150}}>
+                    <div id={"submit"} style={{position: "absolute", top: 225, left: 125}}>
                         {/*submission button*/}
                         <SubmitButton label={"Submit"} onClick={checkValidIngredient}/>
                         {/*this is for setting an error notification if ingredient is invalid*/}
