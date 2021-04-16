@@ -102,9 +102,12 @@ public class UserDatabase {
       currentInventory = currentInventory.substring(currentInventory.indexOf(","));
     }
 
+    currentInventory = currentInventory.replace(ingredient, "");
+
     if (currentInventory.startsWith(",")) {
       currentInventory = currentInventory.substring(1);
     }
+
     try {
       if (conn != null) {
         PreparedStatement prep;
