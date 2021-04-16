@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Locale;
 
 public final class UserDatabase {
   private static Connection conn;
@@ -179,6 +180,7 @@ public final class UserDatabase {
 
   public static void addUserRecipeRating(User user,
                                          String recipe, Double rating) throws SQLException {
+    recipe = recipe.toLowerCase();
     String currentRatings = getUserRecipeRatings(user.getName());
     if (currentRatings.contains(recipe)) {
       currentRatings = currentRatings.replace(recipe + ":"

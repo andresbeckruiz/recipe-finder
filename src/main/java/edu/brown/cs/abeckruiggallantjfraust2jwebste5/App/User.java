@@ -30,8 +30,6 @@ public class User {
     recipeGraph = new Graph();
     recipeRatings = userRecipeRatings(name);
     ingredientRatings = userIngredientRatings(name);
-    System.out.println("hello");
-    System.out.println(recipeRatings);
   }
 
   public HashMap<String, Double> getIngredientRatings() {
@@ -82,7 +80,7 @@ public class User {
   }
 
   public ArrayList<Recipe> cook() {
-    ArrayList<String> recipeNames = findRecipesWithIngredients(ingredients, NUM_RECOMMENDATIONS);
+    ArrayList<String> recipeNames = findRecipesWithIngredients(ingredients, NUM_RECOMMENDATIONS, this);
     ArrayList<Recipe> recipes = new ArrayList<>();
     for (String recipe : recipeNames) {
       recipes.add(getRecipeObject(recipe, this));

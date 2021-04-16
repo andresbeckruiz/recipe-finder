@@ -1,11 +1,12 @@
 package edu.brown.cs.abeckruiggallantjfraust2jwebste5.App;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.HashMap;
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
 
+import java.util.*;
+
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.SCORE_WEIGHT;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.SIMILARITY_WEIGHT;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getRecipeObject;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getRecipesWithIngredient;
 import static java.lang.Math.min;
 
@@ -15,7 +16,7 @@ public final class RecipeFinder {
   }
 
   public static ArrayList<String> findRecipesWithIngredients(
-          HashSet<String> ingredientList, int numRecipesToReturn) {
+          HashSet<String> ingredientList, int numRecipesToReturn, User curUser) {
     LinkedHashMap<String, Integer> recipeMap = new LinkedHashMap<>();
     // for every ingredient find recipes that correspond to that ingredient
     // count how many ingredients in ingredientList overlap with recipe ingredients
@@ -51,11 +52,14 @@ public final class RecipeFinder {
         invertedHashMap.put(entry.getValue(), recipe);
       }
     }
+    TreeMap<Double, ArrayList<String>> ratedMap = factorInRatings(invertedHashMap, curUser);
+
 
     ArrayList<String> topSortedRecipes = new ArrayList<>();
     int numToAdd = numRecipesToReturn;
-    for (int count = invertedHashMap.keySet().size(); count > 0; count--) {
-      ArrayList<String> rep = invertedHashMap.get(count);
+    for (double key : ratedMap.keySet()) {
+      ArrayList<String> rep = ratedMap.get(key);
+
       topSortedRecipes.addAll(rep.subList(0, min(numToAdd, rep.size())));
       numToAdd = numToAdd - rep.size();
       if (numToAdd < 0) {
@@ -63,5 +67,31 @@ public final class RecipeFinder {
       }
     }
     return topSortedRecipes;
+  }
+
+  private static TreeMap<Double, ArrayList<String>> factorInRatings(Map<Integer, ArrayList<String>> map, User user) {
+    TreeMap<Double, ArrayList<String>> mapWithRatings = new TreeMap<>(Collections.reverseOrder());
+    for (int count = map.keySet().size(); count > 0; count--) {
+      ArrayList<String> rep = map.get(count);
+      for (String recipe : rep) {
+
+        Recipe recipeObj = getRecipeObject(recipe, user);
+        if (recipeObj == null) {
+          continue;
+        }
+        Double metric = count * SCORE_WEIGHT + SIMILARITY_WEIGHT * recipeObj.getValue();
+        ArrayList<String> newRating = new ArrayList<>();
+        if (mapWithRatings.get(metric) == null) {
+          newRating = new ArrayList<>();
+          newRating.add(recipe);
+          mapWithRatings.put(metric, newRating);
+        } else {
+          newRating = mapWithRatings.get(metric);
+          newRating.add(recipe);
+          mapWithRatings.put(metric, newRating);
+        }
+      }
+    }
+    return mapWithRatings;
   }
 }

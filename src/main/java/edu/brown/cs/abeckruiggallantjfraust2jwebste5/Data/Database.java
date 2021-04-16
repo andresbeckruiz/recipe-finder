@@ -215,7 +215,11 @@ public final class Database {
       ArrayList<String> params = new ArrayList<>() {
         {
           for (int i = 1; i < numParams; i++) {
-            add(rs.getString(i));
+            if (rs.getString(i) != null) {
+              add(rs.getString(i));
+            } else {
+              add("");
+            }
           }
         }
       };

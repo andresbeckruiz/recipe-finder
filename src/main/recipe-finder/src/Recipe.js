@@ -130,7 +130,6 @@ function Recipe(props) {
             config
         )
             .then(response => {
-                //nothing
             })
 
             .catch(function (error) {

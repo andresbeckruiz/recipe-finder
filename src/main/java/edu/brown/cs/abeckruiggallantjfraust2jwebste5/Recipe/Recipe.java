@@ -55,14 +55,21 @@ public class Recipe implements Vertex<Ingredient> {
       ratingSet = true;
       this.rating = user.getRecipeRatings().get(title);
     } else {
-      this.rating = DEFAULT_RATING;
+      this.rating = getAdjacentRatings();
     }
   }
 
-  public String getIngredientsDetailed() {
-    return ingredientsDetailed;
+  private double getAdjacentRatings() {
+    String ingredientString = Database.getIngredientForRecipe(title);
+    String[] ingredientArray = ingredientString.trim().split("\\s*,\\s*");
+    int numIngredients = ingredientArray.length;
+    double newSim = 0;
+    for (String ingredientName : ingredientArray) {
+      Ingredient ing = new Ingredient(ingredientName, this.owner);
+      newSim += ing.getValue();
+    }
+    return newSim / (double) numIngredients;
   }
-
   public String getName() {
     return title;
   }
@@ -83,11 +90,11 @@ public class Recipe implements Vertex<Ingredient> {
         } else {
           ing = new Ingredient(ingredientName, this.owner);
         }
-        newSim += ing.getValue() * TOTAL_RATING;
+        newSim += ing.getValue();
         adjIngredients.add(ing);
       }
       if (!ratingSet) {
-        this.rating = newSim / (double) (TOTAL_RATING * numIngredients);
+        this.rating = newSim / (double) (numIngredients);
       }
     }
 

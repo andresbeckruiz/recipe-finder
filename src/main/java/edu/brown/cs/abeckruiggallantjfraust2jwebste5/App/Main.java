@@ -5,13 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 import com.google.common.collect.ImmutableMap;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Autocorrect.Autocorrector;
@@ -38,7 +32,6 @@ import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getRec
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.getUserIngredientRatings;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.getUserInventory;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.getUserRecipeRatings;
-//import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.JsonToSql.parseJson;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -114,6 +107,17 @@ public final class Main {
       }
       return "OK";
     });
+
+
+//    //GEORGIA ADDED TO DELETE
+//    HashSet<String> ingredients = new HashSet<>();
+//    ingredients.add("lemon curd");
+//    ingredients.add("lemon");
+//    ingredients.add("double cream");
+//    User user = new User("georgia", ingredients);
+//    user.cook();
+
+
 
     Spark.before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
     Spark.exception(Exception.class, new ExceptionPrinter());
@@ -195,7 +199,6 @@ public final class Main {
     @Override
     public Object handle(Request request, Response response) throws Exception {
       ArrayList<Recipe> recipeSuggestions = recipeApp.getCurUser().cook();
-      // ToDO: edit cook() to return correct info for front end
       Map<String, Object> variables = ImmutableMap.of("firstSuggestion",
               recipeSuggestions.get(0).toSmallMap(),
               "secondSuggestion", recipeSuggestions.get(1).toSmallMap(),
@@ -243,7 +246,7 @@ public final class Main {
     @Override
     public Object handle(Request request, Response response) throws Exception {
       JSONObject data = new JSONObject(request.body());
-      String recipeName = data.getString("recipe");
+      String recipeName = data.getString("recipe").toLowerCase();
       Double recipeRating = data.getDouble("rating");
       recipeApp.getCurUser().addRecipeRating(recipeName, recipeRating);
       return "";
