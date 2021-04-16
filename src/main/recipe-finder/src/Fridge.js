@@ -319,12 +319,12 @@ function Fridge() {
             config
         )
             .then(response => {
-                        let inventory = response.data["inventory"]
-                        for (var ingredient in ingredientRatings) {
-                            inventory[ingredient] = ingredientRatings[ingredient]
-                        }
-                        setIngredientRatings(inventory)
-                    })
+                let inventory = response.data["inventory"]
+                for (var ingredient in ingredientRatings) {
+                    inventory[ingredient] = ingredientRatings[ingredient]
+                }
+                setIngredientRatings(inventory)
+            })
 
             .catch(function (error) {
                 console.log(error);

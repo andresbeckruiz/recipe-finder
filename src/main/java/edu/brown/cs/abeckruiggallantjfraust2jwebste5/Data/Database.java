@@ -15,6 +15,10 @@ import java.util.HashMap;
 public final class Database {
   private Database() { }
   private static Connection conn;
+
+  public static Connection getConn() {
+    return conn;
+  }
   /**
    * Initializes connection to database.
    * @param filename From which to retrieve data
@@ -243,62 +247,6 @@ public final class Database {
         System.out.println(e.getMessage());
       }
     }
-  }
-
-  public static String getUserIngredientRatings(String user) throws SQLException {
-    try {
-      if (conn != null) {
-        PreparedStatement prep;
-        prep = conn.prepareStatement(
-                "SELECT ratedIngredients FROM users WHERE email = ?;");
-        prep.setString(1, user);
-        ResultSet rs = prep.executeQuery();
-        while (rs.next()) {
-          String ratings = rs.getString(1);
-          return ratings;
-        }
-      }
-    } catch (Exception e) {
-      System.out.println("SQL ERROR");
-    }
-    return "";
-  }
-
-  public static String getUserRecipeRatings(String user) throws SQLException {
-    try {
-      if (conn != null) {
-        PreparedStatement prep;
-        prep = conn.prepareStatement(
-                "SELECT ratedRecipes FROM users WHERE email = ?;");
-        prep.setString(1, user);
-        ResultSet rs = prep.executeQuery();
-        while (rs.next()) {
-          String ratings = rs.getString(1);
-          return ratings;
-        }
-      }
-    } catch (Exception e) {
-      System.out.println("SQL ERROR");
-    }
-    return "";
-  }
-
-  public static String getUserInventory(String user) throws SQLException {
-    if (conn != null) {
-      PreparedStatement prep;
-      prep = conn.prepareStatement(
-              "SELECT inventory FROM users WHERE email = ?;");
-      prep.setString(1, user);
-      ResultSet rs = prep.executeQuery();
-      String inventory = "";
-      while (rs.next()) {
-        inventory = rs.getString(1);
-      }
-      rs.close();
-      prep.close();
-      return inventory;
-    }
-    return "";
   }
 
   public static String getName(String email) throws SQLException {
