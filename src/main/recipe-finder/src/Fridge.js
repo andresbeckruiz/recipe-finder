@@ -67,7 +67,15 @@ function Fridge() {
             config
         )
             .then(response => {
-                // nothing
+                let curRating = response.data['rating']
+                let ratings = {}
+                for (var key in ingredientRatings) {
+                    ratings[key] = ingredientRatings[key];
+                }
+                ratings[curr] = curRating;
+
+                setIngredientRatings(ratings);
+                console.log(response.data)
             })
 
             .catch(function (error) {
@@ -224,7 +232,10 @@ function Fridge() {
         width: 250,
         position: "absolute",
         top: 150,
-        left: 200
+        left: 200,
+        border: "4px solid darkgrey",
+        borderRadius: 10
+
     }
 
     const innerStyle = {

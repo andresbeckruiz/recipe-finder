@@ -15,6 +15,9 @@ function Profile() {
 
     const [name, setName] = useState("");
     const [ratedRecipes, setRatedRecipes] = useState([]);
+    const [noRecipesToShow, setNoRecipes] = useState(false);
+    const [noIngredientsToShow, setNoIngredients] = useState(false);
+
     const [ratedIngredients, setRatedIngredients] = useState([]);
     const [loading, setLoading] = useState(false)
 
@@ -90,7 +93,6 @@ function Profile() {
             .then(response => {
                 let ratings = {}
                 for (var key in ratedRecipes) {
-                    console.log(key)
                     ratings[key] = ratedRecipes[key];
                 }
                 ratings[curr] = rating;
@@ -98,7 +100,6 @@ function Profile() {
             })
 
             .catch(function (error) {
-                console.log("ERRORRR")
                 console.log(error);
             });
     }
@@ -128,7 +129,15 @@ function Profile() {
                 let name = response.data["name"];
                 let recipes = response.data["recipes"];
                 let ingredients = response.data["ingredients"];
-
+                if("error" in recipes) {
+                    setNoRecipes(true);
+                } else {
+                    setNoRecipes(false);
+                } if("error" in recipes) {
+                    setNoIngredients(true);
+                } else {
+                    setNoIngredients(false);
+                }
                 //update variables
                 setName(name);
                 setRatedRecipes(recipes);
@@ -249,7 +258,8 @@ function Profile() {
             <Card>
                 <Card.Body>
                     <h2 className={"text-center mb-4"}>Rated Recipes</h2>
-                    {Array.from(Object.keys(ratedRecipes)).map(r =>
+                    { noRecipesToShow ? <h5 className="text-center">No rated recipes</h5> :
+                        Array.from(Object.keys(ratedRecipes)).map(r =>
                         <div>
                             <p>{r}</p>
                             <Rating
@@ -262,14 +272,15 @@ function Profile() {
                                 value={checkIfMap(ratedRecipes, r)}
                             />
                         </div>
-                    )}
+                        ) }
                 </Card.Body>
             </Card>
             <br/>
             <Card>
                 <Card.Body>
                     <h2 className={"text-center mb-4"}>Rated Ingredients</h2>
-                    {Array.from(Object.keys(ratedIngredients)).map(r =>
+                    {noIngredientsToShow ? <h5 className="text-center"> No rated ingredients</h5> :
+                        Array.from(Object.keys(ratedIngredients)).map(r =>
                         <div className="ingredient">
                             <p>{r}</p>
                             <Rating
@@ -282,7 +293,7 @@ function Profile() {
                                 value={checkIfMap(ratedIngredients, r)}
                             />
                         </div>
-                    )}
+                    ) }
                 </Card.Body>
             </Card>
             <div className={"w-100 text-center mt-2"}>

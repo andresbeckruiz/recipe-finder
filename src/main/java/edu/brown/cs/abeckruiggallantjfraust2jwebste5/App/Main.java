@@ -110,12 +110,12 @@ public final class Main {
 
 
 //    //GEORGIA ADDED TO DELETE
-    HashSet<String> ingredients = new HashSet<>();
-    ingredients.add("lemon curd");
-    ingredients.add("lemon");
-    ingredients.add("double cream");
-    User user = new User("georgia", ingredients);
-    user.cook();
+//    HashSet<String> ingredients = new HashSet<>();
+//    ingredients.add("lemon curd");
+//    ingredients.add("lemon");
+//    ingredients.add("double cream");
+//    User user = new User("georgia", ingredients);
+//    user.cook();
 
 
 
@@ -379,9 +379,20 @@ public final class Main {
         String name = getName(email);
         String recipes = getUserRecipeRatings(email);
         String ingredients = getUserIngredientRatings(email);
-        Map<String, String> recipeRating = ratingMapToJson(recipes);
+        Map<String, String> recipeRating = new HashMap<>();
+        Map<String, String> ingredientRating = new HashMap<>();
+        if (recipes.length() == 0) {
+          recipeRating.put("error", "");
+        } else {
+          recipeRating = ratingMapToJson(recipes);
+        }
+        if (ingredients.length() == 0) {
+          ingredientRating.put("error", "");
+        } else {
+          ingredientRating = ratingMapToJson(ingredients);
+        }
 
-        Map<String, String> ingredientRating = ratingMapToJson(ingredients);
+
         Map<String, Object> map = ImmutableMap.of("name", name, "recipes",
                 recipeRating, "ingredients", ingredientRating);
         return GSON.toJson(map);

@@ -5,5 +5,7 @@
     left: 600px;
     top: 150px;
     background-color: #2776ED;
+    border: 4px solid;
+    border-radius: 10px;
 
 }
