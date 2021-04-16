@@ -38,6 +38,7 @@ public class UserSearchTest {
     HashSet<String> testIngredients = new HashSet<>();
     try {
       initialize("data/newdb.sqlite3");
+      initializeConn(getConn());
     } catch (SQLException e) {
       System.out.println("ERROR");
     } catch (ClassNotFoundException e) {

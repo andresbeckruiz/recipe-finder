@@ -30,8 +30,6 @@ public class User {
     recipeGraph = new Graph();
     recipeRatings = userRecipeRatings(name);
     ingredientRatings = userIngredientRatings(name);
-    System.out.println("hello");
-    System.out.println(recipeRatings);
   }
 
   public HashMap<String, Double> getIngredientRatings() {

@@ -149,59 +149,6 @@ public final class Database {
     }
   }
 
-  public static HashMap<String, Double> userRecipeRatings(String username) {
-    try {
-      PreparedStatement prep = conn.prepareStatement("SELECT ratedRecipes FROM users "
-              + "WHERE email IS ?");
-      prep.setString(1, username);
-      ResultSet rs = prep.executeQuery();
-      if (!rs.isBeforeFirst()) {
-        return null;
-      }
-      HashMap<String, Double> ratingMap = new HashMap<>();
-      String[] recipes = rs.getString(1).trim().split("\\s*,\\s*");
-      for (String rec : recipes) {
-        String[] tuple = rec.split(":");
-        if (tuple.length != 2) {
-          continue;
-        }
-        ratingMap.put(tuple[0], Double.parseDouble(tuple[1]));
-      }
-      rs.close();
-      prep.close();
-      return ratingMap;
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-      return null;
-    }
-  }
-
-  public static HashMap<String, Double> userIngredientRatings(String username) {
-    try {
-      PreparedStatement prep = conn.prepareStatement("SELECT ratedIngredients FROM users "
-              + "WHERE email IS ?");
-      prep.setString(1, username);
-      ResultSet rs = prep.executeQuery();
-      if (!rs.isBeforeFirst()) {
-        return null;
-      }
-      HashMap<String, Double> ratingMap = new HashMap<>();
-      String[] ingredients = rs.getString(1).trim().split("\\s*,\\s*");
-      for (String ing : ingredients) {
-        String[] tuple = ing.split(":");
-        if (tuple.length != 2) {
-          continue;
-        }
-        ratingMap.put(tuple[0], Double.parseDouble(tuple[1]));
-      }
-      rs.close();
-      prep.close();
-      return ratingMap;
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-      return null;
-    }
-  }
   public static Recipe getRecipeObject(String recipeName, User user) {
     try {
       PreparedStatement prep = conn.prepareStatement("SELECT * FROM recipes "

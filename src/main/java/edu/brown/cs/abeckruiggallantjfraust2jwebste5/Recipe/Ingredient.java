@@ -24,6 +24,7 @@ public class Ingredient implements Vertex<Recipe> {
     } else {
       this.rating = DEFAULT_RATING;
     }
+    System.out.println("INGREDIENTDONNE");
   }
 
   @Override
