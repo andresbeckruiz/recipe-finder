@@ -8,7 +8,6 @@ Back end (Georgia + Jack)
     - quantity of ingredients
     - Cook = reduce ingredients
     - list ingredients that user does not have in fridge
-- Centering blue box for list of recipes
 - Add to readme we don't have repl, so what we did for system tests
 - Make presentation 5-7 minutes
 
@@ -16,6 +15,7 @@ Front end:
 - commenting (Andres, Jacob) (this weekend)
 - profile page
     -update name? (Andres) (this weekend)
+- Centering blue box for list of recipes (Jacob)
 -email confirmation (Andres) (tonight, if not this weekend)
 
 
@@ -23,12 +23,7 @@ Front end:
 
 TODO bugs:
 
-1) autocorrect parser preventing valid ingredients with two words from being found.
- eg: almond extract (Andres)
-
-2) if user is logged in, and you do npm start and ./run -gui (after not having run in a
+1) if user is logged in, and you do npm start and ./run -gui (after not having run in a
 while), fridge wont show; not sure how big a deal this is
 
-3) Inventory string has additional commas if you add, remove, then add the same account.
-
-4) I got this once, but after I deleted an ingredient and went to search for new ingredients, nothing showed up?
+2) I got this once, but after I deleted an ingredient and went to search for new ingredients, nothing showed up?
