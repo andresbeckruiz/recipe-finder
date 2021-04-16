@@ -1,6 +1,6 @@
 package edu.brown.cs.abeckruiggallantjfraust2jwebste5.App;
 
-import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.RecipeObjects.Recipe;
 
 
 import java.util.ArrayList;

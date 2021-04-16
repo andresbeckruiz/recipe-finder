@@ -1,8 +1,7 @@
 package edu.brown.cs.abeckruiggallantjfraust2jwebste5.main;
 
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.User;
-import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
-import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Ingredient;
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.RecipeObjects.Recipe;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.*;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.*;
@@ -10,18 +9,9 @@ import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.*;
 import java.util.HashSet;
 import java.sql.SQLException;
 
-import java.io.*;
-import java.util.List;
 import java.util.ArrayList;
 
-import org.junit.Before;
-import org.junit.After;
 import org.junit.Test;
-
-import java.util.LinkedList;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashMap;
 
 import static org.junit.Assert.*;
 

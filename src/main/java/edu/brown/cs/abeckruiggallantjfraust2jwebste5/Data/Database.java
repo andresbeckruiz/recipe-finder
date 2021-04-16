@@ -1,7 +1,7 @@
 package edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data;
 
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.User;
-import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.RecipeObjects.Recipe;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

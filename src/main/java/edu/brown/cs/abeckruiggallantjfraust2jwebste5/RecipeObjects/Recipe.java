@@ -1,4 +1,4 @@
-package edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe;
+package edu.brown.cs.abeckruiggallantjfraust2jwebste5.RecipeObjects;
 
 import com.google.common.collect.ImmutableMap;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.User;
@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.DEFAULT_RATING;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.TOTAL_RATING;
 
 public class Recipe implements Vertex<Ingredient> {
 

@@ -2,8 +2,8 @@ package edu.brown.cs.abeckruiggallantjfraust2jwebste5.App;
 
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Graph.Graph;
-import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Ingredient;
-import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.RecipeObjects.Ingredient;
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.RecipeObjects.Recipe;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

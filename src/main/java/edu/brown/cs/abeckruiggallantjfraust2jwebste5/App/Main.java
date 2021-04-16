@@ -5,11 +5,16 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
-import java.util.*;
-
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.TreeMap;
+import java.util.Map;
+import java.util.Set;
 import com.google.common.collect.ImmutableMap;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Autocorrect.Autocorrector;
-import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.RecipeObjects.Recipe;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import org.json.JSONException;
@@ -24,7 +29,7 @@ import com.google.gson.Gson;
 import freemarker.template.Configuration;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.DEFAULT_RATING;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.JsonFormatter.ratingMapToJson;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.DataPreprocess.JsonFormatter.ratingMapToJson;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.addUserToDatabase;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.deleteUser;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.getName;
