@@ -215,8 +215,11 @@ public final class Main {
       Gson gson = new Gson();
       JSONObject data = new JSONObject(request.body());
       String currentRecipeName = data.getString("recipe");
-      // ToDo: create method to get all info about "CurrentRecipeName"
       Recipe curRecipe = getRecipeObject(currentRecipeName, recipeApp.getCurUser());
+
+      //get current recipe rating
+      String email = data.getString("user");
+      String ratings = getUserRecipeRatings(email);
 
       //set ingredients to parsed string
       curRecipe.setInstructions(curRecipe.getInstructions().replaceAll("[\\[\\]()\\//{}\"]",
@@ -230,7 +233,8 @@ public final class Main {
       }
       Map<String, Object> variables = ImmutableMap.of("recipe",
               curRecipe.toBigMap(), "similar1", similarRecipes.get(0),
-              "similar2", similarRecipes.get(1), "similar3", similarRecipes.get(2));
+              "similar2", similarRecipes.get(1), "similar3", similarRecipes.get(2),
+              "rating", ratings);
       String json = GSON.toJson(variables);
       return json;
     }
