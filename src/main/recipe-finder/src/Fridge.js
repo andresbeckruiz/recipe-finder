@@ -6,7 +6,7 @@ import SubmitButton from "./SubmitButton";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import {Link, useHistory} from 'react-router-dom'
-import {Alert, Toast} from 'react-bootstrap'
+import {Alert} from 'react-bootstrap'
 import {useAuth} from "./contexts/AuthContext"
 import Rating from "@material-ui/lab/Rating";
 import ListItem from "./ListItem";
@@ -55,6 +55,7 @@ function Fridge() {
      */
     const addIngredient = (curr, event) => {
 
+        console.log(curr);
         const toSend = {
             ingredient: curr
         };
@@ -198,27 +199,27 @@ function Fridge() {
 
     // function for submit button
     const onSubmit = (text) => {
-        console.log("Submitting happening, valid!")
         //don't want to submit anything if the ingredient isn't valid
-        if (input !== "") {
-            //clear from this scope and from input box
-            document.getElementById("inputBox").value = "";
-            setInput("");
-        }
 
         //open modal if need be
         if (!ingredientRatings.hasOwnProperty(currentToRate)) {
+            if (input !== "") {
+                //clear from this scope and from input box
+                document.getElementById("inputBox").value = "";
+                setInput("");
+            }
+
+            //axios request
+            addIngredient(text);
             setRatingIsOpen(true);
         }
-        //axios request
-        addIngredient(text);
     }
 
     //set global for listener
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
-            onSubmit();
+            onSubmit(input);
         }
     }
 
@@ -281,11 +282,8 @@ function Fridge() {
         )
             .then(response => {
                 let inventory = response.data["inventory"]
-                //update ratings
-                for (var ingredient in inventory) {
-                    ingredientRatings[ingredient] = inventory[ingredient]
-                }
-                setIngredients(ingredientRatings)
+                ingredientRatings = inventory;
+                setIngredients(ingredientRatings);
             })
 
             .catch(function (error) {
@@ -340,7 +338,7 @@ function Fridge() {
             </Link>
             <Button onClick={handleLogout} variant="danger" size= "lg" style={{position: "absolute", right: 50, top: 25}}>Logout</Button>
             <Link to={"/profile"}>
-            <Button variant="primary" size= "sm" style={{position: "absolute", right: 50, top: 80}}>Profile</Button>
+            <Button variant="primary" size= "lg" style={{position: "absolute", right: 50, top: 80}}>Profile</Button>
             </Link>
             {/*two panes for lists and input*/}
 
@@ -400,14 +398,20 @@ function Fridge() {
                              label={"Name of Ingredient"} setCurr={setCurrentToRate}/>
                     <h4 hidden={autocorrectLoading} className={"text-dark"}> Loading...</h4>
                     <ul aria-live={"polite"}>
-                        {suggestions.map(item => {
+                        {/*using nested conditional rendering; don't want suggestions if nothing has
+                        been typed, display text instead. if no suggestions, display text */}
+                        {input.length !== 0 ?
+                            [suggestions.length !== 0 || !autocorrectLoading ?
+                            suggestions.map(item => {
                             return (
-                                <ListItem item={item} setInput={setInput} input={input} setCurr={setCurrentToRate} curr={currentToRate} />
+                                <ListItem item={item} setInput={setInput} input={input}
+                                          setCurr={setCurrentToRate} curr={currentToRate} />
                             )
-                        })}
+                        }) : <h5> No ingredients found </h5>]
+                        : <h5>Start typing to see suggestions!</h5>}
                     </ul>
                     {/*original top number was 50*/}
-                    <div id={"submit"} style={{position: "relative", top: 0, left: 150}}>
+                    <div id={"submit"} style={{position: "absolute", top: 225, left: 125}}>
                         {/*submission button*/}
                         <SubmitButton label={"Submit"} onClick={checkValidIngredient}/>
                         {/*this is for setting an error notification if ingredient is invalid*/}

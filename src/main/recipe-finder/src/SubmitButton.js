@@ -3,7 +3,7 @@ import "react-awesome-button/dist/styles.css";
 
 function SubmitButton(props) {
 
-    return <AwesomeButton className={"submit"} type="primary" onPress= {
+    return <AwesomeButton className={"submit"} type="primary" size={"medium"} onPress= {
         // click
         props.onClick
 
