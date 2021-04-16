@@ -133,11 +133,13 @@ function Profile() {
                     setNoRecipes(true);
                 } else {
                     setNoRecipes(false);
-                } if("error" in recipes) {
+                }
+                if("error" in ingredients) {
                     setNoIngredients(true);
                 } else {
                     setNoIngredients(false);
                 }
+
                 //update variables
                 setName(name);
                 setRatedRecipes(recipes);
