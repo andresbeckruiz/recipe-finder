@@ -170,7 +170,6 @@ public final class Main {
   private class RateIngredientHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-      System.out.println("rating ingredient");
       JSONObject data = new JSONObject(request.body());
       String ingredientName = data.getString("ingredient");
       Double ingredientRating = data.getDouble("rating");
@@ -371,7 +370,6 @@ public final class Main {
   private class GetProfileInfo implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-      System.out.println("profile");
       JSONObject data = new JSONObject(request.body());
       String email = data.getString("name");
       try {
@@ -379,6 +377,7 @@ public final class Main {
         String recipes = getUserRecipeRatings(email);
         String ingredients = getUserIngredientRatings(email);
         Map<String, String> recipeRating = ratingMapToJson(recipes);
+
         Map<String, String> ingredientRating = ratingMapToJson(ingredients);
         Map<String, Object> map = ImmutableMap.of("name", name, "recipes",
                 recipeRating, "ingredients", ingredientRating);
