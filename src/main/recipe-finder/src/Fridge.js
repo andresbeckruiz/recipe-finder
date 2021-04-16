@@ -456,10 +456,12 @@ function Fridge() {
             </div>
             <div>
                 <div className="searchBox">
-                    <h4 style={{position: "absolute", top: -40}}>Current Ingredients</h4>
+                    <h4 style={{position: "absolute", top: -40, left: 205}}>Add an Ingredient</h4>
 
                     {/*original top number was 225*/}
                 <div style={{position: "relative", top: 150, left: 100, right:0}}>
+                    <br/>
+                    <br/>
                     <TextBox val={input} input={setInput} onKeyUp={createSuggestions}
                              label={"Name of Ingredient"} setCurr={setCurrentToRate}/>
                     <h4 hidden={autocorrectLoading} className={"text-dark"}> Loading...</h4>
@@ -477,7 +479,7 @@ function Fridge() {
                         : <h5>Start typing to see suggestions!</h5>}
                     </ul>
                     {/*original top number was 50*/}
-                    <div id={"submit"} style={{position: "absolute", top: 225, left: 125}}>
+                    <div id={"submit"} style={{position: "absolute", top: 260, left: 125}}>
                         {/*submission button*/}
                         <SubmitButton label={"Submit"} onClick={checkValidIngredient}/>
                         {/*this is for setting an error notification if ingredient is invalid*/}
