@@ -82,8 +82,8 @@ function RecipeSelection() {
         height: 600,
         width: 1300,
         position: "absolute",
-        top: 150,
-        left: 150
+        top: 100,
+        left: 75
     }
 
     // style details for inner scroll div
@@ -177,7 +177,7 @@ function RecipeSelection() {
                                         </Link>
                                     </CardActions>
                                 </div>
-                                <div style={{position: "relative", marginRight: 650}}>
+                                <div style={{position: "relative", marginRight: 650, marginTop:5}}>
                                     <CardMedia
                                         className={classes.media}
                                         image={r.src}

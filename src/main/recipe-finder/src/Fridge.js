@@ -228,9 +228,9 @@ function Fridge() {
         height: 600,
         width: 250,
         position: "absolute",
-        top: 150,
+        top: 125,
         left: 200,
-        border: "4px solid darkgrey",
+        border: "4px solid black",
         borderRadius: 10
 
     }
@@ -464,7 +464,7 @@ function Fridge() {
                 </Modal.Footer>
             </Modal>
             </div>
-            <div>
+            <div style={{position:"absolute", top: -30, left: 0}}>
                 <div className="searchBox">
 
                     <h4 style={{position: "absolute", top: -40, left: 205}}>Add an Ingredient</h4>
