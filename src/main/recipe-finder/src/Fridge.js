@@ -203,16 +203,17 @@ function Fridge() {
 
         //open modal if need be
         if (!ingredientRatings.hasOwnProperty(currentToRate)) {
+            setRatingIsOpen(true);
+            //axios request
+            addIngredient(text);
+
             if (input !== "") {
                 //clear from this scope and from input box
                 document.getElementById("inputBox").value = "";
                 setInput("");
             }
-
-            //axios request
-            addIngredient(text);
-            setRatingIsOpen(true);
         }
+
     }
 
     //set global for listener
@@ -282,8 +283,11 @@ function Fridge() {
         )
             .then(response => {
                 let inventory = response.data["inventory"]
-                ingredientRatings = inventory;
-                setIngredients(ingredientRatings);
+                //update ratings
+                for (let ingredient in inventory) {
+                    ingredientRatings[ingredient] = inventory[ingredient];
+                }
+                setIngredients(ingredientRatings)
             })
 
             .catch(function (error) {
