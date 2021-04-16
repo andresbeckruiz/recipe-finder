@@ -24,3 +24,5 @@ TODO bugs:
 while), fridge wont show; not sure how big a deal this is
 
 3) Inventory string has additional commas if you add, remove, then add the same account.
+
+4) I got this once, but after I deleted an ingredient and went to search for new ingredients, nothing showed up?
