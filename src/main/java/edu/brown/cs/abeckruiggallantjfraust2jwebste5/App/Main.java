@@ -71,7 +71,7 @@ public final class Main {
    * to take in user input.
    */
   private void run() {
-    ac = new Autocorrector("data/ingredients.txt", true, true, 1);
+    ac = new Autocorrector("data/ingredients.txt", true, false, 1);
     // Parse command line arguments
     OptionParser parser = new OptionParser();
     parser.accepts("gui");
