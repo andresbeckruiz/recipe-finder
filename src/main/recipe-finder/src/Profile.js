@@ -217,7 +217,7 @@ function Profile() {
             {/*Modal for user account deletion*/}
             <Modal show={modalIsOpen} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Delete ingredient?</Modal.Title>
+                    <Modal.Title>Delete account?</Modal.Title>
                 </Modal.Header>
                 <Modal.Body> <b>WARNING: Your account will be permanently deleted.</b> </Modal.Body>
                 <Modal.Footer>

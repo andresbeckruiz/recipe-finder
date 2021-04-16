@@ -456,7 +456,7 @@ function Fridge() {
             </div>
             <div>
                 <div className="searchBox">
-                    <h4 style={{position: "absolute", top: -40}}>Current Ingredients</h4>
+                    <h4 style={{position: "absolute", top: -40}}>Add Ingredients</h4>
 
                     {/*original top number was 225*/}
                 <div style={{position: "relative", top: 150, left: 100, right:0}}>
