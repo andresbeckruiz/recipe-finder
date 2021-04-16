@@ -52,9 +52,9 @@ public final class RecipeFinder {
         invertedHashMap.put(entry.getValue(), recipe);
       }
     }
-    TreeMap<Double, ArrayList<String>> ratedMap = factorInRatings(invertedHashMap, curUser);
 
-
+    TreeMap<Integer, ArrayList<String>> top = treeMapOfTop(invertedHashMap, numRecipesToReturn);
+    TreeMap<Double, ArrayList<String>> ratedMap = factorInRatings(top, curUser);
     ArrayList<String> topSortedRecipes = new ArrayList<>();
     int numToAdd = numRecipesToReturn;
     for (double key : ratedMap.keySet()) {
@@ -67,6 +67,21 @@ public final class RecipeFinder {
       }
     }
     return topSortedRecipes;
+  }
+
+  private static TreeMap<Integer, ArrayList<String>> treeMapOfTop(Map<Integer, ArrayList<String>> allMap, int numToReturn) {
+    int numToAdd = numToReturn * 2;
+    TreeMap<Integer, ArrayList<String>> top = new TreeMap<>();
+    for (int key : allMap.keySet()) {
+      ArrayList<String> rep = allMap.get(key);
+      rep = new ArrayList<>(rep.subList(0, min(numToAdd, rep.size())));
+      top.put(key, rep);
+      numToAdd = numToAdd - rep.size();
+      if (numToAdd < 0) {
+        return top;
+      }
+    }
+    return top;
   }
 
   private static TreeMap<Double, ArrayList<String>> factorInRatings(Map<Integer, ArrayList<String>> map, User user) {
