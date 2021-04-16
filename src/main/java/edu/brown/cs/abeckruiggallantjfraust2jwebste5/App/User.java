@@ -14,8 +14,13 @@ import java.util.TreeMap;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.DEFAULT_RATING;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.NUM_RECOMMENDATIONS;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.RecipeFinder.findRecipesWithIngredients;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.*;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.*;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.userIngredientRatings;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.userRecipeRatings;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.addUserIngredient;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.removeUserIngredient;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.addUserIngredientRating;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.addUserRecipeRating;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getRecipeObject;
 
 public class User {
   private HashSet<String> ingredients;
@@ -72,15 +77,24 @@ public class User {
   public void addIngredientRating(String ingredient, Double rating) throws SQLException {
     addUserIngredientRating(this, ingredient, rating);
     ingredientRatings.put(ingredient, rating);
+    Ingredient obj = recipeGraph.getNonCentralNodes().get(ingredient);
+    if (obj != null) {
+      obj.setValue(rating);
+    }
   }
 
   public void addRecipeRating(String recipe, Double rating) throws SQLException {
     addUserRecipeRating(this, recipe, rating);
     recipeRatings.put(recipe, rating);
+    Recipe obj = recipeGraph.getCentralNodeMap().get(recipe);
+    if (obj != null) {
+      obj.setValue(rating);
+    }
   }
 
   public ArrayList<Recipe> cook() {
-    ArrayList<String> recipeNames = findRecipesWithIngredients(ingredients, NUM_RECOMMENDATIONS, this);
+    ArrayList<String> recipeNames = findRecipesWithIngredients(ingredients,
+            NUM_RECOMMENDATIONS, this);
     ArrayList<Recipe> recipes = new ArrayList<>();
     for (String recipe : recipeNames) {
       recipes.add(getRecipeObject(recipe, this));

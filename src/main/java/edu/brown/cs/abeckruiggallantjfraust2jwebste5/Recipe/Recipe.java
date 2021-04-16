@@ -237,6 +237,7 @@ public class Recipe implements Vertex<Ingredient> {
   @Override
   public void setValue(double value) {
     this.rating = value;
+    ratingSet = true;
   }
 
   private String checkForNull(String toCheck) {

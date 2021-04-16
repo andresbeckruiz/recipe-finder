@@ -2,7 +2,14 @@ package edu.brown.cs.abeckruiggallantjfraust2jwebste5.App;
 
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Recipe.Recipe;
 
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.TreeMap;
+import java.util.Collections;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.SCORE_WEIGHT;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.SIMILARITY_WEIGHT;
@@ -69,10 +76,11 @@ public final class RecipeFinder {
     return topSortedRecipes;
   }
 
-  private static TreeMap<Integer, ArrayList<String>> treeMapOfTop(Map<Integer, ArrayList<String>> allMap, int numToReturn) {
+  private static TreeMap<Integer, ArrayList<String>> treeMapOfTop(Map<Integer,
+          ArrayList<String>> allMap, int numToReturn) {
     int numToAdd = numToReturn * 2;
     TreeMap<Integer, ArrayList<String>> top = new TreeMap<>();
-    for (int key : allMap.keySet()) {
+    for (int key = allMap.keySet().size(); key > 0; key--) {
       ArrayList<String> rep = allMap.get(key);
       rep = new ArrayList<>(rep.subList(0, min(numToAdd, rep.size())));
       top.put(key, rep);
@@ -84,7 +92,8 @@ public final class RecipeFinder {
     return top;
   }
 
-  private static TreeMap<Double, ArrayList<String>> factorInRatings(Map<Integer, ArrayList<String>> map, User user) {
+  private static TreeMap<Double, ArrayList<String>> factorInRatings(Map<Integer,
+          ArrayList<String>> map, User user) {
     TreeMap<Double, ArrayList<String>> mapWithRatings = new TreeMap<>(Collections.reverseOrder());
     for (int count = map.keySet().size(); count > 0; count--) {
       ArrayList<String> rep = map.get(count);

@@ -110,12 +110,12 @@ public final class Main {
 
 
 //    //GEORGIA ADDED TO DELETE
-//    HashSet<String> ingredients = new HashSet<>();
-//    ingredients.add("lemon curd");
-//    ingredients.add("lemon");
-//    ingredients.add("double cream");
-//    User user = new User("georgia", ingredients);
-//    user.cook();
+    HashSet<String> ingredients = new HashSet<>();
+    ingredients.add("lemon curd");
+    ingredients.add("lemon");
+    ingredients.add("double cream");
+    User user = new User("georgia", ingredients);
+    user.cook();
 
 
 
