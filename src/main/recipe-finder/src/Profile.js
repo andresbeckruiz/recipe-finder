@@ -30,6 +30,78 @@ function Profile() {
 
 
     // Axios Requests
+    const rateIngredient = (rating, event) => {
+        let curr = event.target.getAttribute("name")
+        const toSend = {
+            ingredient: curr,
+            rating: rating
+        };
+
+        let config = {
+            headers: {
+                "Content-Type": "application/json",
+                'Access-Control-Allow-Origin': '*',
+            }
+        }
+
+        axios.post(
+            "http://localhost:4567/rate-ingredient",
+            toSend,
+            config
+        )
+            .then(response => {
+                let ratings = {}
+                for (var key in ratedIngredients) {
+                    ratings[key] = ratedIngredients[key];
+                }
+                ratings[curr] = rating;
+
+                setRatedIngredients(ratings);
+                //nothing
+            })
+
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+    /*
+        * Makes an axios request for rating the recipe
+        */
+    const rateRecipe = (rating, event) => {
+        let curr = event.target.getAttribute("name")
+
+        const toSend = {
+            rating: rating,
+            recipe: curr
+        };
+
+        let config = {
+            headers: {
+                "Content-Type": "application/json",
+                'Access-Control-Allow-Origin': '*',
+            }
+        }
+
+        axios.post(
+            "http://localhost:4567/rate-recipe",
+            toSend,
+            config
+        )
+            .then(response => {
+                let ratings = {}
+                for (var key in ratedRecipes) {
+                    console.log(key)
+                    ratings[key] = ratedRecipes[key];
+                }
+                ratings[curr] = rating;
+                setRatedRecipes(ratings);
+            })
+
+            .catch(function (error) {
+                console.log("ERRORRR")
+                console.log(error);
+            });
+    }
 
     /*
      * Makes an axios request for user info
@@ -189,16 +261,12 @@ function Profile() {
                         <div>
                             <p>{r}</p>
                             <Rating
-                                name="recipe-prof-rating"
+                                name={r}
                                 precision={0.5}
                                 size={"small"}
-                                // onChange={(event, newValue) => {
-                                //     let test = list;
-                                //     test[r] = newValue;
-                                //     setList(test);
-                                //     props.ingredientRater(r, newValue);
-                                // }}
-                                readOnly
+                                onChange={(event, newValue) => {
+                                    rateRecipe(newValue, event);
+                                }}
                                 value={checkIfMap(ratedRecipes, r)}
                             />
                         </div>
@@ -213,17 +281,13 @@ function Profile() {
                         <div className="ingredient">
                             <p>{r}</p>
                             <Rating
-                            name="ingredient-prof-rating"
-                            precision={0.5}
-                            size={"small"}
-                            // onChange={(event, newValue) => {
-                            //     let test = list;
-                            //     test[r] = newValue;
-                            //     setList(test);
-                            //     props.ingredientRater(r, newValue);
-                            // }}
-                            readOnly
-                            value={checkIfMap(ratedIngredients, r)}
+                                name={r}
+                                precision={0.5}
+                                size={"small"}
+                                onChange={(event, newValue) => {
+                                    rateIngredient(newValue, event);
+                                }}
+                                value={checkIfMap(ratedIngredients, r)}
                             />
                         </div>
                     )}
