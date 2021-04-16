@@ -55,6 +55,7 @@ function Fridge() {
      */
     const addIngredient = (curr, event) => {
 
+        console.log(curr);
         const toSend = {
             ingredient: curr
         };
@@ -198,27 +199,27 @@ function Fridge() {
 
     // function for submit button
     const onSubmit = (text) => {
-        console.log("Submitting happening, valid!")
         //don't want to submit anything if the ingredient isn't valid
-        if (input !== "") {
-            //clear from this scope and from input box
-            document.getElementById("inputBox").value = "";
-            setInput("");
-        }
 
         //open modal if need be
         if (!ingredientRatings.hasOwnProperty(currentToRate)) {
+            if (input !== "") {
+                //clear from this scope and from input box
+                document.getElementById("inputBox").value = "";
+                setInput("");
+            }
+
+            //axios request
+            addIngredient(text);
             setRatingIsOpen(true);
         }
-        //axios request
-        addIngredient(text);
     }
 
     //set global for listener
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
-            onSubmit();
+            onSubmit(input);
         }
     }
 
@@ -281,11 +282,8 @@ function Fridge() {
         )
             .then(response => {
                 let inventory = response.data["inventory"]
-                //update ratings
-                for (var ingredient in inventory) {
-                    ingredientRatings[ingredient] = inventory[ingredient]
-                }
-                setIngredients(ingredientRatings)
+                ingredientRatings = inventory;
+                setIngredients(ingredientRatings);
             })
 
             .catch(function (error) {
