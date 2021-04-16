@@ -12,8 +12,7 @@ import ListItem from "./ListItem";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Fridge.css'
-let current;
-
+let currentToDelete = "";
 function Fridge() {
 
     // useState variable for name
@@ -242,7 +241,7 @@ function Fridge() {
             ratings[key] = ingredientRatings[key]
         }
 
-        delete ratings[this.current];
+        delete ratings[currentToDelete];
         setIngredientRatings(ratings);
         setDeleteIngredient(false);
     }
@@ -393,7 +392,7 @@ function Fridge() {
                                 <p style={{textAlign: "center", cursor: "pointer"}} onClick={() =>{
                                     setModalIsOpen(true);
                                     setCurrent(r);
-                                    this.current = r;
+                                    currentToDelete = r;
                                 }
                                 }>{r}</p>
                                 <Rating
