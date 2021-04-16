@@ -142,7 +142,7 @@ function Profile() {
     return (
         <div>
 
-            {/*Modal for deletion*/}
+            {/*Modal for user account deletion*/}
             <Modal show={modalIsOpen} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Delete ingredient?</Modal.Title>
