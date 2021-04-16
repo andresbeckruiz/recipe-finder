@@ -1,47 +1,27 @@
 TODO:
 Back end (Georgia + Jack)
-- testing (Georgia)
-- commenting (Georgia)
-- think of edge cases + test null inputs (Jack)
-- profile page routes (Jack)
-    - view all ratings?
+- testing (Georgia, Jack)
+    -test bug 2?
+- commenting (Georgia, Jack) (this weekend)
+- think of edge cases + test null inputs (Georgia, Andres)
+
 
 Front end:
-- comment login (Andres)
-- error page for route that doesn't exist (/aa) (Andres) DONE
-- rating of ingredients (Georgia)
-- autocorrect of ingredient add (Andres) DONE
-- preventing non-ingredient input (Andres) DONE
-x fixing aesthetic of recipe page (Jacob)
-x default image for recipes that don't have images (Jacob)
-x cook button to open link in new page (Jacob)
-- profile page (Andres)
-    - delete account DONE
-    x update password (move from main page) DONE
-    -update name? (Andres)
-    (maybe later see ratings)
-
-Test:
-- multiple users
-- when ingredient is already in inventory
-- empty image
+- commenting (Andres, Jacob) (this weekend)
+- profile page
+    - delete account modal (Jacob)
+    -update name? (Andres) (this weekend)
+-email confirmation (Andres) (tonight, if not this weekend)
 
 
-// TODO: weighted sum here
-    // TODO: interaction between logged in users?
-    // DEMO: one user with a bunch of data
-    // TODO: profile of past recipes
-    // TODO: delete account
-    // TODO: default image on front end (onerror=)
-
-
-//TODO: Modal for deleting account
-
+// DEMO: one user with a bunch of data (Andres, Georgia)
 
 TODO bugs:
 
-1) the trim function is preventing valid ingredients with two words from being found.
- eg: almond extract (autocorrect parser problem)
+1) autocorrect parser preventing valid ingredients with two words from being found.
+ eg: almond extract (Andres)
 
 2) if user is logged in, and you do npm start and ./run -gui (after not having run in a
 while), fridge wont show; not sure how big a deal this is
+
+3) rating ingredients bug (Georgia, Jacob)

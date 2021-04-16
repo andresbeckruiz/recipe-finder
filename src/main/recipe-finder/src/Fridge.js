@@ -6,7 +6,7 @@ import SubmitButton from "./SubmitButton";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import {Link, useHistory} from 'react-router-dom'
-import {Alert, Toast} from 'react-bootstrap'
+import {Alert} from 'react-bootstrap'
 import {useAuth} from "./contexts/AuthContext"
 import Rating from "@material-ui/lab/Rating";
 import ListItem from "./ListItem";
