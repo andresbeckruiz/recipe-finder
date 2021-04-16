@@ -1,7 +1,6 @@
 package edu.brown.cs.abeckruiggallantjfraust2jwebste5;
 
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.User;
-import edu.brown.cs.abeckruiggallantjfraust2jwebste5.RecipeObjects.Recipe;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.*;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.*;
@@ -21,15 +20,15 @@ import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 import static org.junit.Assert.*;
 
 /**
  * MethodTesting of Ingredient and Recipe Classes
  */
-public class DatabaseTest {
+public class UserDataBaseTest {
   private User testUser;
-
   /**
    * Create new User object for creating ingredients and recipes
    */
@@ -66,31 +65,35 @@ public class DatabaseTest {
   }
 
   /**
-   * Tests Methods of Database Class
+   * Tests Methods of UserDatabase Class
    */
   @Test
   public void testDatabase() {
     this.setUp();
 
-    String testIngredient = "tomato";
-    String testRecipe = "spinach mash";
+    String result = "";
 
-    String tomatoRecipes = getRecipesWithIngredient(testIngredient);
-    String spinachMashIngredients = getIngredientForRecipe(testRecipe);
-    Recipe recipe = getRecipeObject("spinach mash", this.testUser);
+    try {
+      addUserIngredient("test@gmail.com", "milk");
+      addUserIngredient("test@gmail.com", "flour");
+      addUserIngredient("test@gmail.com", "egg");
+      addUserIngredient("test@gmail.com", "lettuce");
+      result = getUserInventory("test@gmail.com");
+    } catch(SQLException e) {
+      System.out.println(e.getMessage());
+    }
 
-    assertTrue(tomatoRecipes.contains("keralan crab with currimbhoy salad"));
-    assertTrue(spinachMashIngredients.equals("olive oil,spinach,garlic,mashed potato"));
+    assertTrue(result.equals("milk,flour,egg,lettuce"));
 
-    assertTrue(recipe.getSimilarityScore() == 0.0);
-    assertTrue(recipe.getIngredients() != null);
-    assertTrue(recipe.getChef().equals("Paul Rankin"));
-    assertTrue(recipe.getInstructions() != null);
-    assertTrue(recipe.getCookingTime().equals("10"));
-    assertTrue(recipe.getPrepTime().equals("30"));
-    assertTrue(recipe.getPhotourl() == null);
-    assertTrue(recipe.getServes().equals("1"));
-    assertTrue(recipe.getUrl().equals("http://bbc.co.uk/food/recipes/cheeseandspinachmash_90409"));
+    HashMap<String, Double> recipeRatings;
+    HashMap<String, Double> ingredientRatings;
+
+    recipeRatings = userRecipeRatings("test@gmail.com");
+    ingredientRatings = userIngredientRatings("test@gmail.com");
+
+    assertTrue(recipeRatings.size() == 0);
+    assertTrue(ingredientRatings.size() == 0);
+
     this.tearDown();
   }
 }

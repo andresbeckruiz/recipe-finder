@@ -4,7 +4,13 @@ Back end (Georgia + Jack)
     -test bug 2?
 - commenting (Georgia, Jack) (this weekend)
 - think of edge cases + test null inputs (Georgia, Andres)
-
+- Future extensibility
+    - quantity of ingredients
+    - Cook = reduce ingredients
+    - list ingredients that user does not have in fridge
+- Centering blue box for list of recipes
+- Add to readme we don't have repl, so what we did for system tests
+- Make presentation 5-7 minutes
 
 Front end:
 - commenting (Andres, Jacob) (this weekend)

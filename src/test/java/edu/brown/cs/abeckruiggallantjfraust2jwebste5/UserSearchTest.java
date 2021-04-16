@@ -13,32 +13,37 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashMap;
 import static org.junit.Assert.*;
 
 /**
- * MethodTesting of Ingredient and Recipe Classes
- */
+* MethodTesting of Ingredient and Recipe Classes
+*/
 public class UserSearchTest {
   private User testUser;
 
   /**
-   * Create new User object for creating ingredients and recipes
-   */
+    * Create new User object for creating ingredients and recipes
+    */
   public void setUp() {
     HashSet<String> testIngredients = new HashSet<>();
     try {
       initialize("data/newdb.sqlite3");
+      initializeConn(getConn());
     } catch (SQLException e) {
       System.out.println("ERROR");
     } catch (ClassNotFoundException e) {
       System.out.println("ERROR");
     }
     try {
-      addUserToDatabase("testUser", "test@gmail.com");
+      addUserToDatabase("testUser", "test1@gmail.com");
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
-    testUser = new User("test@gmail.com", testIngredients);
+    testUser = new User("test1@gmail.com", testIngredients);
   }
 
   /**
@@ -47,14 +52,15 @@ public class UserSearchTest {
   public void tearDown() {
     testUser = null;
     try {
-      deleteUser("test@gmail.com");
+      deleteUser("test1@gmail.com");
+      closeConn();
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
   }
 
   /**
-   * Tests cook() method
+   * Tests cook() method for various edge cases
    */
   @Test
   public void searchTest() {
@@ -72,7 +78,7 @@ public class UserSearchTest {
     assertTrue(recipeSuggestions.size() == 10);
 
     try {
-      this.testUser.addIngredientRating("tomato",3.0);
+      this.testUser.addIngredientRating("tomato", 3.0);
       this.testUser.removeIngredient("tomato");
     } catch(SQLException e){
       System.out.println(e.getMessage());
@@ -84,7 +90,7 @@ public class UserSearchTest {
     try {
       this.testUser.addIngredientRating("tomato",3.0);
       this.testUser.addIngredientRating("tomato",5.0);
-      s = getUserIngredientRatings("test@gmail.com");
+      s = getUserIngredientRatings("test1@gmail.com");
     } catch(SQLException e){
       System.out.println(e.getMessage());
     }

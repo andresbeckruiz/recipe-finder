@@ -32,6 +32,7 @@ public class RecipeIngredientTest {
     HashSet<String> testIngredients = new HashSet<>();
     try {
       initialize("data/newdb.sqlite3");
+      initializeConn(getConn());
     } catch (SQLException e) {
       System.out.println("ERROR");
     } catch (ClassNotFoundException e) {
@@ -53,9 +54,11 @@ public class RecipeIngredientTest {
     testUser = null;
     try {
       deleteUser("test@gmail.com");
+      closeConn();
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
+
   }
 
   /**
@@ -100,6 +103,18 @@ public class RecipeIngredientTest {
 
     Recipe recipe = new Recipe(params, this.testUser);
     assertTrue(recipe.getChef().equals("chef"));
+
+
+    assertTrue(recipe.getSimilarityScore() == 0.0);
+    assertTrue(recipe.getIngredients() != null);
+    assertTrue(recipe.getChef().equals("chef"));
+    assertTrue(recipe.getInstructions() != null);
+    assertTrue(recipe.getCookingTime().equals("cookingTime"));
+    assertTrue(recipe.getPrepTime().equals("prepTime"));
+    assertTrue(recipe.getPhotourl().equals("photourl"));
+    assertTrue(recipe.getServes().equals("serves"));
+    assertTrue(recipe.getUrl().equals("url"));
+
     tearDown();
   }
 }
