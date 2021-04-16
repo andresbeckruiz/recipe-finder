@@ -13,17 +13,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public final class Database {
-  private Database() { }
+  private Database() {
+  }
+
   private static Connection conn;
 
   public static Connection getConn() {
     return conn;
   }
+
+  public static void closeConn() throws SQLException {
+    conn.close();
+  }
   /**
    * Initializes connection to database.
+   *
    * @param filename From which to retrieve data
    * @throws ClassNotFoundException thrown if org.sqlite.JDBC is not found
-   * @throws SQLException when querying and encounters an unexptected error
+   * @throws SQLException           when querying and encounters an unexptected error
    */
   public static void initialize(String filename) throws ClassNotFoundException, SQLException {
     Class.forName("org.sqlite.JDBC");
@@ -174,6 +181,7 @@ public final class Database {
       return null;
     }
   }
+
   public static void addToRecipeDatabase(ArrayList<String> params)
           throws SQLException {
     try {

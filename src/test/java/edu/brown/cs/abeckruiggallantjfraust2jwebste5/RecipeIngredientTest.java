@@ -60,9 +60,11 @@ public class RecipeIngredientTest {
     testUser = null;
     try {
       deleteUser("test@gmail.com");
+      closeConn();
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
+
   }
 
   /**
