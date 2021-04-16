@@ -55,7 +55,7 @@ function List(props) {
                 <div style={{marginTop: 25}}>
                 {Array.from(Object.keys(list)).map(r =>
 
-                   <div className="ingredient">
+                   <div key={r} className="ingredient">
 
                        <p style={{textAlign: "center", cursor: "pointer"}} onClick={() =>{
                         props.setModalIsOpen(true);
@@ -67,14 +67,14 @@ function List(props) {
                            name="ingredient-rating"
                            precision={0.5}
                            size={"small"}
-                           // onChange={(event, newValue) => {
-                           //     let test = list;
-                           //     test[r] = newValue;
-                           //     setList(test);
-                           //     props.ingredientRater(r, newValue);
-                           // }}
+                           onChange={(event, newValue) => {
+                               let test = list;
+                               test[r] = newValue;
+                               setList(test);
+                               props.ingredientRater(r, newValue);
+                           }}
                            readOnly
-                           value={list[r]}
+                           value={parseFloat(list[r])}
                        />
                    </div>
                 )}
