@@ -85,7 +85,6 @@ public class UserSearchTest {
     try {
       this.testUser.addIngredientRating("tomato", 3.0);
       this.testUser.removeIngredient("tomato");
-      //this.testUser.removeIngredient("spinach");
     } catch(SQLException e){
       System.out.println(e.getMessage());
     }

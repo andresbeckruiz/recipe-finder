@@ -38,7 +38,6 @@ public final class UserDatabase {
 
   public static void addUserToDatabase(String name, String email) throws SQLException {
     if (conn != null) {
-      System.out.println("ADDING");
       PreparedStatement prep;
       prep = conn.prepareStatement(
               "INSERT INTO users VALUES (?,?,?,?,?);");
@@ -272,7 +271,6 @@ public final class UserDatabase {
 
   public static void deleteUser(String email) throws SQLException {
     if (conn != null) {
-      System.out.println("asdfkashdfk;afhsd");
       PreparedStatement prep;
       prep = conn.prepareStatement(
               "DELETE FROM users WHERE email = ?;");

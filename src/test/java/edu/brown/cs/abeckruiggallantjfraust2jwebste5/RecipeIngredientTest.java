@@ -109,6 +109,18 @@ public class RecipeIngredientTest {
 
     Recipe recipe = new Recipe(params, this.testUser);
     assertTrue(recipe.getChef().equals("chef"));
+
+
+    assertTrue(recipe.getSimilarityScore() == 0.0);
+    assertTrue(recipe.getIngredients() != null);
+    assertTrue(recipe.getChef().equals("chef"));
+    assertTrue(recipe.getInstructions() != null);
+    assertTrue(recipe.getCookingTime().equals("cookingTime"));
+    assertTrue(recipe.getPrepTime().equals("prepTime"));
+    assertTrue(recipe.getPhotourl().equals("photourl"));
+    assertTrue(recipe.getServes().equals("serves"));
+    assertTrue(recipe.getUrl().equals("url"));
+
     tearDown();
   }
 }
