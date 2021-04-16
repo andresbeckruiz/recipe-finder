@@ -92,7 +92,6 @@ function Recipe(props) {
      * Makes an axios request for rating the recipe
      */
     const rateRecipe = (rating, event) => {
-        console.log("hey")
         const toSend = {
             rating: rating,
             recipe: name

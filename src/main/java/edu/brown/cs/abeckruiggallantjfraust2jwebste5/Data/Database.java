@@ -404,6 +404,7 @@ public final class Database {
       currentRatings = recipe + ":" + rating.toString();
     }
 
+
     //ToDO: update current ratings string and entry in table
     try {
       if (conn != null) {
