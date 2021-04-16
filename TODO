@@ -38,8 +38,12 @@ Test:
 
 TODO bugs:
 
-1) the trim function is preventing valid ingredients with two words from being found. ?? (example?)
+1) the trim function is preventing valid ingredients with two words from being found.
+ eg: almond extract (autocorrect parser problem)
 
 2) (for andres to handle) get list of suggestions to dissappear when textbox is empty
 
 3) not urgent, but submit button placement jumps around depending on suggestions
+
+4) if user is logged in, and you do npm start and ./run -gui (after not having run in a
+while), fridge wont show; not sure how big a deal this is

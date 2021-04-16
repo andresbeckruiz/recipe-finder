@@ -25,7 +25,7 @@ function TextBox(props) {
             <label style={labelStyle}>{props.label}</label>
             <br/>
             <input value={props.val} style={{fontSize:24}} className="inputBox" type={"text"}
-                   onChange={value} id={"inputBox"}></input>
+                   onChange={value} id={"inputBox"} autoComplete={"off"}></input>
         </div>
     );
 }

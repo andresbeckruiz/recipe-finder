@@ -400,11 +400,17 @@ function Fridge() {
                              label={"Name of Ingredient"} setCurr={setCurrentToRate}/>
                     <h4 hidden={autocorrectLoading} className={"text-dark"}> Loading...</h4>
                     <ul aria-live={"polite"}>
-                        {suggestions.map(item => {
+                        {/*using nested conditional rendering; don't want suggestions if nothing has
+                        been typed, display text instead. if no suggestions, display text */}
+                        {input.length !== 0 ?
+                            [suggestions.length !== 0 || !autocorrectLoading ?
+                            suggestions.map(item => {
                             return (
-                                <ListItem item={item} setInput={setInput} input={input} setCurr={setCurrentToRate} curr={currentToRate} />
+                                <ListItem item={item} setInput={setInput} input={input}
+                                          setCurr={setCurrentToRate} curr={currentToRate} />
                             )
-                        })}
+                        }) : <h5> No ingredients found </h5>]
+                        : <h5>Start typing to see suggestions!</h5>}
                     </ul>
                     {/*original top number was 50*/}
                     <div id={"submit"} style={{position: "relative", top: 0, left: 150}}>
