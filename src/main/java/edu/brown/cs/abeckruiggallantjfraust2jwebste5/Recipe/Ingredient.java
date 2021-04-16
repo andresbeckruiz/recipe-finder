@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.DEFAULT_RATING;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.TOTAL_RATING;
 
 public class Ingredient implements Vertex<Recipe> {
   private String name;

@@ -15,6 +15,7 @@ import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperpar
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.NUM_RECOMMENDATIONS;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.RecipeFinder.findRecipesWithIngredients;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.*;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.*;
 
 public class User {
   private HashSet<String> ingredients;
@@ -29,6 +30,8 @@ public class User {
     recipeGraph = new Graph();
     recipeRatings = userRecipeRatings(name);
     ingredientRatings = userIngredientRatings(name);
+    System.out.println("hello");
+    System.out.println(recipeRatings);
   }
 
   public HashMap<String, Double> getIngredientRatings() {
