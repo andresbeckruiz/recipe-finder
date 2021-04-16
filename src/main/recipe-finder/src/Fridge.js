@@ -73,9 +73,7 @@ function Fridge() {
                     ratings[key] = ingredientRatings[key];
                 }
                 ratings[curr] = curRating;
-
                 setIngredientRatings(ratings);
-                console.log(response.data)
             })
 
             .catch(function (error) {
@@ -90,7 +88,6 @@ function Fridge() {
         if (curr == undefined) {
             curr = event.target.getAttribute("name")
         }
-        console.log(curr)
         const toSend = {
             ingredient: curr,
             rating: rating
