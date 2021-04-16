@@ -346,7 +346,7 @@ function Fridge() {
             </Link>
             {/*two panes for lists and input*/}
 
-            <List x={200} width={250} label={"Current Ingredients"} ingredients={ingredients} ingredientRater={rateIngredient} setter={setIngredients}
+            <List x={200} width={350} label={"Current Ingredients"} ingredients={ingredients} ingredientRater={rateIngredient} setter={setIngredients}
              setModalIsOpen={setModalIsOpen} deleteCurr={deleteIngredient} setDeleteCurr={setDeleteIngredient}
             setCurrent={setCurrent} list={list}/>
 
@@ -395,9 +395,11 @@ function Fridge() {
             </Modal>
 
             <div>
-            <List x={600} width={800} label={"Add an Ingredient"} ingredients={[]}>
+            <List x={700} width={700} label={"Add an Ingredient"} ingredients={[]}>
                 {/*original top number was 225*/}
                 <div style={{position: "relative", top: 100, left: 0, right:0}}>
+                    <br/>
+                    <br/>
                     <TextBox val={input} input={setInput} onKeyUp={createSuggestions}
                              label={"Name of Ingredient"} setCurr={setCurrentToRate}/>
                     <h4 hidden={autocorrectLoading} className={"text-dark"}> Loading...</h4>
@@ -415,7 +417,7 @@ function Fridge() {
                         : <h5>Start typing to see suggestions!</h5>}
                     </ul>
                     {/*original top number was 50*/}
-                    <div id={"submit"} style={{position: "absolute", top: 225, left: 125}}>
+                    <div id={"submit"} style={{position: "absolute", top: 260, left: 125}}>
                         {/*submission button*/}
                         <SubmitButton label={"Submit"} onClick={checkValidIngredient}/>
                         {/*this is for setting an error notification if ingredient is invalid*/}
