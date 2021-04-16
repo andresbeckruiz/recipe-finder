@@ -88,7 +88,7 @@ public class RecipeIngredientTest {
   public void testRecipe() {
     this.setUp();
     ArrayList<String> params = new ArrayList<String>();
-    params.add("recipeName");
+    params.add("spinach mash");
     params.add("description");
     params.add("tomato");
     params.add("detailed");
@@ -103,8 +103,6 @@ public class RecipeIngredientTest {
 
     Recipe recipe = new Recipe(params, this.testUser);
     assertTrue(recipe.getChef().equals("chef"));
-
-
     assertTrue(recipe.getSimilarityScore() == 0.0);
     assertTrue(recipe.getIngredients() != null);
     assertTrue(recipe.getChef().equals("chef"));

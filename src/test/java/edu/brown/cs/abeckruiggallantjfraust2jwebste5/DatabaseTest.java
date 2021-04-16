@@ -88,7 +88,7 @@ public class DatabaseTest {
     assertTrue(recipe.getInstructions() != null);
     assertTrue(recipe.getCookingTime().equals("10"));
     assertTrue(recipe.getPrepTime().equals("30"));
-    assertTrue(recipe.getPhotourl() == null);
+    assertTrue(recipe.getPhotourl() != null);
     assertTrue(recipe.getServes().equals("1"));
     assertTrue(recipe.getUrl().equals("http://bbc.co.uk/food/recipes/cheeseandspinachmash_90409"));
     this.tearDown();
