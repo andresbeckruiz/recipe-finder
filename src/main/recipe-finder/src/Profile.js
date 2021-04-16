@@ -4,6 +4,7 @@ import React, {useEffect, useState} from "react";
 import {useAuth} from "./contexts/AuthContext";
 import axios from "axios";
 import Rating from "@material-ui/lab/Rating";
+import Modal from "react-bootstrap/Modal";
 
 function Profile() {
 
@@ -16,6 +17,16 @@ function Profile() {
     const [ratedRecipes, setRatedRecipes] = useState([]);
     const [ratedIngredients, setRatedIngredients] = useState([]);
     const [loading, setLoading] = useState(false)
+
+    // useState variables for deletion modal
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+
+
+    // handlers for modals
+    const handleClose = () => setModalIsOpen(false);
+    const handleCloseDelete = () => {
+        handleDelete();
+    };
 
 
     // Axios Requests
@@ -130,6 +141,23 @@ function Profile() {
 
     return (
         <div>
+
+            {/*Modal for user account deletion*/}
+            <Modal show={modalIsOpen} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Delete ingredient?</Modal.Title>
+                </Modal.Header>
+                <Modal.Body> <b>WARNING: Your account will be permanently deleted.</b> </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="light" onClick={handleClose}>
+                        Cancel
+                    </Button>
+                    <Button variant="danger" onClick={handleCloseDelete}>
+                        Delete
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
             <Link to={"/fridge"}>
                 <Button variant="success" size= "lg" style={{position: "absolute", left: 50, top: 25}}>Back to Fridge</Button>
             </Link>
@@ -149,7 +177,9 @@ function Profile() {
                 <Button variant={"link"} onClick={handleLogout}> Log Out</Button>
             </div>
             <div className={"w-100 text-center mt-2"}>
-                <Button variant={"danger"} onClick={handleDelete} disabled={loading}> Delete Account</Button>
+                <Button variant={"danger"} onClick={() => {
+                    setModalIsOpen(true);
+                }} disabled={loading}> Delete Account</Button>
             </div>
             <br/>
             <Card>

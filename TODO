@@ -9,7 +9,6 @@ Back end (Georgia + Jack)
 Front end:
 - commenting (Andres, Jacob) (this weekend)
 - profile page
-    - delete account modal (Jacob)
     -update name? (Andres) (this weekend)
 -email confirmation (Andres) (tonight, if not this weekend)
 
@@ -23,5 +22,3 @@ TODO bugs:
 
 2) if user is logged in, and you do npm start and ./run -gui (after not having run in a
 while), fridge wont show; not sure how big a deal this is
-
-3) rating ingredients bug (Georgia, Jacob)

@@ -31,13 +31,13 @@ import freemarker.template.Configuration;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.DEFAULT_RATING;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.JsonFormatter.ratingMapToJson;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.addUserToDatabase;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.deleteUser;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getName;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.addUserToDatabase;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.deleteUser;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.getName;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getRecipeObject;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserIngredientRatings;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserInventory;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserRecipeRatings;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.getUserIngredientRatings;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.getUserInventory;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.getUserRecipeRatings;
 //import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.JsonToSql.parseJson;
 
 /**
@@ -215,8 +215,11 @@ public final class Main {
       Gson gson = new Gson();
       JSONObject data = new JSONObject(request.body());
       String currentRecipeName = data.getString("recipe");
-      // ToDo: create method to get all info about "CurrentRecipeName"
       Recipe curRecipe = getRecipeObject(currentRecipeName, recipeApp.getCurUser());
+
+      //get current recipe rating
+      String email = data.getString("user");
+      String ratings = getUserRecipeRatings(email);
 
       //set ingredients to parsed string
       curRecipe.setInstructions(curRecipe.getInstructions().replaceAll("[\\[\\]()\\//{}\"]",
@@ -230,7 +233,8 @@ public final class Main {
       }
       Map<String, Object> variables = ImmutableMap.of("recipe",
               curRecipe.toBigMap(), "similar1", similarRecipes.get(0),
-              "similar2", similarRecipes.get(1), "similar3", similarRecipes.get(2));
+              "similar2", similarRecipes.get(1), "similar3", similarRecipes.get(2),
+              "rating", ratings);
       String json = GSON.toJson(variables);
       return json;
     }
