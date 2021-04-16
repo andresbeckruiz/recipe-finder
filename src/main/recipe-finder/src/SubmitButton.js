@@ -1,13 +1,14 @@
-import { AwesomeButton } from "react-awesome-button";
-import "react-awesome-button/dist/styles.css";
+import Button from 'react-bootstrap/Button';
+import React from "react";
+
 
 function SubmitButton(props) {
 
-    return <AwesomeButton className={"submit"} type="primary" size={"medium"} onPress= {
+    return <Button variant="success" size= "lg" onClick={
         // click
         props.onClick
 
-    }>{props.label}!</AwesomeButton>;
+    }>{props.label}!</Button>;
 }
 
 export default SubmitButton;

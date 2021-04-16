@@ -40,7 +40,6 @@ public class Autocorrector {
   private static List<String> parseCorpus(String files) {
     List<String> fileNames = new ArrayList<String>(Arrays.asList(files.split(",")));;
     List<String> words = new ArrayList<String>();
-
     for (String file : fileNames) {
       Scanner in = null;
       try {
@@ -50,13 +49,8 @@ public class Autocorrector {
         continue;
       }
       while (in.hasNextLine()) {
-        // Regex to make file consistent.
-        String nextLine = in.nextLine().toLowerCase().replaceAll("[^a-z ]", " ");
-        Scanner lineReader = new Scanner(nextLine);
-        while (lineReader.hasNext()) {
-          words.add(lineReader.next());
-        }
-        lineReader.close();
+        String nextLine = in.nextLine();
+        words.add(nextLine);
       }
       in.close();
     }

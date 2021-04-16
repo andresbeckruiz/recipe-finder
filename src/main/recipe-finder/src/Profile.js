@@ -4,6 +4,7 @@ import React, {useEffect, useState} from "react";
 import {useAuth} from "./contexts/AuthContext";
 import axios from "axios";
 import Rating from "@material-ui/lab/Rating";
+import Modal from "react-bootstrap/Modal";
 
 function Profile() {
 
@@ -17,8 +18,90 @@ function Profile() {
     const [ratedIngredients, setRatedIngredients] = useState([]);
     const [loading, setLoading] = useState(false)
 
+    // useState variables for deletion modal
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+
+
+    // handlers for modals
+    const handleClose = () => setModalIsOpen(false);
+    const handleCloseDelete = () => {
+        handleDelete();
+    };
+
 
     // Axios Requests
+    const rateIngredient = (rating, event) => {
+        let curr = event.target.getAttribute("name")
+        const toSend = {
+            ingredient: curr,
+            rating: rating
+        };
+
+        let config = {
+            headers: {
+                "Content-Type": "application/json",
+                'Access-Control-Allow-Origin': '*',
+            }
+        }
+
+        axios.post(
+            "http://localhost:4567/rate-ingredient",
+            toSend,
+            config
+        )
+            .then(response => {
+                let ratings = {}
+                for (var key in ratedIngredients) {
+                    ratings[key] = ratedIngredients[key];
+                }
+                ratings[curr] = rating;
+
+                setRatedIngredients(ratings);
+                //nothing
+            })
+
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+    /*
+        * Makes an axios request for rating the recipe
+        */
+    const rateRecipe = (rating, event) => {
+        let curr = event.target.getAttribute("name")
+
+        const toSend = {
+            rating: rating,
+            recipe: curr
+        };
+
+        let config = {
+            headers: {
+                "Content-Type": "application/json",
+                'Access-Control-Allow-Origin': '*',
+            }
+        }
+
+        axios.post(
+            "http://localhost:4567/rate-recipe",
+            toSend,
+            config
+        )
+            .then(response => {
+                let ratings = {}
+                for (var key in ratedRecipes) {
+                    console.log(key)
+                    ratings[key] = ratedRecipes[key];
+                }
+                ratings[curr] = rating;
+                setRatedRecipes(ratings);
+            })
+
+            .catch(function (error) {
+                console.log("ERRORRR")
+                console.log(error);
+            });
+    }
 
     /*
      * Makes an axios request for user info
@@ -130,6 +213,23 @@ function Profile() {
 
     return (
         <div>
+
+            {/*Modal for user account deletion*/}
+            <Modal show={modalIsOpen} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Delete ingredient?</Modal.Title>
+                </Modal.Header>
+                <Modal.Body> <b>WARNING: Your account will be permanently deleted.</b> </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="light" onClick={handleClose}>
+                        Cancel
+                    </Button>
+                    <Button variant="danger" onClick={handleCloseDelete}>
+                        Delete
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
             <Link to={"/fridge"}>
                 <Button variant="success" size= "lg" style={{position: "absolute", left: 50, top: 25}}>Back to Fridge</Button>
             </Link>
@@ -149,7 +249,9 @@ function Profile() {
                 <Button variant={"link"} onClick={handleLogout}> Log Out</Button>
             </div>
             <div className={"w-100 text-center mt-2"}>
-                <Button variant={"danger"} onClick={handleDelete} disabled={loading}> Delete Account</Button>
+                <Button variant={"danger"} onClick={() => {
+                    setModalIsOpen(true);
+                }} disabled={loading}> Delete Account</Button>
             </div>
             <br/>
             <Card>
@@ -159,16 +261,12 @@ function Profile() {
                         <div>
                             <p>{r}</p>
                             <Rating
-                                name="recipe-prof-rating"
+                                name={r}
                                 precision={0.5}
                                 size={"small"}
-                                // onChange={(event, newValue) => {
-                                //     let test = list;
-                                //     test[r] = newValue;
-                                //     setList(test);
-                                //     props.ingredientRater(r, newValue);
-                                // }}
-                                readOnly
+                                onChange={(event, newValue) => {
+                                    rateRecipe(newValue, event);
+                                }}
                                 value={checkIfMap(ratedRecipes, r)}
                             />
                         </div>
@@ -183,17 +281,13 @@ function Profile() {
                         <div className="ingredient">
                             <p>{r}</p>
                             <Rating
-                            name="ingredient-prof-rating"
-                            precision={0.5}
-                            size={"small"}
-                            // onChange={(event, newValue) => {
-                            //     let test = list;
-                            //     test[r] = newValue;
-                            //     setList(test);
-                            //     props.ingredientRater(r, newValue);
-                            // }}
-                            readOnly
-                            value={checkIfMap(ratedIngredients, r)}
+                                name={r}
+                                precision={0.5}
+                                size={"small"}
+                                onChange={(event, newValue) => {
+                                    rateIngredient(newValue, event);
+                                }}
+                                value={checkIfMap(ratedIngredients, r)}
                             />
                         </div>
                     )}

@@ -5,6 +5,7 @@ import Rating from '@material-ui/lab/Rating';
 import {Link} from "react-router-dom";
 import axios from "axios";
 import Loader from 'react-loader-spinner';
+import {useAuth} from "./contexts/AuthContext";
 
 function Recipe(props) {
 
@@ -25,6 +26,8 @@ function Recipe(props) {
     const [photos, setPhotos] = useState([]);
     const [url, setUrl] = useState("");
 
+    const {currentUser, logout} = useAuth()
+
 
     // Axios Requests
 
@@ -34,7 +37,8 @@ function Recipe(props) {
     const findSimilar = (name, event) => {
 
         const toSend = {
-            recipe: name
+            recipe: name,
+            user: currentUser.email
         };
 
         let config = {
@@ -50,12 +54,12 @@ function Recipe(props) {
             config
         )
             .then(response => {
-                console.log(response.data)
                 let object = response.data;
                 let labels = [];
                 let pics = [];
 
-                //TODO: ADD THE REST PASSED IN
+                setValue(2.5);
+
 
                 //set up suggestions!
                 for (let key in object) {
@@ -81,6 +85,22 @@ function Recipe(props) {
                 setSimilarLabels(labels);
                 setPhotos(pics);
                 setLoading(false);
+
+
+                //set currentRating
+                let ratings = response.data["rating"].split(",");
+                let listRatings = [];
+                for (let i of ratings){
+                    listRatings.push(i.split(":"));
+                }
+                let match = name.replace(/\b\w/g, l => l.toUpperCase());
+                for(let i of listRatings){
+                    if (i[0] === match){
+                        setValue(parseInt(i[1]));
+                    }
+                }
+
+                console.log(listRatings);
             })
 
             .catch(function (error) {
@@ -92,7 +112,6 @@ function Recipe(props) {
      * Makes an axios request for rating the recipe
      */
     const rateRecipe = (rating, event) => {
-        console.log("hey")
         const toSend = {
             rating: rating,
             recipe: name
@@ -143,11 +162,8 @@ function Recipe(props) {
 
     //useEffect hook for initial render
     useEffect(() => {
-        //set up recipe and similar recipes
-        //setName(props.location.state.name);
         setLoading(true);
          findSimilar(props.location.state.name);
-        //get initial rating
     }, [])
 
 

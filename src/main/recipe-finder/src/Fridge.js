@@ -1,4 +1,3 @@
-import List from "./List";
 import React, {useState, useEffect} from 'react';
 import axios from "axios";
 import TextBox from "./TextBox";
@@ -12,8 +11,8 @@ import Rating from "@material-ui/lab/Rating";
 import ListItem from "./ListItem";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-let ingredientRatings = {};
+import './Fridge.css'
+let current;
 
 function Fridge() {
 
@@ -29,7 +28,7 @@ function Fridge() {
     const [input, setInput] = useState("");
 
     // useState variable for ingredients list
-    const [ingredients, setIngredients] = useState(ingredientRatings);
+    const [ingredientRatings, setIngredientRatings] = useState({});
 
     // useState variables for deletion modal
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -42,9 +41,6 @@ function Fridge() {
     // useState hook for current ingredient to delete
     const [current, setCurrent] = useState("");
 
-    //fixes a bug with displaying ratings
-    const [list, setList] = useState([]);
-
 
     const [suggestions, setSuggestions] = useState([])
     const [autocorrectLoading, setAutocorrectLoading] = useState(true)
@@ -55,7 +51,6 @@ function Fridge() {
      */
     const addIngredient = (curr, event) => {
 
-        console.log(curr);
         const toSend = {
             ingredient: curr
         };
@@ -85,6 +80,10 @@ function Fridge() {
     * Makes an axios request for ingredient rating
     */
     const rateIngredient = (curr, rating, event) => {
+        if (curr == undefined) {
+            curr = event.target.getAttribute("name")
+        }
+        console.log(curr)
         const toSend = {
             ingredient: curr,
             rating: rating
@@ -103,9 +102,13 @@ function Fridge() {
             config
         )
             .then(response => {
-                ingredientRatings[currentToRate] = rating;
-                setIngredients(ingredientRatings);
-                setList(Object.keys(ingredients))
+                let ratings = {}
+                for (var key in ingredientRatings) {
+                    ratings[key] = ingredientRatings[key];
+                }
+                ratings[curr] = rating;
+
+                setIngredientRatings(ratings);
                 //nothing
             })
 
@@ -197,25 +200,60 @@ function Fridge() {
         deleteIngredientRequest(current.trim());
     };
 
-    // function for submit button
+    //function for submit button
     const onSubmit = (text) => {
         //don't want to submit anything if the ingredient isn't valid
 
         //open modal if need be
         if (!ingredientRatings.hasOwnProperty(currentToRate)) {
+            setRatingIsOpen(true);
+            //axios request
+            addIngredient(text);
+
             if (input !== "") {
                 //clear from this scope and from input box
                 document.getElementById("inputBox").value = "";
                 setInput("");
             }
-
-            //axios request
-            addIngredient(text);
-            setRatingIsOpen(true);
         }
+
     }
 
-    //set global for listener
+    const style = {
+        backgroundColor: "#2776ED",
+        height: 600,
+        width: 250,
+        position: "absolute",
+        top: 150,
+        left: 200
+    }
+
+    const innerStyle = {
+        height: 590,
+        width: 250,
+        position: "absolute",
+        bottom: 10,
+        overflow: "auto"
+    }
+
+    function deleteCurrent() {
+        let ratings = {}
+        for (var key in ingredientRatings) {
+            ratings[key] = ingredientRatings[key]
+        }
+
+        delete ratings[this.current];
+        setIngredientRatings(ratings);
+        setDeleteIngredient(false);
+    }
+
+    useEffect(() => {
+        if(deleteIngredient) {
+            deleteCurrent();
+        }
+    }, [deleteIngredient])
+
+   // set global for listener
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
@@ -281,10 +319,12 @@ function Fridge() {
             config
         )
             .then(response => {
-                let inventory = response.data["inventory"]
-                ingredientRatings = inventory;
-                setIngredients(ingredientRatings);
-            })
+                        let inventory = response.data["inventory"]
+                        for (var ingredient in ingredientRatings) {
+                            inventory[ingredient] = ingredientRatings[ingredient]
+                        }
+                        setIngredientRatings(inventory)
+                    })
 
             .catch(function (error) {
                 console.log(error);
@@ -321,7 +361,6 @@ function Fridge() {
 
     //populates fridge with user inventory when page loads and gets user name
     useEffect(() => {
-        ingredientRatings = {}
         getName(currentUser.email)
         getUserInventory(currentUser.email)
     },[]);
@@ -338,13 +377,38 @@ function Fridge() {
             </Link>
             <Button onClick={handleLogout} variant="danger" size= "lg" style={{position: "absolute", right: 50, top: 25}}>Logout</Button>
             <Link to={"/profile"}>
-            <Button variant="primary" size= "lg" style={{position: "absolute", right: 50, top: 80}}>Profile</Button>
+            <Button variant="primary" size= "sm" style={{position: "absolute", right: 50, top: 80}}>Profile</Button>
             </Link>
             {/*two panes for lists and input*/}
 
-            <List x={200} width={250} label={"Current Ingredients"} ingredients={ingredients} ingredientRater={rateIngredient} setter={setIngredients}
-             setModalIsOpen={setModalIsOpen} deleteCurr={deleteIngredient} setDeleteCurr={setDeleteIngredient}
-            setCurrent={setCurrent} list={list}/>
+
+
+            <div style={style} className="List">
+                <h4 style={{position: "absolute", top: -40}}>Current Ingredients</h4>
+                <div style={innerStyle} className="List">
+
+                    <div style={{marginTop: 25}}>
+                        {Array.from(Object.keys(ingredientRatings)).map(r =>
+                            <div key={r} className="ingredient">
+                                <p style={{textAlign: "center", cursor: "pointer"}} onClick={() =>{
+                                    setModalIsOpen(true);
+                                    setCurrent(r);
+                                    this.current = r;
+                                }
+                                }>{r}</p>
+                                <Rating
+                                    name={r}
+                                    precision={0.5}
+                                    size={"small"}
+                                    onChange={(event, newValue) => {
+                                        rateIngredient(r, newValue, event);
+                                    }}
+                                    value={parseFloat(ingredientRatings[r])}
+                                />
+                            </div>
+                        )}
+                    </div>
+                </div>
 
             {/*Modal for deletion*/}
             <Modal show={modalIsOpen} onHide={handleClose}>
@@ -389,11 +453,13 @@ function Fridge() {
                     </Button>
                 </Modal.Footer>
             </Modal>
-
+            </div>
             <div>
-            <List x={600} width={800} label={"Add an Ingredient"} ingredients={[]}>
-                {/*original top number was 225*/}
-                <div style={{position: "relative", top: 100, left: 0, right:0}}>
+                <div className="searchBox">
+                    <h4 style={{position: "absolute", top: -40, left: 205}}>Add an Ingredient</h4>
+
+                    {/*original top number was 225*/}
+                <div style={{position: "relative", top: 150, left: 100, right:0}}>
                     <TextBox val={input} input={setInput} onKeyUp={createSuggestions}
                              label={"Name of Ingredient"} setCurr={setCurrentToRate}/>
                     <h4 hidden={autocorrectLoading} className={"text-dark"}> Loading...</h4>
@@ -411,14 +477,14 @@ function Fridge() {
                         : <h5>Start typing to see suggestions!</h5>}
                     </ul>
                     {/*original top number was 50*/}
-                    <div id={"submit"} style={{position: "absolute", top: 225, left: 125}}>
+                    <div id={"submit"} style={{position: "absolute", top: 225, left: 140}}>
                         {/*submission button*/}
                         <SubmitButton label={"Submit"} onClick={checkValidIngredient}/>
                         {/*this is for setting an error notification if ingredient is invalid*/}
                         <ToastContainer/>
                     </div>
                 </div>
-            </List>
+            </div>
             {/*textbox for input*/}
             </div>
         </div>

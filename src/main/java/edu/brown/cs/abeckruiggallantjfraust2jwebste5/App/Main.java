@@ -71,7 +71,7 @@ public final class Main {
    * to take in user input.
    */
   private void run() {
-    ac = new Autocorrector("data/ingredients.txt", true, true, 1);
+    ac = new Autocorrector("data/ingredients.txt", true, false, 1);
     // Parse command line arguments
     OptionParser parser = new OptionParser();
     parser.accepts("gui");
@@ -170,7 +170,6 @@ public final class Main {
   private class RateIngredientHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-      System.out.println("rating ingredient");
       JSONObject data = new JSONObject(request.body());
       String ingredientName = data.getString("ingredient");
       Double ingredientRating = data.getDouble("rating");
@@ -215,8 +214,11 @@ public final class Main {
       Gson gson = new Gson();
       JSONObject data = new JSONObject(request.body());
       String currentRecipeName = data.getString("recipe");
-      // ToDo: create method to get all info about "CurrentRecipeName"
       Recipe curRecipe = getRecipeObject(currentRecipeName, recipeApp.getCurUser());
+
+      //get current recipe rating
+      String email = data.getString("user");
+      String ratings = getUserRecipeRatings(email);
 
       //set ingredients to parsed string
       curRecipe.setInstructions(curRecipe.getInstructions().replaceAll("[\\[\\]()\\//{}\"]",
@@ -230,7 +232,8 @@ public final class Main {
       }
       Map<String, Object> variables = ImmutableMap.of("recipe",
               curRecipe.toBigMap(), "similar1", similarRecipes.get(0),
-              "similar2", similarRecipes.get(1), "similar3", similarRecipes.get(2));
+              "similar2", similarRecipes.get(1), "similar3", similarRecipes.get(2),
+              "rating", ratings);
       String json = GSON.toJson(variables);
       return json;
     }
@@ -367,7 +370,6 @@ public final class Main {
   private class GetProfileInfo implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-      System.out.println("profile");
       JSONObject data = new JSONObject(request.body());
       String email = data.getString("name");
       try {
@@ -375,6 +377,7 @@ public final class Main {
         String recipes = getUserRecipeRatings(email);
         String ingredients = getUserIngredientRatings(email);
         Map<String, String> recipeRating = ratingMapToJson(recipes);
+
         Map<String, String> ingredientRating = ratingMapToJson(ingredients);
         Map<String, Object> map = ImmutableMap.of("name", name, "recipes",
                 recipeRating, "ingredients", ingredientRating);

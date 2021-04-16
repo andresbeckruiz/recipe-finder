@@ -230,6 +230,7 @@ public class UserDatabase {
     return "";
   }
 
+
   public static String getUserInventory(String user) throws SQLException {
     if (conn != null) {
       PreparedStatement prep;
