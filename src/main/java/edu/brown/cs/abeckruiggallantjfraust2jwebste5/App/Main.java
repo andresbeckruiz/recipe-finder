@@ -31,13 +31,13 @@ import freemarker.template.Configuration;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.DEFAULT_RATING;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.JsonFormatter.ratingMapToJson;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.addUserToDatabase;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.deleteUser;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getName;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.addUserToDatabase;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.deleteUser;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.getName;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getRecipeObject;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserIngredientRatings;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserInventory;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getUserRecipeRatings;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.getUserIngredientRatings;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.getUserInventory;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.getUserRecipeRatings;
 //import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.JsonToSql.parseJson;
 
 /**

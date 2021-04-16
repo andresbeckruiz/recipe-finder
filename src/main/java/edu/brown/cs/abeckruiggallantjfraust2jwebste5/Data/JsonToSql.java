@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.createIngredientDatabase;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.createRecipeDatabase;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.createUserDatabase;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.createUserDatabase;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.initialize;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.addToRecipeDatabase;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.addIngredient;
