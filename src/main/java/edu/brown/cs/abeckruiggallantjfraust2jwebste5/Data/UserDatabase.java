@@ -55,13 +55,12 @@ public final class UserDatabase {
     String firstValue = "";
     if (currentInventory.lastIndexOf(",") != -1) {
       // if ingredient is at end
-      lastValue = currentInventory.substring(currentInventory.lastIndexOf(","));
+      lastValue = currentInventory.substring(currentInventory.lastIndexOf(",") + 1);
     }
     if (currentInventory.indexOf(",") != -1) {
       // if ingredient is at beginning
       firstValue = currentInventory.substring(0, currentInventory.indexOf(","));
     }
-
     if (!(currentInventory.contains("," + ingredient + ","))
             && !lastValue.equals(ingredient)
             && !firstValue.equals(ingredient)) {
@@ -89,21 +88,20 @@ public final class UserDatabase {
   public static void removeUserIngredient(String user, String ingredient) throws SQLException {
     String currentInventory = getUserInventory(user);
     // if ingredient is in middle
-    currentInventory = currentInventory.replace("," + ingredient + ",", ",");
-
-    // if ingredient is at end
-    String lastValue = currentInventory.substring(currentInventory.lastIndexOf(","));
-    if (lastValue.equals(ingredient)) {
-      currentInventory = currentInventory.substring(0, currentInventory.lastIndexOf(","));
+    if (currentInventory.contains("," + ingredient + ",")) {
+      currentInventory = currentInventory.replace("," + ingredient + ",", ",");
+      System.out.println("middle");
+    } else {
+      // last ingredient
+      String lastValue = currentInventory.substring(currentInventory.lastIndexOf(",") + 1);
+      // first ingredient
+      String firstValue = currentInventory.substring(0, currentInventory.indexOf(","));
+      if (lastValue.equals(ingredient)) {
+        currentInventory = currentInventory.substring(0, currentInventory.lastIndexOf(","));
+      } else if (firstValue.equals(ingredient)) {
+        currentInventory = currentInventory.substring(currentInventory.indexOf(","));
+      }
     }
-
-    // if ingredient is at beginning
-    String firstValue = currentInventory.substring(0, currentInventory.indexOf(","));
-    if (firstValue.equals(ingredient)) {
-      currentInventory = currentInventory.substring(currentInventory.indexOf(","));
-    }
-
-    currentInventory = currentInventory.replace(ingredient, "");
 
     if (currentInventory.startsWith(",")) {
       currentInventory = currentInventory.substring(1);

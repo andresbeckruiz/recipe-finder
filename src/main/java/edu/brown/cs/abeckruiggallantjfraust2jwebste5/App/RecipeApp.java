@@ -9,13 +9,11 @@ import java.sql.SQLException;
 public class RecipeApp {
   private User curUser = null;
 
-  @SuppressWarnings("checkstyle:TodoComment")
   public RecipeApp() {
-    //TODO: fix try catch!
     try {
       initialize("data/newdb.sqlite3");
       initializeConn(Database.getConn());
-    } catch (SQLException e) {
+    } catch (SQLException ClassNotFoundException) {
       System.out.println("ERROR");
     } catch (ClassNotFoundException e) {
       System.out.println("ERROR");

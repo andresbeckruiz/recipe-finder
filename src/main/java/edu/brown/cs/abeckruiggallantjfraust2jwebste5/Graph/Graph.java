@@ -1,11 +1,12 @@
 package edu.brown.cs.abeckruiggallantjfraust2jwebste5.Graph;
-import edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.VertexComparator;
 
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.VertexComparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeMap;
 
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.*;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.SIMILARITY_WEIGHT;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.SCORE_WEIGHT;
 
 public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex> {
 
@@ -18,6 +19,7 @@ public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex
   public HashMap<String, nonCentralVertex> getNonCentralNodes() {
     return nonCentralNodeMap;
   }
+
   public HashMap<String, centralVertex> getCentralNodeMap() {
     return centralNodeMap;
   }
@@ -75,7 +77,8 @@ public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex
     setOne.retainAll(setTwo);
     int intersectionSize = setOne.size();
     int totalNumSharedAdjNodes = initialSetOneSize + setTwo.size();
-    return ((SCORE_WEIGHT)*(adjToAdj.getValue()) + ((SIMILARITY_WEIGHT)) * ((double) intersectionSize
+    return ((SCORE_WEIGHT) * (adjToAdj.getValue()) + ((SIMILARITY_WEIGHT))
+            * ((double) intersectionSize
             / (double) totalNumSharedAdjNodes));
   }
 }
