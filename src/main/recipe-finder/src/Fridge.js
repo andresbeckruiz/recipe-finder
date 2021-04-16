@@ -383,7 +383,7 @@ function Fridge() {
 
 
             <div style={style} className="List">
-                <h4 style={{position: "absolute", top: -40}}>Current Ingredients</h4>
+                <h4 style={{position: "absolute", top: -40}}>Your Fridge</h4>
                 <div style={innerStyle} className="List">
 
                     <div style={{marginTop: 25}}>

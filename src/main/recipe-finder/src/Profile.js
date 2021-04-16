@@ -245,14 +245,6 @@ function Profile() {
                     </Link>
                 </Card.Body>
             </Card>
-            <div className={"w-100 text-center mt-2"}>
-                <Button variant={"link"} onClick={handleLogout}> Log Out</Button>
-            </div>
-            <div className={"w-100 text-center mt-2"}>
-                <Button variant={"danger"} onClick={() => {
-                    setModalIsOpen(true);
-                }} disabled={loading}> Delete Account</Button>
-            </div>
             <br/>
             <Card>
                 <Card.Body>
@@ -293,6 +285,14 @@ function Profile() {
                     )}
                 </Card.Body>
             </Card>
+            <div className={"w-100 text-center mt-2"}>
+                <Button variant={"link"} onClick={handleLogout}> Log Out</Button>
+            </div>
+            <div className={"w-100 text-center mt-2"}>
+                <Button variant={"danger"} onClick={() => {
+                    setModalIsOpen(true);
+                }} disabled={loading}> Delete Account</Button>
+            </div>
         </div>
     );
 }
