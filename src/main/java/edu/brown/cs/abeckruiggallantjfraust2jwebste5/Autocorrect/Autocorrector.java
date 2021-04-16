@@ -82,19 +82,10 @@ public class Autocorrector {
         trieOutput.addAll(trie.findLedWithinRoot(acWord, led));
       }
     }
-
-    // Append suggestions to earlier part of phrase.
     List<String> trieOutputAsList = new ArrayList<String>(trieOutput);
     Set<String> suggestions = new TreeSet<String>();
-    if (query.indexOf(' ') != -1) {
-      String unchanged = query.substring(0, query.lastIndexOf(' '));
-      for (int i = 0; i < Math.min(5, trieOutputAsList.size()); i++) {
-        suggestions.add(unchanged + " " + trieOutputAsList.get(i));
-      }
-    } else {
-      for (int i = 0; i < Math.min(5, trieOutputAsList.size()); i++) {
-        suggestions.add(trieOutputAsList.get(i));
-      }
+    for (int i = 0; i < Math.min(5, trieOutputAsList.size()); i++) {
+      suggestions.add(trieOutputAsList.get(i));
     }
     return suggestions;
   }
