@@ -22,3 +22,5 @@ TODO bugs:
 
 2) if user is logged in, and you do npm start and ./run -gui (after not having run in a
 while), fridge wont show; not sure how big a deal this is
+
+3) Inventory string has additional commas if you add, remove, then add the same account.

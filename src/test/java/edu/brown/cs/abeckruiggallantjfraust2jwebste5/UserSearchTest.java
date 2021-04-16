@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 /**
  * MethodTesting of Ingredient and Recipe Classes
  */
-public class RecipeIngredientTest {
+public class UserSearchTest {
   private User testUser;
 
   /**
@@ -54,7 +54,6 @@ public class RecipeIngredientTest {
   /**
    * Clear variables for future tests.
    */
-  @After
   public void tearDown() {
     testUser = null;
     try {
@@ -65,47 +64,42 @@ public class RecipeIngredientTest {
   }
 
   /**
-   * Tests Methods of Ingredient Class
+   * Tests cook() method
    */
   @Test
-  public void testIngredient() {
+  public void searchTest() {
     this.setUp();
-    String name = "tomato";
-    Ingredient ingredient = new Ingredient(name, this.testUser);
-    HashMap<String, Recipe> recipesAlreadyAdded = new HashMap<>();
-    HashSet<Recipe> adjacentVertices = ingredient.getAdjacentVertices(recipesAlreadyAdded);
+    try {
+      this.testUser.addIngredient("tomato");
+      this.testUser.addIngredient("egg");
+      this.testUser.addIngredient("spinach");
+      this.testUser.addIngredientRating("tomato",3.0);
+      this.testUser.removeIngredient("egg");
+    } catch(SQLException e) {
+      System.out.println(e.getMessage());
+    }
+    ArrayList<Recipe> recipeSuggestions = this.testUser.cook();
+    assertTrue(recipeSuggestions.size() == 10);
 
-    assertTrue(ingredient.getName().equals("tomato"));
-    ingredient.setValue(5.0);
-    ingredient.setSimilarityScore(4.0);
-    assertTrue(ingredient.getValue() == 5.0);
-    assertTrue(ingredient.getSimilarityScore() == 4.0);
-    assertTrue(adjacentVertices.size() > 0);
-    tearDown();
-  }
+    try {
+      this.testUser.addIngredientRating("tomato",3.0);
+      this.testUser.removeIngredient("tomato");
+    } catch(SQLException e){
+      System.out.println(e.getMessage());
+    }
+    recipeSuggestions = this.testUser.cook();
+    assertTrue(recipeSuggestions.size() != 0);
 
-  /**
-   * Tests Methods of Ingredient Class
-   */
-  @Test
-  public void testRecipe() {
-    this.setUp();
-    ArrayList<String> params = new ArrayList<String>();
-    params.add("recipeName");
-    params.add("description");
-    params.add("tomato");
-    params.add("detailed");
-    params.add("chef");
-    params.add("instructions");
-    params.add("cookingTime");
-    params.add("prepTime");
-    params.add("photourl");
-    params.add("serves");
-    params.add("url");
-    params.add("owner");
-
-    Recipe recipe = new Recipe(params, this.testUser);
-    assertTrue(recipe.getChef().equals("chef"));
+    String s = "";
+    try {
+      this.testUser.addIngredientRating("tomato",3.0);
+      this.testUser.addIngredientRating("tomato",5.0);
+      s = getUserIngredientRatings("test@gmail.com");
+    } catch(SQLException e){
+      System.out.println(e.getMessage());
+    }
+    assertTrue(!(s.contains("tomato:3.0")));
+    assertTrue(s.contains("tomato:5.0"));
     tearDown();
   }
 }

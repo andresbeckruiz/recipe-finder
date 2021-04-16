@@ -7,14 +7,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserDatabase {
-
+public final class UserDatabase {
   private static Connection conn;
 
-  public UserDatabase(Connection conn) {
-    this.conn = conn;
+  private UserDatabase() {
   }
-
+  public static void initializeConn(Connection con) {
+    conn = con;
+  }
   public static void createUserDatabase() throws SQLException {
     try {
       PreparedStatement prep = conn.prepareStatement("DROP TABLE IF EXISTS users");
@@ -102,9 +102,12 @@ public class UserDatabase {
       currentInventory = currentInventory.substring(currentInventory.indexOf(","));
     }
 
+    currentInventory = currentInventory.replace(ingredient, "");
+
     if (currentInventory.startsWith(",")) {
       currentInventory = currentInventory.substring(1);
     }
+
     try {
       if (conn != null) {
         PreparedStatement prep;
