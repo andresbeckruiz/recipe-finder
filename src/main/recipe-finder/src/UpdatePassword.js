@@ -4,8 +4,7 @@ import {useAuth} from "./contexts/AuthContext";
 import {Link, useHistory} from "react-router-dom";
 
 export default function UpdatePassword() {
-    //const nameRef = useRef()
-    //const emailRef = useRef()
+    //authentication variables
     const passwordRef = useRef()
     const passwordConfirmRef = useRef()
     const {currentUser, updatePassword, updateEmail} = useAuth()
@@ -13,6 +12,7 @@ export default function UpdatePassword() {
     const [loading, setLoading] = useState(false)
     const history = useHistory()
 
+    //handles submission
     function handleSubmit(e) {
         e.preventDefault()
         if (passwordRef.current.value !== passwordConfirmRef.current.value) {

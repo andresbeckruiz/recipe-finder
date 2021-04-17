@@ -5,7 +5,6 @@ import {Link, useHistory} from "react-router-dom"
 import axios from "axios";
 
 export default function Login() {
-    //const nameRef = useRef()
     const emailRef = useRef()
     const passwordRef = useRef()
     const {login} = useAuth()
@@ -13,8 +12,8 @@ export default function Login() {
     const [loading, setLoading] = useState(false)
     const history = useHistory()
 
+    //axios request that creates a user account in firebase
     const createUser = (email) => {
-        console.log(email)
         const toSend = {
             name: email
         };
@@ -30,7 +29,6 @@ export default function Login() {
             toSend,
             config
         ).then((response) => {
-            console.log(response)
             history.push("/fridge")
         })
             .catch(function (error) {
@@ -62,10 +60,6 @@ export default function Login() {
                     <h2 className={"text-center mb-3"}> Log In</h2>
                     {error && <Alert variant={"danger"}> {error} </Alert>}
                     <Form onSubmit={handleSubmit}>
-                        {/*<Form.Group id="name">*/}
-                        {/*    <Form.Label>Name</Form.Label>*/}
-                        {/*    <Form.Control type={"name"} ref={{nameRef}} required/>*/}
-                        {/*</Form.Group>*/}
                         <Form.Group id="email">
                             <Form.Label>Email</Form.Label>
                             <Form.Control type={"email"} ref={emailRef} required/>

@@ -8,13 +8,11 @@ import React from 'react';
  */
 function ListItem(props) {
 
+    //replaces input
     const replaceInput = () => {
         let newInput = props.item;
         props.setInput(newInput);
         props.setCurr(newInput);
-        console.log(props.item);
-        console.log(props.input);
-        console.log(props.curr);
     }
 
     return (

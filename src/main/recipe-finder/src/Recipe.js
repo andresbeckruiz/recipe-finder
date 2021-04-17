@@ -12,20 +12,24 @@ function Recipe(props) {
     // useState variable for name
     const [name, setName] = useState("Recipe Name");
 
+    // useState hook for default values of ratings
     const [value, setValue] = React.useState(2.5);
 
+    // useState hooks for all initial info about the recipe
     const [ingredients, setIngredients] = useState("ingredients");
-
     const [preparation, setPreparation] = useState("preparation");
 
+    // useState hooks for loader component
     const [loading, setLoading] = useState(false);
     const [loader, setLoader] = useState(false);
     const [opacity, setOpacity] = useState(1.0);
 
+    // useState hooks for similar labels
     const [similarLabels, setSimilarLabels] = useState([]);
     const [photos, setPhotos] = useState([]);
     const [url, setUrl] = useState("");
 
+    // authentication
     const {currentUser, logout} = useAuth()
 
 
@@ -150,11 +154,13 @@ function Recipe(props) {
         return isNaN(str.slice(-1)) ? false : true;
     }
 
+    //helper function that dynamically loads in new recipes
     function setNewRecipe(name){
         setLoading(true);
         findSimilar(name);
     }
 
+    //opens a link to recipe
     function openPage() {
         window.open(url);
     }

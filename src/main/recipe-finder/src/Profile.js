@@ -8,17 +8,19 @@ import Modal from "react-bootstrap/Modal";
 
 function Profile() {
 
-
+    // useState hooks for authentication
     const [error, setError] = useState("")
     const {currentUser, logout} = useAuth()
     const history = useHistory()
 
+    //useState hooks for user info
     const [name, setName] = useState("");
     const [ratedRecipes, setRatedRecipes] = useState([]);
     const [noRecipesToShow, setNoRecipes] = useState(false);
     const [noIngredientsToShow, setNoIngredients] = useState(false);
-
     const [ratedIngredients, setRatedIngredients] = useState([]);
+
+    //useState loading hook
     const [loading, setLoading] = useState(false)
 
     // useState variables for deletion modal
@@ -33,6 +35,8 @@ function Profile() {
 
 
     // Axios Requests
+
+    //axios request to rate an ingredient
     const rateIngredient = (rating, event) => {
         let curr = event.target.getAttribute("name")
         const toSend = {
@@ -201,7 +205,6 @@ function Profile() {
     }
     async function handleLogout() {
         setError("")
-
         try {
             await logout()
             history.push("/login")
@@ -210,6 +213,7 @@ function Profile() {
         }
     }
 
+    // handles deletion of user in firebase
     async function handleDelete() {
         setLoading(true)
         deleteUser(currentUser.email)
@@ -219,7 +223,6 @@ function Profile() {
     useEffect(() => {
         getName(currentUser.email);
     },[]);
-
 
 
     return (

@@ -5,6 +5,7 @@ import {Link, useHistory} from "react-router-dom"
 import axios from "axios"
 
 export default function Signup() {
+    //authentication variables
     const nameRef = useRef()
     const emailRef = useRef()
     const passwordRef = useRef()
@@ -14,6 +15,7 @@ export default function Signup() {
     const [loading, setLoading] = useState(false)
     const history = useHistory()
 
+    //axios request for making a new user in firebase
     const createUser = (name, email) => {
         console.log(emailRef.current.value)
         const toSend = {
@@ -64,8 +66,6 @@ export default function Signup() {
             setLoading(false)
         }
     }
-
-
 
     return(
         <>
