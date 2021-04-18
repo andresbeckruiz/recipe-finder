@@ -12,6 +12,7 @@ import ListItem from "./ListItem";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Fridge.css'
+
 let currentToDelete = "";
 function Fridge() {
 
@@ -40,13 +41,14 @@ function Fridge() {
     // useState hook for current ingredient to delete
     const [current, setCurrent] = useState("");
 
-
+    // useState hooks for autocorrect functionality
     const [suggestions, setSuggestions] = useState([])
     const [autocorrectLoading, setAutocorrectLoading] = useState(true)
+
     // Axios Requests
 
     /*
-     * Makes an axios request for adding ingredients
+     * Makes an axios request for adding an ingredient
      */
     const addIngredient = (curr, event) => {
 
@@ -122,8 +124,8 @@ function Fridge() {
     }
 
     /*
- * Makes an axios request for ingredient rating
- */
+    * Makes an axios request for deleting an ingredient rating
+    */
     const deleteIngredientRequest = (curr, event) => {
 
         const toSend = {
@@ -151,6 +153,9 @@ function Fridge() {
             });
     }
 
+    /*
+     * axios request to check if ingredient is valid from database
+     */
     const checkValidIngredient = () => {
         let text = input.trim();
         //don't want to submit empty ingredient
@@ -188,97 +193,7 @@ function Fridge() {
             });
     }
 
-
-    // style details for root page
-    const rootStyle = {
-        backgroundColor: "white",
-        height: '100vh'
-    }
-
-    // handlers for modals
-    const handleClose = () => setModalIsOpen(false);
-    const handleRatingClose = () => setRatingIsOpen(false);
-    const handleCloseDelete = () => {
-        setDeleteIngredient(true);
-        setModalIsOpen(false);
-        deleteIngredientRequest(current.trim());
-    };
-
-    //function for submit button
-    const onSubmit = (text) => {
-        //don't want to submit anything if the ingredient isn't valid
-
-        //open modal if need be
-        if (!ingredientRatings.hasOwnProperty(currentToRate)) {
-            setRatingIsOpen(true);
-            //axios request
-            addIngredient(text);
-
-            if (input !== "") {
-                //clear from this scope and from input box
-                document.getElementById("inputBox").value = "";
-                setInput("");
-            }
-        }
-
-    }
-
-    const style = {
-        backgroundColor: "#2776ED",
-        height: 600,
-        width: 250,
-        position: "absolute",
-        top: 125,
-        left: 200,
-        border: "4px solid black",
-        borderRadius: 10
-
-    }
-
-    const innerStyle = {
-        height: 590,
-        width: 250,
-        position: "absolute",
-        bottom: 10,
-        overflow: "auto"
-    }
-
-    function deleteCurrent() {
-        let ratings = {}
-        for (var key in ingredientRatings) {
-            ratings[key] = ingredientRatings[key]
-        }
-
-        delete ratings[currentToDelete];
-        setIngredientRatings(ratings);
-        setDeleteIngredient(false);
-    }
-
-    useEffect(() => {
-        if(deleteIngredient) {
-            deleteCurrent();
-        }
-    }, [deleteIngredient])
-
-   // set global for listener
-
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
-            onSubmit(input);
-        }
-    }
-
-    async function handleLogout() {
-        setError("")
-
-        try {
-            await logout()
-            history.push("/login")
-        } catch {
-            setError("Failed to log out")
-        }
-    }
-
+    // axios request that gets user name
     const getName = (email) => {
 
         const toSend = {
@@ -307,6 +222,7 @@ function Fridge() {
             });
     }
 
+    // axios request that gets user inventory
     const getUserInventory = (email) => {
 
         const toSend = {
@@ -340,6 +256,7 @@ function Fridge() {
             });
     }
 
+    // axios request for autocorrect
     const createSuggestions = () => {
         setSuggestions([])
         setAutocorrectLoading(false)
@@ -360,7 +277,6 @@ function Fridge() {
             .then((data) => {
                 let suggestionsTemp = []
                 for (let word of data.results) {
-                    console.log(word);
                     suggestionsTemp.push(word)
                 }
                 setSuggestions(suggestionsTemp)
@@ -368,11 +284,104 @@ function Fridge() {
             })
     }
 
+
+    // style details for root page
+    const rootStyle = {
+        backgroundColor: "white",
+        height: '100vh'
+    }
+
+    const style = {
+        backgroundColor: "#2776ED",
+        height: 600,
+        width: 250,
+        position: "absolute",
+        top: 125,
+        left: 200,
+        border: "4px solid black",
+        borderRadius: 10
+
+    }
+
+    const innerStyle = {
+        height: 590,
+        width: 250,
+        position: "absolute",
+        bottom: 10,
+        overflow: "auto"
+    }
+
+    // handlers for modals
+    const handleClose = () => setModalIsOpen(false);
+    const handleRatingClose = () => setRatingIsOpen(false);
+    const handleCloseDelete = () => {
+        setDeleteIngredient(true);
+        setModalIsOpen(false);
+        deleteIngredientRequest(current.trim());
+    };
+
+    //function for submit button
+    const onSubmit = (text) => {
+        //don't want to submit anything if the ingredient isn't valid
+
+        //open modal if need be
+        if (!ingredientRatings.hasOwnProperty(currentToRate)) {
+            setRatingIsOpen(true);
+            //axios request
+            addIngredient(text);
+
+            if (input !== "") {
+                //clear from this scope and from input box
+                document.getElementById("inputBox").value = "";
+                setInput("");
+            }
+        }
+
+    }
+
+    //function for deleting currently selected ingredient
+    function deleteCurrent() {
+        let ratings = {}
+        for (let key in ingredientRatings) {
+            ratings[key] = ingredientRatings[key]
+        }
+
+        delete ratings[currentToDelete];
+        setIngredientRatings(ratings);
+        setDeleteIngredient(false);
+    }
+
+   // set global for key listener
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            onSubmit(input);
+        }
+    }
+
+    // function that handles logging out
+    async function handleLogout() {
+        setError("")
+
+        try {
+            await logout()
+            history.push("/login")
+        } catch {
+            setError("Failed to log out")
+        }
+    }
+
     //populates fridge with user inventory when page loads and gets user name
     useEffect(() => {
         getName(currentUser.email)
         getUserInventory(currentUser.email)
     },[]);
+
+    // useEffect hook for deleting ingredients
+    useEffect(() => {
+        if(deleteIngredient) {
+            deleteCurrent();
+        }
+    }, [deleteIngredient])
 
 
     return (
@@ -389,9 +398,6 @@ function Fridge() {
             <Button variant="primary" size= "sm" style={{position: "absolute", right: 50, top: 80}}>Profile</Button>
             </Link>
             {/*two panes for lists and input*/}
-
-
-
             <div style={style} className="List">
                 <h4 style={{position: "absolute", top: -40}}>Your Fridge</h4>
                 <div style={innerStyle} className="List">

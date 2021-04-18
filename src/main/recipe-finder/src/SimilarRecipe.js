@@ -1,5 +1,3 @@
-import * as url from "url";
-import {Link} from "react-router-dom";
 
 function SimilarRecipe(props) {
 

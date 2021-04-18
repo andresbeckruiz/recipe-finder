@@ -8,6 +8,7 @@ import {useEffect, useState} from "react";
 
 let alt = false;
 
+//for card styles
 const useStyles = makeStyles({
     root: {
         minWidth: 275,
@@ -29,6 +30,7 @@ const useStyles = makeStyles({
 });
 
 function RecipeSelection() {
+    //useState hook for list of recipes to present to user
     let [recipes, setRecipes] = useState([]);
     let [recipesToShow, setRecipesToShow] = useState(false);
 
@@ -122,6 +124,7 @@ function RecipeSelection() {
             <div style={style}>
                 <div style={innerStyle}>
                     {recipesToShow ? recipes.map((r) => {
+                        // alternate sides for aesthetic appeal
                         if (alt){
                             alt = false;
                             return <Card className={classes.root}>

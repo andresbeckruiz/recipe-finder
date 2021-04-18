@@ -87,10 +87,52 @@ _On your first meeting with your mentor TA, you should plan dates for at least t
 
 **Adversary Checkpoint:** _(Schedule for on or before April 12 once you are assigned an adversary TA)_
 
+
+# Recipe Finder
+
+## Division of Labor: 
+
+- Georgia: backend class design/structure, creation of SQL database and database methods, graph classes and recommendation algorithm
+
+- Andres: User authentication with firebase, authentication frontend pages and integration, user database functions and front end handlers, routing, autocorrect/validity for ingredients submission
+
+
+- Jacob: Frontend design and implementation, React hook logic, axios requests/integration with backend, UI/UX research/testing, frontend debugging
+
+- Jack: JUnit Testing, backend class design/structure, graph classes and recommendation algorithm, integration & implementation of handlers
+
+
+## Known bugs:
+
+- There are no known bugs in the program.
+
+## Design Details specific to your code:
+
+- User authentication:
+
+- Frontend:
+	- The frontend includes the following pages (excluding login and signup pages):
+		- Fridge:
+			- This page includes the components that make up a user's Fridge. It also acts as a landing page after authentication. This inlucdes the list of current ingredients that a user has as well as a way to input more ingredients into their Fridge. The input is limited to ingredients found in our database (through an implementation of autocorrect). There are also accessible links to each of the other pages from this page.
+		- Recipe Selection:
+			- This page displays a scrollable div that includes a list of recipes presented to the user (acquired from backend graph and similarity/ranking algorithms). It includes a photo (if the recipe has one) for each recipe, as well as its name and the chef who created the recipe. The page includes accessible links to return to the Fridge if wanted.
+		- Recipe:
+			- This is the display page for any recipe selected. The page will dynamically display the ingredients and preparations needed for each recipel, as well as 3 similar recipes (acquired from backend algorithm). The page includes accessible links to return to the Recipe Selection page, the Fridge page, or to opening a link including the recipe on the BBC's website.
+		- Profile: 
+			- This page displays information about the user. This includes an option to delete/change their account. It also lists all the recipes and ingredients the user has previously rated, as well as a way to change those ratings dynamically.
+
+- Graph:
+
+- Similarity Algorithm:
+
 ## How to Build and Run
-_A necessary part of any README!_
 
+- You can build the program by running ‘mvn package’ in the terminal while located in the root directory.
 
-User auth tutorial: https://www.youtube.com/watch?v=PKwu15ldZ7k&t=43s
+- You can run the program with the frontend component by running ‘./run --gui’ in the terminal while located in the root directory. You will also need to (in a separate terminal window) go into the 'recipe-finder' directory located in the 'src/main' and run ‘npm start’. This will ensure that the GUI starts with React.
+
+## What browser you used to test your GUI
+- We primarily used Google Chrome to test Recipe Finder.
+
 
 
