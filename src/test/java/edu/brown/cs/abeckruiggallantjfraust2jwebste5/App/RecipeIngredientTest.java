@@ -71,9 +71,7 @@ public class RecipeIngredientTest {
 
     assertTrue(ingredient.getName().equals("tomato"));
     ingredient.setValue(5.0);
-    ingredient.setSimilarityScore(4.0);
     assertTrue(ingredient.getValue() == 5.0);
-    assertTrue(ingredient.getSimilarityScore() == 4.0);
     assertTrue(adjacentVertices.size() > 0);
     tearDown();
   }
@@ -100,7 +98,6 @@ public class RecipeIngredientTest {
 
     Recipe recipe = new Recipe(params, this.testUser);
     assertTrue(recipe.getChef().equals("chef"));
-    assertTrue(recipe.getSimilarityScore() == 0.0);
     assertTrue(recipe.getIngredients() != null);
     assertTrue(recipe.getChef().equals("chef"));
     assertTrue(recipe.getInstructions() != null);

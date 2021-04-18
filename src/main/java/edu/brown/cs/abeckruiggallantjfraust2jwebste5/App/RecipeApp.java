@@ -6,6 +6,10 @@ import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.DatabaseHelpers.User
 
 import java.sql.SQLException;
 
+/**
+ * This class handles all the top level information for the app. Right now
+ * this includes the connection to the database, and the current user.
+ */
 public class RecipeApp {
   private User curUser = null;
 
@@ -22,10 +26,16 @@ public class RecipeApp {
     }
   }
 
+  /**
+   * @return current user
+   */
   public User getCurUser() {
     return curUser;
   }
 
+  /**
+   * @param curUser used to set the current user
+   */
   public void setCurUser(User curUser) {
     this.curUser = curUser;
   }

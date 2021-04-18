@@ -86,7 +86,6 @@ public class DatabaseTest {
   @Test
   public void testRecipeObject() {
     Recipe recipe = getRecipeObject("spinach mash", this.testUser);
-    assertTrue(recipe.getSimilarityScore() == 0.0);
     assertTrue(recipe.getIngredients() != null);
     assertTrue(recipe.getChef().equals("Paul Rankin"));
     assertTrue(recipe.getInstructions() != null);
@@ -102,7 +101,6 @@ public class DatabaseTest {
   public void testRecipeObjectRated() {
     Recipe recipe = getRecipeObject("spinach mash", this.testUser);
     recipe.setValue(5);
-    assertTrue(recipe.getSimilarityScore() == 0.0);
     assertTrue(recipe.getIngredients() != null);
     assertTrue(recipe.getChef().equals("Paul Rankin"));
     assertTrue(recipe.getInstructions() != null);

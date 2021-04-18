@@ -72,9 +72,9 @@ public class RecipeFinderTest {
     testUser.addIngredientRating("lemon", .5);
     testUser.addIngredientRating("double cream", .5);
     ArrayList<String> similarRecipes = findRecipesWithIngredients(10, testUser);
-    assertTrue(similarRecipes.get(0).equals("lemon syllabub"));
-    assertTrue(similarRecipes.get(1).equals("girl’s birthday cake"));
-    assertTrue(similarRecipes.get(2).equals("apple charlotte"));
+    assertTrue(similarRecipes.get(0).equals("apple charlotte"));
+    assertTrue(similarRecipes.get(1).equals("chocolate soufflé"));
+    assertTrue(similarRecipes.get(2).equals("lemon syllabub"));
   }
 
   @Test
@@ -89,8 +89,8 @@ public class RecipeFinderTest {
     testUser.addIngredientRating("double cream", 5.0);
     ArrayList<String> similarRecipes = findRecipesWithIngredients(10, testUser);
     assertTrue(similarRecipes.get(0).equals("lemon curd ice cream"));
-    assertTrue(similarRecipes.get(1).equals("lemon meringue ice cream with lemon balm"));
-    assertTrue(similarRecipes.get(2).equals("cheaty peach ice cream"));
+    assertTrue(similarRecipes.get(1).equals("cheaty peach ice cream"));
+    assertTrue(similarRecipes.get(2).equals("lemon meringue ice cream with lemon balm"));
   }
 
   @Test

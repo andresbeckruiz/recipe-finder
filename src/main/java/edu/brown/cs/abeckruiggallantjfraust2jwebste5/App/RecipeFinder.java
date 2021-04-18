@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.Collections;
-
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.SCORE_WEIGHT;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.SIMILARITY_WEIGHT;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.DatabaseHelpers.Database.getRecipeObject;
@@ -35,23 +34,28 @@ public final class RecipeFinder {
    */
   public static ArrayList<String> findRecipesWithIngredients(int numRecipesToReturn, User curUser) {
     HashSet<String> ingredientList = curUser.getIngredients();
+    //if no ingredients in user's fridge, no recipes can be made
     if (ingredientList == null || ingredientList.size() == 0) {
       return new ArrayList<String>();
     }
     LinkedHashMap<String, Integer> recipeMap = new LinkedHashMap<>();
-    // for every ingredient find recipes that correspond to that ingredient
-    // count how many ingredients in ingredientList overlap with recipe ingredients
+    /* for every ingredient find recipes that have that ingredient
+    count maintains a number representing how many ingredients in
+     ingredientList (the user's inventory) are in the given recipe.
+     For e.g. if count for "lasagna" is 2, then two of the ingredients
+     in the lasagna recipe are in the user's inventory. */
     for (String ingredient : ingredientList) {
+      //gets all recipes with ingredient
       String recipesString = getRecipesWithIngredient(ingredient);
       if (recipesString == null) {
         continue;
       }
       String[] rec = recipesString.trim().split("\\s*,\\s*");
       for (String recipe : rec) {
-        // get the value of the specified key
+        // get the number of occurences of the specified recipe
         Integer count = recipeMap.get(recipe);
-        // if the map contains no mapping for the key,
-        // map the key with a value of 1
+        // if the map contains no mapping for the recipe,
+        // map the recipe with a value of 1
         if (count == null) {
           recipeMap.put(recipe, 1);
         } else {  // else increment the found value by 1
@@ -59,8 +63,7 @@ public final class RecipeFinder {
         }
       }
     }
-
-    //create hashmap where keys are count and value is arraylist of recipes
+    //create hashmap where keys are count and value is arraylist of recipes with that count
     Map<Integer, ArrayList<String>> invertedHashMap = new HashMap<>();
     for (Map.Entry<String, Integer> entry : recipeMap.entrySet()) {
       ArrayList<String> recipe = invertedHashMap.get(entry.getValue());
@@ -74,8 +77,23 @@ public final class RecipeFinder {
       }
     }
 
+    //create a new treemap with recipes with the most number of ingredients in the user's inventory.
     TreeMap<Integer, ArrayList<String>> top = treeMapOfTop(invertedHashMap, numRecipesToReturn);
+    //creates a new treemap, where the top (numRecipesToReturn*2) are sorted based on the user's
+    //rating preferences
     TreeMap<Double, ArrayList<String>> ratedMap = factorInRatings(top, curUser);
+    //converts to arraylist of size numRecipesToReturn of top recipes
+    return topSortedRecipes(ratedMap, numRecipesToReturn);
+  }
+
+  /**
+   * Converts sorted map of recipes, to arraylist of top numRecipesToReturn recipes.
+   * @param ratedMap each recipe with their score as the key
+   * @param numRecipesToReturn is the size of the arraylist of recipes to return
+   * @return arraylist of the top recipes that most match the user's inventory + ratings
+   */
+  private static ArrayList<String> topSortedRecipes(TreeMap<Double, ArrayList<String>> ratedMap,
+                                                    int numRecipesToReturn) {
     ArrayList<String> topSortedRecipes = new ArrayList<>();
     int numToAdd = numRecipesToReturn;
     for (double key : ratedMap.keySet()) {
@@ -90,6 +108,12 @@ public final class RecipeFinder {
     return topSortedRecipes;
   }
 
+  /**
+   * Given a map, returns a small map containing numToReturn recipes.
+   * @param allMap from which we will create the smaller map.
+   * @param numToReturn is the number of recipes the smaller map should contain.
+   * @return smaller map containing numToReturn*2 recipes
+   */
   private static TreeMap<Integer, ArrayList<String>> treeMapOfTop(Map<Integer,
           ArrayList<String>> allMap, int numToReturn) {
     int numToAdd = numToReturn * 2;
@@ -106,19 +130,32 @@ public final class RecipeFinder {
     return top;
   }
 
+  /**
+   * Creates a metric that takes into account number of ingredients in user's inventory that
+   * overlap with the recipe, as well as what the user rated that recipe/the ingredients
+   * it uses. Then sorts the map based on this metric.
+   * @param map from which we will sort the contents
+   * @param user used to find what the user has rated the recipe/ingredients
+   * @return sorted map based on metric
+   */
   private static TreeMap<Double, ArrayList<String>> factorInRatings(Map<Integer,
           ArrayList<String>> map, User user) {
     TreeMap<Double, ArrayList<String>> mapWithRatings = new TreeMap<>(Collections.reverseOrder());
+    //iterates through every count in the map
     for (int count = map.keySet().size(); count > 0; count--) {
       ArrayList<String> rep = map.get(count);
+      //iterate through every recipe
       for (String recipe : rep) {
-
         Recipe recipeObj = getRecipeObject(recipe, user);
+        int numIngredients = recipeObj.getIngredients().size();
         if (recipeObj == null) {
           continue;
         }
-        Double metric = count * SCORE_WEIGHT + SIMILARITY_WEIGHT * recipeObj.getValue();
-        ArrayList<String> newRating = new ArrayList<>();
+        //calculate a weighted sum to decide the match
+        Double metric = count / numIngredients * SCORE_WEIGHT + SIMILARITY_WEIGHT
+                * recipeObj.getValue();
+        ArrayList<String> newRating;
+        //add this rating to a hashmap, that sorts based on metric
         if (mapWithRatings.get(metric) == null) {
           newRating = new ArrayList<>();
           newRating.add(recipe);

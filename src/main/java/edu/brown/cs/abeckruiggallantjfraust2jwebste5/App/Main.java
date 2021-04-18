@@ -116,21 +116,23 @@ public final class Main {
     Spark.before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
     Spark.exception(Exception.class, new ExceptionPrinter());
 
+    /* all routes (names are indicative of their function) */
+    //handlers related to ingredients
     Spark.post("/enter-ingredient", new AddIngredientHandler());
     Spark.post("/rate-ingredient", new RateIngredientHandler());
     Spark.post("/delete-ingredient", new DeleteIngredientHandler());
-
-    Spark.post("/find-suggestions", new FindRecipeSuggestionsHandler());
-    Spark.post("/recipe", new FindSimilarRecipesHandler());
+    //handlers related to recipes
     Spark.post("/rate-recipe", new RateRecipeHandler());
-
+    //main pages
+    Spark.post("/find-suggestions", new FindRecipeSuggestionsHandler()); //suggested recipe page
+    Spark.post("/recipe", new FindSimilarRecipesHandler()); //recipe page (includes similar recipes)
+    Spark.post("/profile", new GetProfileInfo()); //profile page
+    Spark.post("/inventory", new GetUserInventory()); //called on fridge load
+    //user account handlres
     Spark.post("/newUser", new CreateNewUserHandler());
     Spark.post("/newUserSignup", new CreateNewUserHandlerSignup());
-    Spark.post("/inventory", new GetUserInventory());
     Spark.post("/name", new GetName());
-    Spark.post("/profile", new GetProfileInfo());
     Spark.post("/delete-user", new DeleteUser());
-
     //for autocorrect
     Spark.post("/autocorrect", new AutocorrectHandler());
     Spark.post("/valid-ingredient", new ValidIngredient());
@@ -153,6 +155,9 @@ public final class Main {
     }
   }
 
+  /**
+   * Called when ingredient is being added to user's inventory.
+   */
   private class AddIngredientHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
@@ -165,6 +170,9 @@ public final class Main {
     }
   }
 
+  /**
+   * Called when ingredient is being rated.
+   */
   private class RateIngredientHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
@@ -176,6 +184,9 @@ public final class Main {
     }
   }
 
+  /**
+   * Called when ingredient is being deleted from a user's inventory.
+   */
   private class DeleteIngredientHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
@@ -192,46 +203,46 @@ public final class Main {
   private class FindRecipeSuggestionsHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
+      //finds recipe suggestions (based on user's inventory)
       ArrayList<Recipe> recipeSuggestions = recipeApp.getCurUser().cook();
-      Map<String, ImmutableMap<String, String>> newMap = new HashMap<>();
+      Map<String, ImmutableMap<String, String>> toReturn = new HashMap<>();
+      //if there were no suggestions
       if (recipeSuggestions.size() == 0) {
-        ImmutableMap<String, String> mapito = ImmutableMap.copyOf(new HashMap<>());
-        newMap.put("error", mapito);
+        toReturn.put("error", ImmutableMap.copyOf(new HashMap<>()));
       } else {
-        int numToReturn = NUM_RECOMMENDATIONS;
-        if (recipeSuggestions.size() < NUM_RECOMMENDATIONS) {
-          numToReturn = recipeSuggestions.size();
-        }
+        //find the number to return
+        int numToReturn = Math.min(NUM_RECOMMENDATIONS, recipeSuggestions.size());
+        //for each suggestion, converts recipe to a small map (to be converted to json)
         for (int i = 0; i < numToReturn; i++) {
-          newMap.put("suggestion-" + i, recipeSuggestions.get(i).toSmallMap());
+          toReturn.put("suggestion-" + i, recipeSuggestions.get(i).toSmallMap());
         }
       }
-      Map<String, Object> variables = ImmutableMap.copyOf(newMap);
+      Map<String, Object> variables = ImmutableMap.copyOf(toReturn);
       String json = GSON.toJson(variables);
       return json;
     }
   }
 
   /**
-   * Handles finding similar recipes when prompted in front end.
+   * Handles finding similar recipes once a recipe is selected.
    */
   private class FindSimilarRecipesHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
       JSONObject data = new JSONObject(request.body());
+      //get queried recipe
       String currentRecipeName = data.getString("recipe");
       Recipe curRecipe = getRecipeObject(currentRecipeName, recipeApp.getCurUser());
 
-      //get current recipe rating
+      //get queried recipe rating
       String email = data.getString("user");
       String ratings = getUserRecipeRatings(email);
 
-      //set ingredients to parsed string
-      curRecipe.setInstructions(curRecipe.getInstructions().replaceAll("[\\[\\]()\\//{}\"]",
-              "").replaceAll("[\b,]", "").replaceAll("[.]", ". "));
-
+      //finds similar recipes
       ArrayList<Map<String, String>> similarRecipes = recipeApp.getCurUser()
               .findSimilarRecipes(currentRecipeName);
+
+      //converts similar recipes to json
       Map<String, Object> variables = ImmutableMap.of("recipe",
               curRecipe.toBigMap(), "similar1", similarRecipes.get(0),
               "similar2", similarRecipes.get(1), "similar3", similarRecipes.get(2),
@@ -241,6 +252,9 @@ public final class Main {
     }
   }
 
+  /**
+   * Handles rating recipes.
+   */
   private class RateRecipeHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
@@ -312,16 +326,15 @@ public final class Main {
       JSONObject data = new JSONObject(request.body());
       Map<String, Object> map = new HashMap<>();
       String username = data.getString("name");
-      String string = getUserInventory(username);
+      String inventory = getUserInventory(username);
       //splitting to create hashset for user ingredients
-      if (string.length() > 0) {
-        String[] values = string.split(",");
-        HashSet<String> ingredients = new HashSet<>(Arrays.asList(values));
+      if (inventory.length() > 0) {
+        HashSet<String> ingredients = new HashSet<>(Arrays.asList(inventory.split(",")));
         //get ratings for ingredients
         User user = recipeApp.getCurUser();
         HashMap<String, Double> preRated = user.getIngredientRatings();
         HashMap<String, String> ingRatings = new HashMap<>();
-
+        //gets rating for each ingredient, and if its not in database, sets default rating
         for (String ingredient : ingredients) {
           boolean rated = preRated.containsKey(ingredient);
           if (rated) {
@@ -338,6 +351,9 @@ public final class Main {
     }
   }
 
+  /**
+   * Gets current users name.
+   */
   private class GetName implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
@@ -349,6 +365,9 @@ public final class Main {
     }
   }
 
+  /**
+   * Gets the profile info for a user. Includes rated ingredients + recipes.
+   */
   private class GetProfileInfo implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
@@ -360,17 +379,18 @@ public final class Main {
         String ingredients = getUserIngredientRatings(email);
         Map<String, String> recipeRating = new HashMap<>();
         Map<String, String> ingredientRating = new HashMap<>();
+        //check if no rated recipes
         if (recipes.length() == 0) {
           recipeRating.put("error", "");
         } else {
           recipeRating = ratingMapToJson(recipes);
         }
+        //check if no rated ingredients
         if (ingredients.length() == 0) {
           ingredientRating.put("error", "");
         } else {
           ingredientRating = ratingMapToJson(ingredients);
         }
-
 
         Map<String, Object> map = ImmutableMap.of("name", name, "recipes",
                 recipeRating, "ingredients", ingredientRating);
@@ -382,6 +402,9 @@ public final class Main {
     }
   }
 
+  /**
+   * Deletes a user from the database.
+   */
   private class DeleteUser implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {

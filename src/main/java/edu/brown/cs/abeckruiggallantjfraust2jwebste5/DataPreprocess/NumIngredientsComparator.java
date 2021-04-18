@@ -3,6 +3,14 @@ package edu.brown.cs.abeckruiggallantjfraust2jwebste5.DataPreprocess;
 import java.util.Comparator;
 import java.util.HashMap;
 
+/**
+ * This class is only used in preprocessing. It is given a map of
+ * each recipe title, to how many ingredients the recipe has. Then it
+ * compares two recipes titles, based on their entries in the map.
+ *
+ * NOTE: this was not junit tested, as it is only run in preprocess, and
+ * we can (and did) verify the results by hand.
+ */
 public final class NumIngredientsComparator implements Comparator<String> {
   private HashMap<String, Integer> numIngredientsMap;
   public NumIngredientsComparator(HashMap<String, Integer> map) {

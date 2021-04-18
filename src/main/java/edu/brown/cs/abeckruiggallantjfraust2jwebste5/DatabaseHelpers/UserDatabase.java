@@ -213,12 +213,17 @@ public final class UserDatabase {
                 + user.getIngredientRatings().get(ingredient), "," + ingredient + ":" + rating);
 
         //if ingredient is first item
-        String firstEntry = currentRatings.substring(0, currentRatings.indexOf(","));
-        String firstIngredient = firstEntry.substring(0, firstEntry.indexOf(":"));
-        if (firstIngredient.equals(ingredient)) {
-          //remove first entry and add new first entry on
-          currentRatings = ingredient + ":" + rating + ","
-                  + currentRatings.substring(currentRatings.indexOf(",") + 1);
+        if (currentRatings.contains(",")) {
+          String firstEntry = currentRatings.substring(0, currentRatings.indexOf(","));
+          String firstIngredient = firstEntry.substring(0, firstEntry.indexOf(":"));
+          if (firstIngredient.equals(ingredient)) {
+            //remove first entry and add new first entry on
+            currentRatings = ingredient + ":" + rating + ","
+                    + currentRatings.substring(currentRatings.indexOf(",") + 1);
+          }
+        } else if (currentRatings.contains(ingredient)
+                && currentRatings.substring(0, currentRatings.indexOf(":")).equals(ingredient)) {
+          currentRatings = ingredient + ":" + rating;
         }
       } else {
         if (currentRatings.length() == 0) {
@@ -285,13 +290,19 @@ public final class UserDatabase {
                 + user.getRecipeRatings().get(recipe), "," + recipe + ":" + rating);
 
         //if ingredient is first item
-        String firstEntry = currentRatings.substring(0, currentRatings.indexOf(","));
-        String firstIngredient = firstEntry.substring(0, firstEntry.indexOf(":"));
-        if (firstIngredient.equals(recipe)) {
-          //remove first entry and add new first entry on
-          currentRatings = recipe + ":" + rating + ","
-                  + currentRatings.substring(currentRatings.indexOf(",") + 1);
+        if (currentRatings.contains(",")) {
+          String firstEntry = currentRatings.substring(0, currentRatings.indexOf(","));
+          String firstIngredient = firstEntry.substring(0, firstEntry.indexOf(":"));
+          if (firstIngredient.equals(recipe)) {
+            //remove first entry and add new first entry on
+            currentRatings = recipe + ":" + rating + ","
+                    + currentRatings.substring(currentRatings.indexOf(",") + 1);
+          }
+        } else if (currentRatings.contains(recipe) //if no commas, means only one element
+                && currentRatings.substring(0, currentRatings.indexOf(":")).equals(recipe)) {
+          currentRatings = recipe + ":" + rating;
         }
+
       } else {
         if (currentRatings.length() == 0) {
           currentRatings = recipe + ":" + rating;

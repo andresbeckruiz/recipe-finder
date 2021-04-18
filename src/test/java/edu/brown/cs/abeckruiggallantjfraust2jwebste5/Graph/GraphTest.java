@@ -124,7 +124,6 @@ public class GraphTest {
     double firstVal = topSimilar.get(firstNode);
     testUser.addRecipeRating("tagliatelle with broccoli and tomato sauce", 5.0);
     TreeMap<Recipe, Double> topSimilar2 = graph.search(recipe);
-    double secondVal = topSimilar2.get(firstNode);
     assertTrue(firstVal != topSimilar2.get(firstNode));
   }
 
