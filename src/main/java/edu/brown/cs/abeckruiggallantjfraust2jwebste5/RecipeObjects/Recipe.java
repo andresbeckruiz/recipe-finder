@@ -2,7 +2,7 @@ package edu.brown.cs.abeckruiggallantjfraust2jwebste5.RecipeObjects;
 
 import com.google.common.collect.ImmutableMap;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.User;
-import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database;
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.DatabaseHelpers.Database;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Graph.Vertex;
 
 import java.util.Map;
@@ -191,7 +191,7 @@ public class Recipe implements Vertex<Ingredient> {
     return "  -" + title + " : " + url;
   }
 
-  public ImmutableMap toSmallMap() {
+  public ImmutableMap<String, String> toSmallMap() {
     Map<String, String> mutableMap = new HashMap<>();
     mutableMap.put("recipeName", this.title);
     if (this.photourl == null) {
@@ -206,7 +206,7 @@ public class Recipe implements Vertex<Ingredient> {
     return immutableMap;
   }
 
-  public ImmutableMap toBigMap() {
+  public ImmutableMap<String, String> toBigMap() {
     Map<String, String> map = new HashMap<>() {{
         put("title", checkForNull(title));
         put("description", checkForNull(description));

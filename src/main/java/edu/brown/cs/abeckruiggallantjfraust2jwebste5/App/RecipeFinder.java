@@ -11,17 +11,33 @@ import java.util.Collections;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.SCORE_WEIGHT;
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.SIMILARITY_WEIGHT;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getRecipeObject;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getRecipesWithIngredient;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.DatabaseHelpers.Database.getRecipeObject;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.DatabaseHelpers.Database.getRecipesWithIngredient;
 import static java.lang.Math.min;
 
+/**
+ * This class deals with finding recipes without creating a graph.
+ * Has methods like findRecipesWithIngredients that finds the top
+ * most similar recipes, based on the ingredients in the user's
+ * inventory and how they rated the ingredients/recipes.
+ */
 public final class RecipeFinder {
 
   private RecipeFinder() {
   }
 
-  public static ArrayList<String> findRecipesWithIngredients(
-          HashSet<String> ingredientList, int numRecipesToReturn, User curUser) {
+  /**
+   * finds the top most similar recipes, based on the ingredients in the user's
+   * inventory and how they rated the ingredients/recipes.
+   * @param numRecipesToReturn the number of recipes that will be return to the frontend
+   * @param curUser the current user (used to find their rated recipes)
+   * @return arraylist of recipe names that correspond to the top recipes
+   */
+  public static ArrayList<String> findRecipesWithIngredients(int numRecipesToReturn, User curUser) {
+    HashSet<String> ingredientList = curUser.getIngredients();
+    if (ingredientList == null || ingredientList.size() == 0) {
+      return new ArrayList<String>();
+    }
     LinkedHashMap<String, Integer> recipeMap = new LinkedHashMap<>();
     // for every ingredient find recipes that correspond to that ingredient
     // count how many ingredients in ingredientList overlap with recipe ingredients

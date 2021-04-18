@@ -38,7 +38,7 @@ public class Autocorrector {
    * @return List of strings parsed from files.
    */
   private static List<String> parseCorpus(String files) {
-    List<String> fileNames = new ArrayList<String>(Arrays.asList(files.split(",")));;
+    List<String> fileNames = new ArrayList<String>(Arrays.asList(files.split(",")));
     List<String> words = new ArrayList<String>();
     for (String file : fileNames) {
       Scanner in = null;
@@ -59,8 +59,7 @@ public class Autocorrector {
 
   /**
    * Given phrase input by user, gives autocorrect suggestions.
-   *
-   * @param phrase: String input by user
+   * @param phrase String input by user
    * @return Set of strings representing suggestions
    */
   public Set<String> suggest(String phrase) {

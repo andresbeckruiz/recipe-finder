@@ -30,6 +30,7 @@ const useStyles = makeStyles({
 
 function RecipeSelection() {
     let [recipes, setRecipes] = useState([]);
+    let [recipesToShow, setRecipesToShow] = useState(false);
 
     // Axios Requests
 
@@ -56,10 +57,15 @@ function RecipeSelection() {
         )
             .then(response => {
                 let object = response.data;
-                //iterate through suggestions
                 recipes = []
-                for(let i in object) {
-                    recipes.push(object[i]);
+                if (!("error" in object)) {
+                    //iterate through suggestions
+                    for (var i = 0; i < Object.keys(object).length; i++) {
+                        recipes.push(object["suggestion-" + i]);
+                    }
+                    setRecipesToShow(true);
+                } else{
+                    setRecipesToShow(false);
                 }
                 setRecipes(recipes);
 
@@ -115,7 +121,7 @@ function RecipeSelection() {
             </Link>
             <div style={style}>
                 <div style={innerStyle}>
-                    {recipes.map((r) => {
+                    {recipesToShow ? recipes.map((r) => {
                         if (alt){
                             alt = false;
                             return <Card className={classes.root}>
@@ -186,8 +192,7 @@ function RecipeSelection() {
                                 </div>
                             </Card>
                         }
-                    }
-                    )}
+                    }) : <h4 className="text-center pt-5" >No Recipes To Show</h4> }
                 </div>
             </div>
         </div>

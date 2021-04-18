@@ -17,11 +17,11 @@ public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex
   }
 
   public HashMap<String, nonCentralVertex> getNonCentralNodes() {
-    return nonCentralNodeMap;
+    return this.nonCentralNodeMap;
   }
 
   public HashMap<String, centralVertex> getCentralNodeMap() {
-    return centralNodeMap;
+    return this.centralNodeMap;
   }
 
   private void addNonCentralHashSetToHashMap(HashSet<nonCentralVertex> set) {
@@ -64,11 +64,10 @@ public class Graph<centralVertex extends Vertex, nonCentralVertex extends Vertex
       }
       addCentralHashSetToHashMap(adjToAdjVertices);
     }
-
     return mostSimilarContenders;
   }
 
-  public double computeSimilarity(centralVertex adjToAdj,
+  private double computeSimilarity(centralVertex adjToAdj,
                                   HashSet<nonCentralVertex> setTwo) {
     HashSet<nonCentralVertex> setOne = adjToAdj.getAdjacentVertices(nonCentralNodeMap);
     addNonCentralHashSetToHashMap(setOne);

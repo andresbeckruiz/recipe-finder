@@ -327,11 +327,10 @@ function Fridge() {
         )
             .then(response => {
                 let inventory = response.data["inventory"]
+                console.log(inventory)
                 for (var ingredient in ingredientRatings) {
                     inventory[ingredient] = ingredientRatings[ingredient]
                 }
-                //TODO: fixes a backend bug, but should fix front end
-                console.log(inventory)
                 delete inventory[""]
                 setIngredientRatings(inventory)
             })

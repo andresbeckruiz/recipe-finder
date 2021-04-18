@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.ArrayList;
-import java.util.TreeMap;
 import java.util.Map;
 import java.util.Set;
 import com.google.common.collect.ImmutableMap;
@@ -29,14 +28,15 @@ import com.google.gson.Gson;
 import freemarker.template.Configuration;
 
 import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.DEFAULT_RATING;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.DataPreprocess.JsonFormatter.ratingMapToJson;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.addUserToDatabase;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.deleteUser;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.getName;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database.getRecipeObject;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.getUserIngredientRatings;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.getUserInventory;
-import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.UserDatabase.getUserRecipeRatings;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.ConstantHyperparameters.NUM_RECOMMENDATIONS;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.DatabaseHelpers.JsonFormatter.ratingMapToJson;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.DatabaseHelpers.UserDatabase.addUserToDatabase;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.DatabaseHelpers.UserDatabase.deleteUser;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.DatabaseHelpers.UserDatabase.getName;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.DatabaseHelpers.Database.getRecipeObject;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.DatabaseHelpers.UserDatabase.getUserIngredientRatings;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.DatabaseHelpers.UserDatabase.getUserInventory;
+import static edu.brown.cs.abeckruiggallantjfraust2jwebste5.DatabaseHelpers.UserDatabase.getUserRecipeRatings;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -112,17 +112,6 @@ public final class Main {
       }
       return "OK";
     });
-
-
-//    //GEORGIA ADDED TO DELETE
-//    HashSet<String> ingredients = new HashSet<>();
-//    ingredients.add("lemon curd");
-//    ingredients.add("lemon");
-//    ingredients.add("double cream");
-//    User user = new User("georgia", ingredients);
-//    user.cook();
-
-
 
     Spark.before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
     Spark.exception(Exception.class, new ExceptionPrinter());
@@ -204,10 +193,20 @@ public final class Main {
     @Override
     public Object handle(Request request, Response response) throws Exception {
       ArrayList<Recipe> recipeSuggestions = recipeApp.getCurUser().cook();
-      Map<String, Object> variables = ImmutableMap.of("firstSuggestion",
-              recipeSuggestions.get(0).toSmallMap(),
-              "secondSuggestion", recipeSuggestions.get(1).toSmallMap(),
-              "thirdSuggestion", recipeSuggestions.get(2).toSmallMap());
+      Map<String, ImmutableMap<String, String>> newMap = new HashMap<>();
+      if (recipeSuggestions.size() == 0) {
+        ImmutableMap<String, String> mapito = ImmutableMap.copyOf(new HashMap<>());
+        newMap.put("error", mapito);
+      } else {
+        int numToReturn = NUM_RECOMMENDATIONS;
+        if (recipeSuggestions.size() < NUM_RECOMMENDATIONS) {
+          numToReturn = recipeSuggestions.size();
+        }
+        for (int i = 0; i < numToReturn; i++) {
+          newMap.put("suggestion-" + i, recipeSuggestions.get(i).toSmallMap());
+        }
+      }
+      Map<String, Object> variables = ImmutableMap.copyOf(newMap);
       String json = GSON.toJson(variables);
       return json;
     }
@@ -219,7 +218,6 @@ public final class Main {
   private class FindSimilarRecipesHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
-      Gson gson = new Gson();
       JSONObject data = new JSONObject(request.body());
       String currentRecipeName = data.getString("recipe");
       Recipe curRecipe = getRecipeObject(currentRecipeName, recipeApp.getCurUser());
@@ -232,12 +230,8 @@ public final class Main {
       curRecipe.setInstructions(curRecipe.getInstructions().replaceAll("[\\[\\]()\\//{}\"]",
               "").replaceAll("[\b,]", "").replaceAll("[.]", ". "));
 
-      ArrayList<Map<String, String>> similarRecipes = new ArrayList<>();
-      TreeMap<Recipe, Double> map = recipeApp.getCurUser().findSimilarRecipes(currentRecipeName);
-      for (Map.Entry<Recipe, Double> entry : map.entrySet()) {
-        Recipe recipe = entry.getKey();
-        similarRecipes.add(recipe.toSmallMap());
-      }
+      ArrayList<Map<String, String>> similarRecipes = recipeApp.getCurUser()
+              .findSimilarRecipes(currentRecipeName);
       Map<String, Object> variables = ImmutableMap.of("recipe",
               curRecipe.toBigMap(), "similar1", similarRecipes.get(0),
               "similar2", similarRecipes.get(1), "similar3", similarRecipes.get(2),
@@ -267,31 +261,27 @@ public final class Main {
       JSONObject data = new JSONObject(request.body());
       String username = data.getString("name");
       User newUser;
-      try {
-        //get inventory
-        String inventoryString = getUserInventory(username);
+      //get inventory
+      String inventoryString = getUserInventory(username);
+      //splitting to create hashset for user ingredients
+      if (inventoryString.length() > 0) {
+        String[] inventoryArr = inventoryString.split(",");
+        HashSet<String> ingredients = new HashSet<>(Arrays.asList(inventoryArr));
+        //get rating
+        String ratingString = getUserIngredientRatings(username);
+        newUser = new User(username, ingredients);
         //splitting to create hashset for user ingredients
-        if (inventoryString.length() > 0) {
-          String[] inventoryArr = inventoryString.split(",");
-          HashSet<String> ingredients = new HashSet<>(Arrays.asList(inventoryArr));
-          //get rating
-          String ratingString = getUserIngredientRatings(username);
-          newUser = new User(username, ingredients);
-          //splitting to create hashset for user ingredients
-          if (ratingString.length() > 0) {
-            String[] ratingArr = ratingString.split(",");
-            for (String review : ratingArr) {
-              String[] rating = review.split(":");
-              newUser.addIngredientRating(rating[0], Double.parseDouble(rating[1]));
-            }
+        if (ratingString.length() > 0) {
+          String[] ratingArr = ratingString.split(",");
+          for (String review : ratingArr) {
+            String[] rating = review.split(":");
+            newUser.addIngredientRating(rating[0], Double.parseDouble(rating[1]));
           }
-        } else {
-          newUser = new User(username, null);
         }
-        recipeApp.setCurUser(newUser);
-      } catch (SQLException e) {
-        return "error";
+      } else {
+        newUser = new User(username, null);
       }
+      recipeApp.setCurUser(newUser);
       return "success";
     }
   }
@@ -305,16 +295,11 @@ public final class Main {
       JSONObject data = new JSONObject(request.body());
       String name = data.getString("name");
       String email = data.getString("email");
-      try {
-        addUserToDatabase(name, email);
-        HashSet<String> ingredients = new HashSet<>();
-        User newUser = new User(email, ingredients);
-        recipeApp.setCurUser(newUser);
-        return "";
-      } catch (SQLException e) {
-        System.err.println("ERROR: Error connecting to database");
-        return "error";
-      }
+      addUserToDatabase(name, email);
+      HashSet<String> ingredients = new HashSet<>();
+      User newUser = new User(email, ingredients);
+      recipeApp.setCurUser(newUser);
+      return "";
     }
   }
 
@@ -327,35 +312,29 @@ public final class Main {
       JSONObject data = new JSONObject(request.body());
       Map<String, Object> map = new HashMap<>();
       String username = data.getString("name");
-      try {
-        String string = getUserInventory(username);
-        //splitting to create hashset for user ingredients
-        if (string.length() > 0) {
-          String[] values = string.split(",");
-          HashSet<String> ingredients = new HashSet<>(Arrays.asList(values));
-          //get ratings for ingredients
-          User user = recipeApp.getCurUser();
-          HashMap<String, Double> preRated = user.getIngredientRatings();
-          HashMap<String, String> ingRatings = new HashMap<>();
+      String string = getUserInventory(username);
+      //splitting to create hashset for user ingredients
+      if (string.length() > 0) {
+        String[] values = string.split(",");
+        HashSet<String> ingredients = new HashSet<>(Arrays.asList(values));
+        //get ratings for ingredients
+        User user = recipeApp.getCurUser();
+        HashMap<String, Double> preRated = user.getIngredientRatings();
+        HashMap<String, String> ingRatings = new HashMap<>();
 
-          for (String ingredient : ingredients) {
-            boolean rated = preRated.containsKey(ingredient);
-            if (rated) {
-              ingRatings.put(ingredient, Double.toString(preRated.get(ingredient)));
-            } else {
-              ingRatings.put(ingredient, Double.toString(DEFAULT_RATING));
-            }
-            map = ImmutableMap.of("inventory", ingRatings);
+        for (String ingredient : ingredients) {
+          boolean rated = preRated.containsKey(ingredient);
+          if (rated) {
+            ingRatings.put(ingredient, Double.toString(preRated.get(ingredient)));
+          } else {
+            ingRatings.put(ingredient, Double.toString(DEFAULT_RATING));
           }
-        } else {
-          map = ImmutableMap.of("inventory", "");
+          map = ImmutableMap.of("inventory", ingRatings);
         }
-        return GSON.toJson(map);
-
-      } catch (SQLException e) {
-        System.err.println("ERROR: Error connecting to database");
-        return "error";
+      } else {
+        map = ImmutableMap.of("inventory", "");
       }
+      return GSON.toJson(map);
     }
   }
 
@@ -364,14 +343,9 @@ public final class Main {
     public Object handle(Request request, Response response) throws Exception {
       JSONObject data = new JSONObject(request.body());
       String email = data.getString("name");
-      try {
-        String name = getName(email);
-        Map<String, String> map = ImmutableMap.of("name", name);
-        return GSON.toJson(map);
-      } catch (SQLException e) {
-        System.err.println("ERROR: Error connecting to database");
-        return "error";
-      }
+      String name = getName(email);
+      Map<String, String> map = ImmutableMap.of("name", name);
+      return GSON.toJson(map);
     }
   }
 

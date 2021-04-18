@@ -1,7 +1,7 @@
 package edu.brown.cs.abeckruiggallantjfraust2jwebste5.RecipeObjects;
 
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.App.User;
-import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Data.Database;
+import edu.brown.cs.abeckruiggallantjfraust2jwebste5.DatabaseHelpers.Database;
 import edu.brown.cs.abeckruiggallantjfraust2jwebste5.Graph.Vertex;
 
 import java.util.HashMap;
