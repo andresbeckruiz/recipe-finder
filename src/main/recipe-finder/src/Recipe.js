@@ -76,6 +76,8 @@ function Recipe(props) {
                                 recipeIngredients.push(recipe[i]);
                             }
                         }
+                        //set currentRating
+                        setValue(recipe["rating"]);
                         setName(recipe["title"].replace(/\b\w/g, l => l.toUpperCase()));
                         setIngredients(recipeIngredients.toString());
                         setPreparation(recipe["instructions"]);
@@ -91,20 +93,6 @@ function Recipe(props) {
                 setLoading(false);
 
 
-                //set currentRating
-                let ratings = response.data["rating"].split(",");
-                let listRatings = [];
-                for (let i of ratings){
-                    listRatings.push(i.split(":"));
-                }
-                let match = name.replace(/\b\w/g, l => l.toUpperCase());
-                for(let i of listRatings){
-                    if (i[0] === match){
-                        setValue(parseInt(i[1]));
-                    }
-                }
-
-                console.log(listRatings);
             })
 
             .catch(function (error) {
