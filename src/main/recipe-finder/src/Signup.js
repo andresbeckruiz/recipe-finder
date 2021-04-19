@@ -59,7 +59,7 @@ export default function Signup() {
             //return here beause we don't want to continue with signup, exit function
             return setError("Passwords do not match")
         }
-
+        //will get a firebase error if password is less than 6 characters long
         if (passwordRef.current.value.length < 6){
             return setError("Password must be at least 6 characters long")
         }
