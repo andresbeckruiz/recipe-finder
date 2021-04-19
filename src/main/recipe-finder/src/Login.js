@@ -5,14 +5,20 @@ import {Link, useHistory} from "react-router-dom"
 import axios from "axios";
 
 export default function Login() {
+    //authentication variables
     const emailRef = useRef()
     const passwordRef = useRef()
+    //login function
     const {login} = useAuth()
+    //error message
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const history = useHistory()
 
-    //axios request that creates a user account in firebase
+    /**
+     * Axios request when a user logins
+     * @param email
+     */
     const createUser = (email) => {
         const toSend = {
             name: email
@@ -36,7 +42,11 @@ export default function Login() {
             });
     }
 
-    //here is where we can check that fields are in the right format that we want
+    /**
+     * Handles submission for a login reequest
+     * @param e representing the event
+     * @returns {Promise<void>}
+     */
     async function handleSubmit(e) {
         e.preventDefault()
 
