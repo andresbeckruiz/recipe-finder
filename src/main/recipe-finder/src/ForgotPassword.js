@@ -4,14 +4,18 @@ import {useAuth} from "./contexts/AuthContext"
 import {Link } from "react-router-dom"
 
 export default function ForgotPassword() {
-    //const nameRef = useRef()
+
+    //authentication variables
     const emailRef = useRef()
     const {resetPassword} = useAuth()
     const [error, setError] = useState("")
     const [message, setMessage] = useState("")
     const [loading, setLoading] = useState(false)
 
-    //here is where we can check that fields are in the right format that we want
+    /**
+     * This handles the submission of a forgot password request
+     * @param e representing the event
+     */
     async function handleSubmit(e) {
         e.preventDefault()
 

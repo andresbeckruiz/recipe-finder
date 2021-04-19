@@ -10,12 +10,18 @@ export default function Signup() {
     const emailRef = useRef()
     const passwordRef = useRef()
     const passwordConfirmRef = useRef()
+    //signup function
     const {signup} = useAuth()
+    //error message
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const history = useHistory()
 
-    //axios request for making a new user in firebase
+    /**
+     * Axios request for making a new user in firebase
+     * @param name
+     * @param email
+     */
     const createUser = (name, email) => {
         console.log(emailRef.current.value)
         const toSend = {
@@ -41,7 +47,11 @@ export default function Signup() {
             });
     }
 
-    //here is where we can check that fields are in the right format that we want
+    /**
+     * This function handles submission of a signup request
+     * @param e
+     * @returns error if applicable
+     */
     async function handleSubmit(e) {
         e.preventDefault()
 

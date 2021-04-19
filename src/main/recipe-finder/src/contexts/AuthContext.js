@@ -3,10 +3,18 @@ import {auth} from "../firebase"
 
 const AuthContext = React.createContext()
 
+
 export function useAuth() {
     return useContext(AuthContext)
 }
 
+/**
+ * This function contains all of our firebase functions we use for logging in and keeps
+ * track of the current user
+ * @param children
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export function AuthProvider({children}){
 
     const [currentUser, setCurrentUser] = useState()
