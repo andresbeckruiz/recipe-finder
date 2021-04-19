@@ -122,8 +122,25 @@ _On your first meeting with your mentor TA, you should plan dates for at least t
 			- This page displays information about the user. This includes an option to delete/change their account. It also lists all the recipes and ingredients the user has previously rated, as well as a way to change those ratings dynamically.
 
 - Graph:
+	- The graph is a graph of central and non-central nodes. 
+	- Created generically, so that other implementations can use the same algorithm without using Recipes and Ingredients
+	  specifically.
+	- Does not contain edges, and instead relies on the nodes themselves to reference their adjacent central/non-central
+	  nodes.
+	- Operates on classes that implement the Vertex interface. The Vertex interface requires that each node has a way to 
+	  get the adjacent nodes, get the value of a node, and get its name property.
+	- Has a function to search the graph, to find the most similar adjacent central node to a given central node. This 
+	  search algorithm employs the similarity algorithm explained below.
 
-- Similarity Algorithm:
+- Similarity Algorithm: 
+	- The similarity algorithm employs a combination of the Jacard similarity algorithm + rating prediction to 
+	predict the similarity between nodes.
+  	- The Jacard similarity algorithm finds the number of nodes that two adjacent nodes have in common, and divides
+	this by the total number of adjacent nodes each central node has. This is one part of the index.
+   - The second part of the index is the value (or "ranking"– for our implementation of the graph). The value is either
+	the rating that a user gives a certain recipe, or an estimated rating which is calculated by averaging the ratings
+	of the adjacent ingredients.
+   - These two values are then combined using a weighted sum
 
 ## How to Build and Run
 

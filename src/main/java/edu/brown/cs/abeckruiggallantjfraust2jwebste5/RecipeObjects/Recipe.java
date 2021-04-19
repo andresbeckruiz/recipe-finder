@@ -277,6 +277,7 @@ public class Recipe implements Vertex<Ingredient> {
         put("instructions", checkForNull(instructions));
         put("url", checkForNull(url));
         put("chefName", checkForNull(chef));
+        put("rating", checkForNull(Double.toString(rating)));
       }
     };
     HashSet<String> recipeIngredients = ingredients;
