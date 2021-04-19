@@ -191,9 +191,10 @@ ingredient and an alert is shown.
 
 ## How to Build and Run
 
-- You can build the program by running ‘mvn package’ in the terminal while located in the root directory.
-	-NOTE: The GraphTest tests take quite long to run because the algorithm that computes similarity takes a while,
-  and we make multiple successive calls to this method within the file. 
+- You can build the program by running ‘mvn package’ in the terminal while you are located in the root directory. 
+  - NOTE: The GraphTest tests take quite long to run because the algorithm that computes similarity takes a while,
+  		and we make multiple successive calls to this method within the file. The tests will run for ~5 minutes. If
+  		you'd like to skip them run ‘mvn package -Dmaven.test.skip=true‘
 
 - You can run the program with the frontend component by running ‘./run --gui’ in the terminal while located in the 
   root directory. You will also need to (in a separate terminal window) go into the 'recipe-finder' directory located 
