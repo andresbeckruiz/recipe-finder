@@ -156,6 +156,9 @@ public class User {
     ArrayList<String> recipeNames = findRecipesWithIngredients(
             NUM_RECOMMENDATIONS, this);
     ArrayList<Recipe> recipes = new ArrayList<>();
+    if (recipeNames == null) {
+      recipeNames = new ArrayList<String>();
+    }
     for (String recipe : recipeNames) {
       recipes.add(getRecipeObject(recipe, this));
     }

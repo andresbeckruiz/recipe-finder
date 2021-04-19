@@ -123,4 +123,37 @@ public class RecipeFinderTest {
     assertTrue(similarRecipes.get(0).equals("lemon curd ice cream"));
   }
 
+  @Test
+  public void badIngredientSearch() {
+    HashSet<String> ingredients = new HashSet<>();
+    ingredients.add("asdfadsfasdf");
+    testUser.setIngredients(ingredients);
+    ArrayList<String> similarRecipes = findRecipesWithIngredients(1, testUser);
+    assertTrue(similarRecipes.size() == 0);
+  }
+
+  @Test
+  public void manyBadIngredientsSearch() {
+    HashSet<String> ingredients = new HashSet<>();
+    ingredients.add("asdfadsfasdf");
+    ingredients.add("avasvsdfadsfasdf");
+    ingredients.add("aerawer3");
+    ingredients.add("a23absd");
+    testUser.setIngredients(ingredients);
+    ArrayList<String> similarRecipes = findRecipesWithIngredients(1, testUser);
+    assertTrue(similarRecipes.size() == 0);
+  }
+
+  @Test
+  public void mixOfGoodAndBadIngredientsSearch() {
+    HashSet<String> ingredients = new HashSet<>();
+    ingredients.add("asdfadsfasdf");
+    ingredients.add("avasvsdfadsfasdf");
+    ingredients.add("egg");
+    ingredients.add("flour");
+    testUser.setIngredients(ingredients);
+    ArrayList<String> similarRecipes = findRecipesWithIngredients(1, testUser);
+    assertTrue(similarRecipes.get(0).equals("sausage roll’s big night out"));
+  }
+
 }
