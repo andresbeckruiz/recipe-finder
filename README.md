@@ -192,7 +192,7 @@ ingredient and an alert is shown.
 ## How to Build and Run
 
 - You can build the program by running ‘mvn package’ in the terminal while located in the root directory.
-	-NOTE: The GraphTest tests take quite long to run because the algorithm that computes similarity takes a while,
+	-NOTE: The GraphTest tests take roughly 5 minutes because the algorithm that computes similarity takes a while,
   and we make multiple successive calls to this method within the file.
   	-NOTE: The RandomInputTest takes around 15 seconds to run. This test adds random ingredients to the users fridge
   and checks for recipes.
