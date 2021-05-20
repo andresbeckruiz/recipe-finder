@@ -1,5 +1,7 @@
 # cs0320 Term Project 2021
 
+Project Specifications: https://cs.brown.edu/courses/cs0320/projects/term-project.html
+
 **Team Members:** ggallant jwebste5 abeckrui jfraust2
 
 **Team Strengths and Weaknesses:** 
